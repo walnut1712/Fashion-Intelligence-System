@@ -1,0 +1,6 @@
+Model,GenderF1,UsageF1,MeanF1
+MLP,66.18,57.87,62.02
+CNN_plain,75.48,74.16,74.82
+CNN_weighted,75.72,73.49,74.6
+CNN_full,63.36,64.54,63.95
+CNN_tuned,67.03,66.68,66.86

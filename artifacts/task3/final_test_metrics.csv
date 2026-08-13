@@ -1,0 +1,3 @@
+Target,Accuracy,MacroF1,WeightedF1,BalancedAcc,BaselineAcc,BaselineF1,AccGain,F1Gain
+gender,82.87,67.01,84.55,79.19,54.2,14.06,28.67,52.95
+usage,83.62,61.55,84.71,71.37,76.9,17.39,6.72,44.16
