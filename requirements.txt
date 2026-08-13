@@ -1,0 +1,41 @@
+# COSC2753 Assignment 2 - Fashion Intelligence System
+# Python 3.10-3.13
+#
+# GPU (CUDA) INSTALL - recommended, and what the notebooks were developed against.
+# The torch wheels are NOT on PyPI, so they need PyTorch's own index. Install them
+# first, then the rest of this file:
+#
+#   python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+#   python -m pip install -r requirements.txt
+#
+# Match the index URL to your NVIDIA driver (run `nvidia-smi` and read the CUDA version):
+#   CUDA 12.8+  -> https://download.pytorch.org/whl/cu128
+#   CUDA 12.6-7 -> https://download.pytorch.org/whl/cu126
+#   CUDA 11.8+  -> https://download.pytorch.org/whl/cu118
+#   No GPU      -> https://download.pytorch.org/whl/cpu
+#
+# KNOWN ISSUE: do not install into an Anaconda environment. Anaconda's MKL and
+# PyTorch both ship libiomp5md.dll, and loading both crashes the kernel with
+# "OMP: Error #15". Use a plain python.org interpreter or a venv instead.
+
+# --- deep learning ---
+torch>=2.5
+torchvision>=0.20
+
+# --- data handling ---
+numpy>=1.26
+pandas>=2.0
+
+# --- classical ML, metrics, splitting ---
+scikit-learn>=1.4
+
+# --- images ---
+pillow>=10.0
+
+# --- visualisation ---
+matplotlib>=3.8
+seaborn>=0.13
+
+# --- notebook environment ---
+jupyter>=1.0
+ipykernel>=6.29
