@@ -1,6 +1,8 @@
 # Large data/cache files (exceed GitHub's 100MB limit)
 A2_FashionDataset/processed/image_cache_60x80.npy
 A2_FashionDataset/processed/image_cache_60x80_ids.npy
+A2_FashionDataset/processed/search_cache_60x80.npy
+A2_FashionDataset/processed/search_cache_60x80_ids.npy
 
 # Raw dataset images (large binary assets)
 A2_FashionDataset/FashionDataset/
