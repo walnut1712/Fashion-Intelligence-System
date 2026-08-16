@@ -1,0 +1,33 @@
+{
+  "gallery_size": 38612,
+  "catalogue_size": 32837,
+  "held_out_query_images": 2000,
+  "relevance_attribute": "articleType",
+  "methods_compared": [
+    "Classical (old)",
+    "Task3-CNN (old)",
+    "Autoencoder (old)",
+    "Triplet (old)",
+    "Improved",
+    "Improved+TTA",
+    "Fused",
+    "Improved+TTA+rerank(a=0.7)"
+  ],
+  "best_method": "Improved+TTA",
+  "embedding_dim": 128,
+  "random_baseline_P@10": 5.91,
+  "P@10_unseen": 81.23,
+  "mAP@10_unseen": 76.74,
+  "nDCG@10_unseen": 89.58,
+  "R_precision_unseen": 80.3,
+  "colour@10_unseen": 56.31,
+  "both@10_unseen": 45.92,
+  "P@10_gallery_queries_old_protocol": 92.33,
+  "control_attribute": "baseColour",
+  "control_winner": "Autoencoder",
+  "ms_per_query": 0.01,
+  "index_size_mb": 16.81,
+  "index_dim_on_disk": 128,
+  "fusion_colour_weight": 0.35,
+  "rerank_alpha": 0.7
+}
