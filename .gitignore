@@ -25,3 +25,9 @@ Thumbs.db
 
 # Generated image cache
 A2_FashionDataset/processed/*.npy
+
+# Generated image cache
+A2_FashionDataset/processed/*.npy
+
+# Generated NumPy cache files
+A2_FashionDataset/processed/*.npy
