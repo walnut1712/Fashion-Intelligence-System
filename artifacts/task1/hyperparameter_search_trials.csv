@@ -1,0 +1,2 @@
+learning_rate,dropout,head_hidden,widths,WeightedF1,MacroF1,Top3Acc,Epochs
+0.0005,0.5,256,"(16, 32, 64, 128)",5.78,4.02,23.39,2

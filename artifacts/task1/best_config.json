@@ -1,0 +1,14 @@
+{
+  "final_model": "CNN_start",
+  "sampled": {
+    "learning_rate": "0.0005",
+    "dropout": "0.5",
+    "head_hidden": "256",
+    "widths": "(16, 32, 64, 128)"
+  },
+  "train_config": {
+    "learning_rate": 0.0005
+  },
+  "seed_mean_weighted_f1": 10.665,
+  "seed_std_weighted_f1": 0.9404520189781083
+}

@@ -1,8 +1,5 @@
 # Large data/cache files (exceed GitHub's 100MB limit)
-A2_FashionDataset/processed/image_cache_60x80.npy
-A2_FashionDataset/processed/image_cache_60x80_ids.npy
-A2_FashionDataset/processed/search_cache_60x80.npy
-A2_FashionDataset/processed/search_cache_60x80_ids.npy
+A2_FashionDataset/processed/*.npy
 
 # Raw dataset images (large binary assets)
 A2_FashionDataset/FashionDataset/
@@ -22,3 +19,15 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+<<<<<<< HEAD
+=======
+
+# Generated image cache
+A2_FashionDataset/processed/*.npy
+
+# Generated image cache
+A2_FashionDataset/processed/*.npy
+
+# Generated NumPy cache files
+A2_FashionDataset/processed/*.npy
+>>>>>>> 8a8e682317a7b80c14473dada5dffd326b3a739f

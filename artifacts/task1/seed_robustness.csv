@@ -1,0 +1,3 @@
+Seed,accuracy,macro_f1,weighted_f1,balanced_acc,top3_acc,top5_acc
+142,14.08,2.97,11.33,7.8,34.13,49.64
+143,12.89,2.84,10.0,7.41,27.45,42.24
