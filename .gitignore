@@ -19,15 +19,3 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
-<<<<<<< HEAD
-=======
-
-# Generated image cache
-A2_FashionDataset/processed/*.npy
-
-# Generated image cache
-A2_FashionDataset/processed/*.npy
-
-# Generated NumPy cache files
-A2_FashionDataset/processed/*.npy
->>>>>>> 8a8e682317a7b80c14473dada5dffd326b3a739f
