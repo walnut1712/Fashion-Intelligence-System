@@ -1,0 +1,194 @@
+[
+  {
+    "articleType": "Tights",
+    "count": 9,
+    "masterCategory": "Apparel",
+    "subCategory": "Bottomwear"
+  },
+  {
+    "articleType": "Footballs",
+    "count": 8,
+    "masterCategory": "Sporting Goods",
+    "subCategory": "Sports Equipment"
+  },
+  {
+    "articleType": "Blazers",
+    "count": 8,
+    "masterCategory": "Apparel",
+    "subCategory": "Topwear"
+  },
+  {
+    "articleType": "Clothing Set",
+    "count": 8,
+    "masterCategory": "Apparel",
+    "subCategory": "Apparel Set"
+  },
+  {
+    "articleType": "Headband",
+    "count": 7,
+    "masterCategory": "Accessories",
+    "subCategory": "Headwear"
+  },
+  {
+    "articleType": "Salwar and Dupatta",
+    "count": 7,
+    "masterCategory": "Apparel",
+    "subCategory": "Bottomwear"
+  },
+  {
+    "articleType": "Wristbands",
+    "count": 6,
+    "masterCategory": "Sporting Goods",
+    "subCategory": "Wristbands"
+  },
+  {
+    "articleType": "Umbrellas",
+    "count": 6,
+    "masterCategory": "Accessories",
+    "subCategory": "Umbrellas"
+  },
+  {
+    "articleType": "Lip Gloss",
+    "count": 6,
+    "masterCategory": "Personal Care",
+    "subCategory": "Lips"
+  },
+  {
+    "articleType": "Nehru Jackets",
+    "count": 5,
+    "masterCategory": "Apparel",
+    "subCategory": "Topwear"
+  },
+  {
+    "articleType": "Eyeshadow",
+    "count": 5,
+    "masterCategory": "Personal Care",
+    "subCategory": "Eyes"
+  },
+  {
+    "articleType": "Compact",
+    "count": 4,
+    "masterCategory": "Personal Care",
+    "subCategory": "Makeup"
+  },
+  {
+    "articleType": "Lip Plumper",
+    "count": 4,
+    "masterCategory": "Personal Care",
+    "subCategory": "Lips"
+  },
+  {
+    "articleType": "Highlighter and Blush",
+    "count": 4,
+    "masterCategory": "Personal Care",
+    "subCategory": "Makeup"
+  },
+  {
+    "articleType": "Hat",
+    "count": 3,
+    "masterCategory": "Accessories",
+    "subCategory": "Headwear"
+  },
+  {
+    "articleType": "Shrug",
+    "count": 3,
+    "masterCategory": "Apparel",
+    "subCategory": "Topwear"
+  },
+  {
+    "articleType": "Tablet Sleeve",
+    "count": 3,
+    "masterCategory": "Accessories",
+    "subCategory": "Bags"
+  },
+  {
+    "articleType": "Trolley Bag",
+    "count": 3,
+    "masterCategory": "Accessories",
+    "subCategory": "Bags"
+  },
+  {
+    "articleType": "Lehenga Choli",
+    "count": 2,
+    "masterCategory": "Apparel",
+    "subCategory": "Topwear"
+  },
+  {
+    "articleType": "Key chain",
+    "count": 2,
+    "masterCategory": "Accessories",
+    "subCategory": "Accessories"
+  },
+  {
+    "articleType": "Robe",
+    "count": 2,
+    "masterCategory": "Apparel",
+    "subCategory": "Loungewear and Nightwear"
+  },
+  {
+    "articleType": "Shapewear",
+    "count": 2,
+    "masterCategory": "Apparel",
+    "subCategory": "Innerwear"
+  },
+  {
+    "articleType": "Concealer",
+    "count": 2,
+    "masterCategory": "Personal Care",
+    "subCategory": "Makeup"
+  },
+  {
+    "articleType": "Baby Dolls",
+    "count": 2,
+    "masterCategory": "Apparel",
+    "subCategory": "Loungewear and Nightwear"
+  },
+  {
+    "articleType": "Rain Jacket",
+    "count": 2,
+    "masterCategory": "Apparel",
+    "subCategory": "Topwear"
+  },
+  {
+    "articleType": "Rain Trousers",
+    "count": 2,
+    "masterCategory": "Apparel",
+    "subCategory": "Bottomwear"
+  },
+  {
+    "articleType": "Shoe Laces",
+    "count": 1,
+    "masterCategory": "Accessories",
+    "subCategory": "Shoe Accessories"
+  },
+  {
+    "articleType": "Ties and Cufflinks",
+    "count": 1,
+    "masterCategory": "Accessories",
+    "subCategory": "Cufflinks"
+  },
+  {
+    "articleType": "Cushion Covers",
+    "count": 1,
+    "masterCategory": "Home",
+    "subCategory": "Home Furnishing"
+  },
+  {
+    "articleType": "Body Wash and Scrub",
+    "count": 1,
+    "masterCategory": "Personal Care",
+    "subCategory": "Bath and Body"
+  },
+  {
+    "articleType": "Ipad",
+    "count": 1,
+    "masterCategory": "Free Items",
+    "subCategory": "Vouchers"
+  },
+  {
+    "articleType": "Lounge Tshirts",
+    "count": 1,
+    "masterCategory": "Apparel",
+    "subCategory": "Loungewear and Nightwear"
+  }
+]
