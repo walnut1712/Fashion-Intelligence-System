@@ -1,0 +1,24 @@
+{
+    "framework": "PyTorch",
+    "device": "mps",
+    "epochs_completed": 27,
+    "baseline": {
+        "accuracy": 0.49582879941965907,
+        "macro_f1": 0.16573714839961204,
+        "balanced_accuracy": 0.25
+    },
+    "validation": {
+        "accuracy": 0.6878287683656811,
+        "macro_f1": 0.6541321052498612,
+        "weighted_f1": 0.6901932541642579,
+        "balanced_accuracy": 0.7041160731316769
+    },
+    "test": {
+        "accuracy": 0.6753717809212912,
+        "macro_f1": 0.6431634008022564,
+        "weighted_f1": 0.678212000401914,
+        "balanced_accuracy": 0.6990836105930164
+    },
+    "training_minutes": 30.454441599051158,
+    "best_model": "/Users/_thu_thuu/Desktop/RMIT/2026sem2/machine learning/Fashion-Intelligence-System-1/artifacts/task2/task2_season_best_pytorch.pth"
+}
