@@ -22,3 +22,6 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+# Generated image cache
+A2_FashionDataset/processed/*.npy
