@@ -16,6 +16,9 @@ venv/
 # Jupyter checkpoints
 .ipynb_checkpoints/
 
+# Backups of superseded model/artifact runs kept for local reference only
+**/_stale_run_backup/
+
 # OS
 .DS_Store
 Thumbs.db
