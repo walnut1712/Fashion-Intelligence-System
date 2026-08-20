@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fashion Intelligence</title>
+<meta name="description" content="Predict item type, season, gender and occasion from a garment photo, and retrieve visually similar catalogue items.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============================ icon sprite ============================ -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" class="sprite">
+  <symbol id="ic-shirt" viewBox="0 0 24 24">
+    <path d="M15 4l6 2v5h-3v9H6v-9H3V6l6-2a3 3 0 0 0 6 0z"/>
+  </symbol>
+  <symbol id="ic-photo" viewBox="0 0 24 24">
+    <rect x="3" y="4" width="18" height="16" rx="3"/>
+    <path d="M15.5 8.5h.01M4 16.5l3.5-3.5a2.5 2.5 0 0 1 3.5 0l3.5 3.5"/>
+    <path d="M14 15l1-1a2.5 2.5 0 0 1 3.5 0l1.5 1.5"/>
+  </symbol>
+  <symbol id="ic-upload" viewBox="0 0 24 24">
+    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12"/>
+  </symbol>
+  <symbol id="ic-refresh" viewBox="0 0 24 24">
+    <path d="M20 11A8 8 0 0 0 6.3 6.3L4 8.5M4 5v3.5h3.5"/>
+    <path d="M4 13a8 8 0 0 0 13.7 4.7L20 15.5M20 19v-3.5h-3.5"/>
+  </symbol>
+  <symbol id="ic-x" viewBox="0 0 24 24">
+    <path d="M18 6 6 18M6 6l12 12"/>
+  </symbol>
+  <symbol id="ic-alert" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9"/><path d="M12 8.5v4.5M12 16.5h.01"/>
+  </symbol>
+  <symbol id="ic-chart" viewBox="0 0 24 24">
+    <path d="M4 19h16M7.5 16V9.5M12 16V5M16.5 16v-4"/>
+  </symbol>
+  <symbol id="ic-chevron" viewBox="0 0 24 24">
+    <path d="m9 6 6 6-6 6"/>
+  </symbol>
+  <symbol id="ic-search" viewBox="0 0 24 24">
+    <circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.9-4.9"/>
+  </symbol>
+</svg>
+
+<!-- ============================ header ============================ -->
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="brand">
+      <span class="brand-mark"><svg class="ic"><use href="#ic-shirt"/></svg></span>
+      <span class="brand-text">
+        <span class="brand-name">Fashion Intelligence</span>
+        <span class="brand-sub">COSC2753 &middot; Assignment&nbsp;2</span>
+      </span>
+    </div>
+    <div class="topbar-right">
+      <span id="mode-pill" class="pill pill-idle">
+        <span class="dot"></span><span id="mode-label">Connecting&hellip;</span>
+      </span>
+      <a class="link-quiet" href="#model-card">Model card</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap page">
+
+  <div id="banner" class="banner" hidden>
+    <svg class="ic" aria-hidden="true"><use href="#ic-alert"/></svg>
+    <p id="banner-text"></p>
+  </div>
+
+  <!-- ============================ analyse ============================ -->
+  <section class="card" aria-labelledby="h-analyse">
+    <div class="card-head">
+      <h2 id="h-analyse" class="card-title">Analyse an item</h2>
+      <p class="card-note">Drop in a garment photo. The four attribute models and the retrieval index all run against that one image.</p>
+    </div>
+
+    <div class="analyse-grid">
+
+      <!-- query column -->
+      <div class="panel query-panel">
+        <div id="dropzone" class="dropzone" role="button" tabindex="0"
+             aria-label="Upload a garment image. Drop a file here, or press Enter to browse.">
+          <svg class="ic ic-lg" aria-hidden="true"><use href="#ic-upload"/></svg>
+          <p class="dz-title">Drop an image</p>
+          <p class="dz-sub">or click to browse &middot; JPG, PNG, WEBP</p>
+          <p class="dz-hint">Pasting from the clipboard works too</p>
+        </div>
+
+        <figure id="preview" class="preview" hidden>
+          <div class="preview-frame">
+            <img id="preview-img" alt="The garment image you uploaded">
+          </div>
+          <figcaption class="preview-meta">
+            <span id="preview-name" class="preview-name"></span>
+            <span id="preview-dims" class="preview-dims"></span>
+          </figcaption>
+          <div class="preview-actions">
+            <button type="button" id="btn-rerun" class="btn btn-ghost">
+              <svg class="ic" aria-hidden="true"><use href="#ic-refresh"/></svg>Re-run
+            </button>
+            <button type="button" id="btn-clear" class="btn btn-ghost">
+              <svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg>Clear
+            </button>
+          </div>
+        </figure>
+
+        <input type="file" id="file-input" accept="image/*" hidden>
+
+        <div class="samples">
+          <p class="samples-label">No image handy?</p>
+          <button type="button" id="btn-sample" class="btn btn-quiet">Use a sample item</button>
+        </div>
+      </div>
+
+      <!-- predictions column -->
+      <div class="panel pred-panel">
+        <div class="panel-head">
+          <h3 class="panel-title">Predictions</h3>
+          <span id="latency" class="panel-meta"></span>
+        </div>
+
+        <div id="pred-grid" class="pred-grid" aria-live="polite" aria-busy="false"></div>
+
+        <p class="panel-foot">
+          Confidence is the softmax probability of the winning class. Where a model is unsure, open
+          <em>alternatives</em> to see what it was choosing between.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================ retrieval ============================ -->
+  <section class="card" aria-labelledby="h-similar">
+    <div class="card-head card-head-row">
+      <div>
+        <h2 id="h-similar" class="card-title">Similar items</h2>
+        <p class="card-note">Nearest neighbours by cosine similarity in the 128-dimension embedding space.</p>
+      </div>
+      <div class="seg" role="group" aria-label="Number of results to retrieve">
+        <button type="button" class="seg-btn" data-k="6">6</button>
+        <button type="button" class="seg-btn is-on" data-k="12">12</button>
+        <button type="button" class="seg-btn" data-k="24">24</button>
+      </div>
+    </div>
+
+    <div id="results" class="results" aria-live="polite"></div>
+  </section>
+
+  <!-- ============================ model card ============================ -->
+  <section class="card" id="model-card" aria-labelledby="h-model">
+    <div class="card-head">
+      <h2 id="h-model" class="card-title">
+        <svg class="ic" aria-hidden="true"><use href="#ic-chart"/></svg>
+        What these numbers are worth
+      </h2>
+      <p class="card-note">
+        Held-out test performance for every model behind this page, so a reading on screen can be weighed
+        against how often that model is actually right.
+      </p>
+    </div>
+    <div id="model-card-body" class="mc-list"></div>
+    <p class="src-note" id="mc-source"></p>
+  </section>
+
+</main>
+
+<footer class="wrap foot">
+  <p>Fashion Intelligence &mdash; a demonstration interface over the Assignment&nbsp;2 models. Predictions are illustrative, not retail advice.</p>
+</footer>
+
+<script src="demo-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
