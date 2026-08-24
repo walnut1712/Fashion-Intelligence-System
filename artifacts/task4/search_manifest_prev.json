@@ -1,0 +1,53 @@
+{
+  "best_method": "Improved+TTA",
+  "index_file": "search_index_improved_tta.npy",
+  "encoder_file": "task4_improved_encoder.pt",
+  "catalogue_size": 32837,
+  "held_out_products": 4132,
+  "held_out_images": 5774,
+  "embedding_dim": 128,
+  "image_size_pil": [
+    60,
+    80
+  ],
+  "channel_mean": [
+    0.8536885380744934,
+    0.8337876796722412,
+    0.8234683275222778
+  ],
+  "channel_std": [
+    0.25454336404800415,
+    0.26043280959129333,
+    0.2607315480709076
+  ],
+  "fusion_colour_weight": 0.35,
+  "use_tta": true,
+  "uses_reranking": false,
+  "rerank_alpha": null,
+  "rerank_pool": null,
+  "learned_dim": null,
+  "deployment_metrics": {
+    "P@1": 0.828,
+    "R@1": 0.0017,
+    "AP@1": 0.828,
+    "nDCG@1": 0.9018,
+    "P@5": 0.8196,
+    "R@5": 0.0084,
+    "AP@5": 0.7859,
+    "nDCG@5": 0.8989,
+    "P@10": 0.8123,
+    "R@10": 0.0165,
+    "AP@10": 0.7674,
+    "nDCG@10": 0.8958,
+    "P@20": 0.802,
+    "R@20": 0.0302,
+    "AP@20": 0.7496,
+    "nDCG@20": 0.8914,
+    "R-precision": 0.803,
+    "type@10": 0.8123,
+    "colour@10": 0.5631,
+    "both@10": 0.4592,
+    "ms_per_query": 0.0064,
+    "dim": 128.0
+  }
+}

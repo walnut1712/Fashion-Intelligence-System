@@ -1,0 +1,11 @@
+{
+  "final_model": "EarlyBranch",
+  "parameters": 4249577,
+  "test_gender_accuracy": 90.23,
+  "test_gender_macro_f1": 76.17,
+  "test_usage_accuracy": 90.99,
+  "test_usage_macro_f1": 84.44,
+  "test_exact_match": 82.2,
+  "baseline_gender_accuracy": 54.2,
+  "baseline_usage_accuracy": 77.11
+}
