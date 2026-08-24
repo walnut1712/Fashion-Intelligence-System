@@ -1,0 +1,4 @@
+mode,mean_top1_similarity,mean_distinct_types,mean_agreement(of 8),queries_with_1_type
+letterbox,0.6567,2.68,5.89,8
+crop,0.6635,3.11,5.32,6
+nobg,0.6673,3.11,4.63,1
