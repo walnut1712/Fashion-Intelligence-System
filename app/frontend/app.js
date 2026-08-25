@@ -31,6 +31,7 @@
     prediction: null,
     results: null
   };
+  var testSampleIds = null;
 
   /* ------------------------------------------------------------ helpers */
 
@@ -413,10 +414,25 @@
   }
 
   function useSample() {
-    var s = FI.samples[Math.floor(Math.random() * FI.samples.length)];
+    var ids = testSampleIds || FI.samples.map(function (sample) { return sample.id; });
+    var id = ids[Math.floor(Math.random() * ids.length)];
+    var s = { id: id, label: "Sample · " + id };
     var url = API_BASE + "/api/catalogue/" + s.id + "/image";
 
-    withTimeout(fetch(url).then(function (r) {
+    var samplesRequest = testSampleIds
+      ? Promise.resolve({ ids: testSampleIds })
+      : fetch(API_BASE + "/api/test-samples").then(function (r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.json();
+        });
+
+    withTimeout(samplesRequest.then(function (data) {
+      if (data.ids && data.ids.length) testSampleIds = data.ids;
+      var sampleId = testSampleIds[Math.floor(Math.random() * testSampleIds.length)];
+      s = { id: sampleId, label: "Sample · " + sampleId };
+      url = API_BASE + "/api/catalogue/" + s.id + "/image";
+      return fetch(url);
+    }).then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.blob();
     }), 3000)

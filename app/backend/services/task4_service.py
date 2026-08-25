@@ -110,3 +110,13 @@ class Task4Service:
                 if metadata_path.exists():
                     return metadata_path
         return None
+
+    def list_test_sample_ids(self):
+        folder = self.project_root / "A2_FashionDataset" / "FashionDataset" / "test" / "images_test"
+        if not folder.exists():
+            return []
+        return sorted(
+            int(path.stem)
+            for path in folder.glob("*.jpg")
+            if path.stem.isdigit()
+        )

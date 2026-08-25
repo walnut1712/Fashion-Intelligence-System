@@ -206,6 +206,13 @@ def catalogue_image(item_id: str):
     return FileResponse(str(image_path))
 
 
+@app.get("/api/test-samples")
+def test_samples():
+    if task4_service is None:
+        raise HTTPException(status_code=503, detail=task4_error)
+    return {"ids": task4_service.list_test_sample_ids()}
+
+
 @app.post("/api/analyze")
 async def analyze(
     image: UploadFile = File(...),
