@@ -90,7 +90,9 @@ class Task4Service:
         item_id = str(item_id)
         candidates = [
             self.project_root / "A2_FashionDataset" / "FashionDataset" / "train" / "images_train",
+            self.project_root / "A2_FashionDataset" / "FashionDataset" / "test" / "images_test",
             self.project_root / "A2_FashionDataset" / "train" / "images_train",
+            self.project_root / "A2_FashionDataset" / "test" / "images_test",
             self.project_root / "A2_FashionDataset" / "images_train",
             self.project_root / "A2_FashionDataset" / "FashionDataset" / "images_train",
         ]
