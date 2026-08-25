@@ -348,10 +348,8 @@
     if (state.mode === "live" && state.file) {
       var fd = new FormData();
       fd.append("image", state.file);
-      fd.append("k", String(state.k));
-      fd.append("search_mode", "nobg");
       work = withTimeout(
-        fetch(API_BASE + "/api/analyze", { method: "POST", body: fd }).then(function (r) {
+        fetch(API_BASE + "/api/analyze?k=" + encodeURIComponent(state.k) + "&search_mode=nobg", { method: "POST", body: fd }).then(function (r) {
           if (!r.ok) throw new Error("server returned HTTP " + r.status);
           return r.json();
         }),
