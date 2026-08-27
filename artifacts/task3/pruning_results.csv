@@ -1,4 +1,0 @@
-Sparsity%,ActualZero%,NonZeroWeights,GenderF1,UsageF1,MeanF1,DeltaVsUnpruned
-0.0,0.0,2734224,78.44,84.79,81.62,0.0
-50.0,50.0,1367112,80.22,85.07,82.64,1.02
-80.0,80.0,546845,79.24,83.95,81.6,-0.02

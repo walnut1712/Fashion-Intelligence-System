@@ -1,6 +1,0 @@
-Model,GenderF1,UsageF1,MeanF1
-CNN_tuned,79.76,85.32,82.54
-MLP,75.89,79.85,77.87
-CNN_none,78.39,83.0,80.7
-CNN_heavy_aug,77.32,82.22,79.77
-CNN_weighted,79.65,82.03,80.84
