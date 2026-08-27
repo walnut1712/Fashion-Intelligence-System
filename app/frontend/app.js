@@ -10,7 +10,9 @@
 
   /* When opened straight off disk there is no server to be same-origin with,
      so aim at the default uvicorn address instead. */
-  var API_BASE = location.protocol === "file:" ? "http://127.0.0.1:8000" : "";
+  var API_BASE = location.protocol === "file:" || location.port === "5500"
+    ? "http://127.0.0.1:8000"
+    : "";
 
   var ATTRS = [
     { key: "item_type", label: "Item type", task: "T1" },
@@ -29,6 +31,7 @@
     prediction: null,
     results: null
   };
+  var testSampleIds = null;
 
   /* ------------------------------------------------------------ helpers */
 
@@ -42,6 +45,25 @@
 
   function pct(x, dp) {
     return (x * 100).toFixed(dp === undefined ? 1 : dp) + "%";
+  }
+
+  function normalizePrediction(value) {
+    if (Array.isArray(value)) return value;
+    if (!value) return [];
+    var ranked = value.top3 && value.top3.length ? value.top3 : [value];
+    return ranked.map(function (r) {
+      return { label: r.label, p: r.confidence };
+    });
+  }
+
+  function normalizeResult(value) {
+    return {
+      id: value.id,
+      similarity: value.similarity,
+      article_type: value.articleType || value.article_type,
+      base_colour: value.baseColour || value.base_colour,
+      image_url: value.image_url
+    };
   }
 
   /* Confidence and similarity live on different scales, so they get
@@ -164,7 +186,7 @@
     }
 
     var p = state.prediction;
-    lat.textContent = "inference " + p.latency_ms + " ms";
+    lat.textContent = p.latency_ms == null ? "inference complete" : "inference " + p.latency_ms + " ms";
 
     host.innerHTML = ATTRS.map(function (a) {
       var ranked = (p.predictions[a.key] || []).slice();
@@ -223,7 +245,7 @@
       state.results.results.map(function (r, i) {
         var t = simTier(r.similarity);
         var thumb = live
-          ? '<img src="' + API_BASE + "/api/image/" + encodeURIComponent(r.id) + '" alt="" loading="lazy"' +
+          ? '<img src="' + API_BASE + (r.image_url || "") + '" alt="" loading="lazy"' +
             ' data-colour="' + esc(r.base_colour || "") + '">'
           : swatch(r.base_colour);
 
@@ -326,17 +348,28 @@
     if (state.mode === "live" && state.file) {
       var fd = new FormData();
       fd.append("image", state.file);
-      fd.append("k", String(state.k));
       work = withTimeout(
-        fetch(API_BASE + "/api/analyse", { method: "POST", body: fd }).then(function (r) {
+        fetch(API_BASE + "/api/analyze?k=" + encodeURIComponent(state.k) + "&search_mode=nobg", { method: "POST", body: fd }).then(function (r) {
           if (!r.ok) throw new Error("server returned HTTP " + r.status);
           return r.json();
         }),
         20000
       ).then(function (data) {
+        var predictions = data.predictions || {};
         return {
-          prediction: { latency_ms: data.latency_ms, predictions: data.predictions },
-          results: { results: data.results || [] }
+          prediction: {
+            latency_ms: data.latency_ms,
+            predictions: {
+              item_type: normalizePrediction(predictions.articleType),
+              season: normalizePrediction(predictions.season),
+              gender: normalizePrediction(predictions.gender),
+              usage: normalizePrediction(predictions.usage)
+            }
+          },
+          results: {
+            results: ((data.visual_search && data.visual_search.similar_items) || [])
+              .map(normalizeResult)
+          }
         };
       });
     } else {
@@ -379,10 +412,25 @@
   }
 
   function useSample() {
-    var s = FI.samples[Math.floor(Math.random() * FI.samples.length)];
-    var url = API_BASE + "/api/image/" + s.id;
+    var ids = testSampleIds || FI.samples.map(function (sample) { return sample.id; });
+    var id = ids[Math.floor(Math.random() * ids.length)];
+    var s = { id: id, label: "Sample · " + id };
+    var url = API_BASE + "/api/catalogue/" + s.id + "/image";
 
-    withTimeout(fetch(url).then(function (r) {
+    var samplesRequest = testSampleIds
+      ? Promise.resolve({ ids: testSampleIds })
+      : fetch(API_BASE + "/api/test-samples").then(function (r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.json();
+        });
+
+    withTimeout(samplesRequest.then(function (data) {
+      if (data.ids && data.ids.length) testSampleIds = data.ids;
+      var sampleId = testSampleIds[Math.floor(Math.random() * testSampleIds.length)];
+      s = { id: sampleId, label: "Sample · " + sampleId };
+      url = API_BASE + "/api/catalogue/" + s.id + "/image";
+      return fetch(url);
+    }).then(function (r) {
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.blob();
     }), 3000)

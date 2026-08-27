@@ -95,8 +95,26 @@ FI.metrics = {
    real thumbnail for them.                                                 */
 FI.samples = [
   { id: 52003, label: "Sample · 52003" },
+  { id: 52007, label: "Sample · 52007" },
   { id: 52017, label: "Sample · 52017" },
+  { id: 52021, label: "Sample · 52021" },
+  { id: 52023, label: "Sample · 52023" },
+  { id: 52026, label: "Sample · 52026" },
+  { id: 52027, label: "Sample · 52027" },
+  { id: 52028, label: "Sample · 52028" },
+  { id: 52029, label: "Sample · 52029" },
+  { id: 52030, label: "Sample · 52030" },
+  { id: 52031, label: "Sample · 52031" },
+  { id: 52032, label: "Sample · 52032" },
   { id: 52044, label: "Sample · 52044" },
+  { id: 52045, label: "Sample · 52045" },
+  { id: 52049, label: "Sample · 52049" },
+  { id: 52050, label: "Sample · 52050" },
+  { id: 52051, label: "Sample · 52051" },
+  { id: 52052, label: "Sample · 52052" },
+  { id: 52053, label: "Sample · 52053" },
+  { id: 52054, label: "Sample · 52054" },
+  { id: 52055, label: "Sample · 52055" },
   { id: 52070, label: "Sample · 52070" },
   { id: 52101, label: "Sample · 52101" }
 ];
