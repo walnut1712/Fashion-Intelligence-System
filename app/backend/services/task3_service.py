@@ -33,21 +33,38 @@ class ConvBlock(nn.Module):
         return self.block(x)
 
 
-class MultiTaskCNN(nn.Module):
-    def __init__(self, num_classes, widths=(32, 64, 128, 256), dropout=0.4, head_hidden=128):
+class EarlyBranchCNN(nn.Module):
+    def __init__(self, num_classes, dropout=0.4, head_hidden=256):
         super().__init__()
-        channels = 3
-        blocks = []
-        for width in widths:
-            blocks.append(ConvBlock(channels, width))
-            channels = width
-        self.backbone = nn.Sequential(*blocks)
-        self.pool = nn.AdaptiveAvgPool2d(1)
+
+        def make_block(in_channels, out_channels):
+            return nn.Sequential(
+                nn.Conv2d(in_channels, out_channels, 3, padding=1, bias=False),
+                nn.BatchNorm2d(out_channels),
+                nn.ReLU(inplace=True),
+                nn.Conv2d(out_channels, out_channels, 3, padding=1, bias=False),
+                nn.BatchNorm2d(out_channels),
+                nn.ReLU(inplace=True),
+                nn.MaxPool2d(2),
+            )
+
+        self.shared = nn.Sequential(
+            *make_block(3, 32),
+            *make_block(32, 64),
+        )
+        self.branches = nn.ModuleDict({
+            target: nn.Sequential(
+                *make_block(64, 128),
+                *make_block(128, 256),
+            )
+            for target in num_classes
+        })
 
         def make_head(n_out):
             return nn.Sequential(
                 nn.Dropout(dropout),
-                nn.Linear(channels, head_hidden),
+                nn.Flatten(),
+                nn.Linear(256 * 3 * 5, head_hidden),
                 nn.ReLU(inplace=True),
                 nn.Dropout(dropout),
                 nn.Linear(head_hidden, n_out),
@@ -59,26 +76,25 @@ class MultiTaskCNN(nn.Module):
         })
 
     def forward(self, x):
-        features = self.pool(self.backbone(x)).flatten(1)
-        return {target: head(features) for target, head in self.heads.items()}
+        shared_features = self.shared(x)
+        return {
+            target: self.heads[target](self.branches[target](shared_features))
+            for target in self.branches
+        }
 
 
 class Task3Service:
     def __init__(self):
         self.device = choose_device()
         self.project_root = Path(__file__).resolve().parents[3]
-        self.model_path = self.project_root / "artifacts" / "task3" / "task3_multitask_cnn.pt"
+        self.model_path = self.project_root / "artifacts" / "task3" / "task3_cnn_model.pt"
         if not self.model_path.exists():
             raise FileNotFoundError("Task 3 model not found: {}".format(self.model_path))
 
         self.checkpoint = self._load_checkpoint()
-        architecture = self.checkpoint["architecture"]
         self.class_names = self.checkpoint["class_names"]
-        self.model = MultiTaskCNN(
+        self.model = EarlyBranchCNN(
             num_classes=self.checkpoint["num_classes"],
-            widths=tuple(architecture["widths"]),
-            dropout=float(architecture["dropout"]),
-            head_hidden=int(architecture["head_hidden"]),
         )
         self.model.load_state_dict(self.checkpoint["state_dict"])
         self.model.to(self.device)
