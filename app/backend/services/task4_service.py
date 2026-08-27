@@ -47,12 +47,19 @@ class Task4Service:
             )
 
         k = max(1, min(20, int(k)))
-        with tempfile.NamedTemporaryFile(suffix=".jpg") as temp_file:
+        temp_file = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
+        temp_path = Path(temp_file.name)
+        try:
             temp_file.write(image_bytes)
             temp_file.flush()
+            temp_file.close()
             results = self.engine.search(
-                [Path(temp_file.name)], k=k, mode=mode
+                [temp_path], k=k, mode=mode
             )
+        finally:
+            if not temp_file.closed:
+                temp_file.close()
+            temp_path.unlink(missing_ok=True)
 
         if results is None or len(results) == 0:
             return []
