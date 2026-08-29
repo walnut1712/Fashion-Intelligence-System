@@ -1,5 +1,5 @@
 model,benchmark,P@10,P@1,colour@10,both@10
-baseline,clean,81.3,82.95,56.22,45.84
-baseline,hard,9.72,8.95,24.66,3.28
-bg-augmented,clean,79.68,82.55,53.32,42.48
-bg-augmented,hard,44.42,44.15,41.59,21.66
+baseline,clean,79.67,82.55,53.32,42.48
+baseline,hard,44.42,44.1,41.58,21.66
+bg-augmented,clean,79.82,82.1,53.69,42.76
+bg-augmented,hard,49.66,49.7,44.22,24.8

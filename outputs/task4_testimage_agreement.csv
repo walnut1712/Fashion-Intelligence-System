@@ -1,0 +1,17 @@
+id,predicted type,baseline top-1,augmented top-1,agree on top-1,baseline coherence,augmented coherence
+59267,Watches,Watches,Watches,True,1.0,1.0
+58724,Tshirts,Tshirts,Tshirts,True,1.0,1.0
+53680,Handbags,Handbags,Handbags,True,1.0,1.0
+52862,Earrings,Earrings,Earrings,True,1.0,1.0
+53777,Sports Shoes,Sports Shoes,Sports Shoes,True,1.0,1.0
+57645,Lipstick,Deodorant,Perfume and Body Mist,False,0.17,0.5
+57200,Dresses,Dresses,Dresses,True,0.67,1.0
+59883,Tops,Tops,Tops,True,0.67,0.83
+57484,Flip Flops,Flip Flops,Flip Flops,True,0.33,0.17
+58586,Necklace and Chains,Jewellery Set,Jewellery Set,True,0.17,0.17
+59091,Bra,Bra,Bra,True,1.0,1.0
+53815,Kurtas,Kurtas,Kurtas,True,0.83,0.83
+58460,Tshirts,Tshirts,Tshirts,True,1.0,1.0
+57548,Lip Liner,Lip Gloss,Lip Gloss,True,0.67,0.83
+54911,Tshirts,Tshirts,Tops,False,0.83,0.17
+55955,Shoe Accessories,Perfume and Body Mist,Deodorant,False,0.83,0.33

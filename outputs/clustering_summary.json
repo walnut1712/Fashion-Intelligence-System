@@ -1,0 +1,14 @@
+{
+  "embeddings_from": "Improved+TTA+bgaug",
+  "n_items": 32837,
+  "k_chosen": 120,
+  "best_silhouette_k": 30,
+  "kmeans_SD": 6998.62,
+  "kmeans_iterations": 38,
+  "mean_purity": 0.806,
+  "methods_compared": [
+    "k-Means (k=120)",
+    "DBSCAN (eps=0.278)",
+    "Agglomerative ward (k=120)"
+  ]
+}
