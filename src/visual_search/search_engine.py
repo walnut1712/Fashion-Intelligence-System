@@ -1,6 +1,6 @@
 """Task 4 visual search - loadable engine for user-supplied images.
 
-Loads the artefacts produced by ``05_task4_visual_search-squid.ipynb`` and
+Loads the artefacts produced by ``05_task4_visual_search.ipynb`` and
 answers "which catalogue items look like this photo?" for images that were
 never part of the dataset.
 
@@ -363,7 +363,7 @@ class SearchEngine:
         if len(metadata) != len(index):
             raise ValueError(
                 f"Index has {len(index)} rows but metadata has {len(metadata)}. "
-                "Re-run the final cells of 05_task4_visual_search-squid.ipynb."
+                "Re-run the final cells of 05_task4_visual_search.ipynb."
             )
 
         device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
