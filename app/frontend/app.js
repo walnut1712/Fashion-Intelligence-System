@@ -155,7 +155,9 @@
     var dead = Object.keys(models).filter(function (k) { return models[k].loaded === false; });
     if (!dead.length) { hideBanner(); return; }
     var detail = dead.map(function (k) {
-      return "<b>" + esc(k) + "</b> (" + esc(models[k].error || "not loaded") + ")";
+      var why = String(models[k].error || "not loaded");
+      if (why.length > 140) why = why.slice(0, 140) + "…";
+      return "<b>" + esc(k) + "</b> (" + esc(why) + ")";
     }).join(", ");
     showBanner("Backend is up but these models failed to load: " + detail +
                ". Their predictions are unavailable.");
