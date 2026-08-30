@@ -15,12 +15,21 @@ Fashion-Intelligence-System/
 │   │   ├── main.py
 │   │   └── services/
 │   │       ├── __init__.py
-│   │       └── task1_service.py
+│   │       ├── task1_service.py
+│   │       ├── task2_service.py
+│   │       ├── task3_service.py
+│   │       └── task4_service.py
 │   └── frontend/
+├── src/
+│   └── models/
+│       └── item_type_classifier.py   # Task 1 architecture — REQUIRED by the backend
 ├── artifacts/
-│   ├── task1/task1_cnn.pt
-│   ├── task2/task2_season_best_pytorch.pth
-│   ├── task3/task3_multitask_cnn.pt
+│   ├── task1/
+│   │   └── task1_cnn.pt
+│   ├── task2/
+│   │   └── task2_season_best_pytorch.pth
+│   ├── task3/
+│   │   └── task3_cnn_model.pt
 │   └── task4/
 │       ├── search_manifest.json
 │       ├── task4_improved_encoder.pt
@@ -34,6 +43,25 @@ The code automatically expects:
 artifacts/task1/task1_cnn.pt
 ```
 
+`app/backend/services/task1_service.py` does **not** define the Task 1 network
+itself — it imports `ItemTypeCNN` from `src/models/item_type_classifier.py`, the
+same module `notebooks/02_task1_item_type.ipynb` trains with. Copying `app/`
+without `src/` will make Task 1 fail to load. Keeping two copies of the
+architecture is what previously left a trained checkpoint that the API could
+not load at all, so the duplicate was removed rather than resynchronised.
+
+Verify the checkpoint and the serving path agree before starting the API:
+
+```bash
+python -m pytest tests/test_models.py tests/test_prediction.py -q
+```
+
+To score a folder of images from the command line instead of over HTTP:
+
+```bash
+python predict.py --images A2_FashionDataset/FashionDataset/test/images_test \
+                  --out outputs/task1_item_type_predictions.csv --submission
+```
 ## 2. Create/activate your Python environment
 
 Install dependencies:

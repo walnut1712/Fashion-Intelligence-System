@@ -1,6 +1,11 @@
-Model,accuracy,macro_f1,weighted_f1,balanced_acc,top3_acc,top5_acc
-Baseline_majority,18.6,0.71,5.84,2.27,,
-Classical_LogReg,54.18,44.31,56.42,49.57,85.2,92.6
-MLP,33.65,22.53,29.54,32.02,62.77,78.04
-CNN_start,21.96,6.5,16.29,9.42,38.42,47.49
-CNN_start_TEST,20.76,6.28,15.11,12.34,37.23,47.73
+Model,split,accuracy,macro_f1,weighted_f1,balanced_acc,top3_acc,top5_acc
+Baseline_majority,validation,17.63,0.33,5.28,1.1,,
+Classical_LogReg,validation,52.36,37.4,56.15,48.4,76.15,85.05
+MLP,validation,69.24,39.59,67.81,41.56,88.59,93.25
+CNN_gap_head,validation,79.08,55.35,79.04,59.45,94.47,96.94
+CNN_start,validation,80.3,60.0,80.14,65.04,94.51,96.98
+CNN_weights_none_full,validation,88.45,72.7,88.04,71.53,97.76,98.65
+CNN_aug_none_full,validation,87.47,75.16,87.45,75.76,97.27,98.25
+Baseline_majority,test,17.6,0.33,5.27,1.09,,
+"Pretrained_ResNet18_probe (reference only, not submitted)",test,75.59,58.4,76.4,61.33,93.16,96.84
+CNN_weights_none_full_TEST,test,87.64,73.09,87.13,71.52,97.55,98.78

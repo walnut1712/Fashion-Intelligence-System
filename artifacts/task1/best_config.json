@@ -1,14 +1,53 @@
 {
-  "final_model": "CNN_start",
+  "run_id": "20260830_215803",
+  "final_model": "CNN_weights_none_full",
+  "selection_criterion": "max validation weighted-F1; ties inside its own seed noise floor broken toward fewer parameters",
+  "seed_noise_floor": {
+    "accuracy": 0.218,
+    "macro_f1": 0.753,
+    "weighted_f1": 0.242,
+    "balanced_acc": 1.119
+  },
+  "architecture": {
+    "widths": [
+      16,
+      32,
+      64,
+      128
+    ],
+    "dropout": 0.2,
+    "head_hidden": 384,
+    "pool_grid": [
+      1,
+      1
+    ],
+    "pool_mode": "avgmax"
+  },
   "sampled": {
-    "learning_rate": "0.0005",
-    "dropout": "0.5",
-    "head_hidden": "256",
-    "widths": "(16, 32, 64, 128)"
+    "learning_rate": "0.002",
+    "dropout": "0.2",
+    "head_hidden": "384",
+    "widths": "(16, 32, 64, 128)",
+    "pool_grid": "(1, 1)"
   },
   "train_config": {
-    "learning_rate": 0.0005
+    "use_class_weights": false,
+    "learning_rate": 0.002
   },
-  "seed_mean_weighted_f1": 10.665,
-  "seed_std_weighted_f1": 0.9404520189781083
+  "augmentation": "gentle",
+  "ablation_budget_ranking": {
+    "CNN_weights_none": 82.2,
+    "CNN_aug_none": 80.9,
+    "CNN_tuned": 80.84,
+    "CNN_start": 80.14,
+    "CNN_aug_heavy": 78.22,
+    "CNN_sched_plateau": 76.65,
+    "CNN_weights_balanced": 66.88
+  },
+  "full_budget_validation": {
+    "CNN_weights_none_full": 88.04,
+    "CNN_aug_none_full": 87.45
+  },
+  "seed_mean_weighted_f1": 80.48333333333333,
+  "seed_std_weighted_f1": 0.2421432083155231
 }
