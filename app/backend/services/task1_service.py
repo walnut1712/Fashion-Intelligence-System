@@ -26,7 +26,7 @@ from src.models.item_type_classifier import (  # noqa: E402
 
 
 class Task1Service:
-	def __init__(self, model_path=None, tta=False):
+	def __init__(self, model_path=None, tta=None):
 		self.device = choose_device()
 		self.project_root = PROJECT_ROOT
 		self.model_path = Path(model_path) if model_path else (
@@ -36,7 +36,9 @@ class Task1Service:
 			raise FileNotFoundError("Task 1 model not found: {}".format(self.model_path))
 
 		self.model, self.checkpoint = load_item_type_model(self.model_path, self.device)
-		self.tta = bool(tta)
+		# The notebook records whether it evaluated with horizontal-flip TTA, so
+		# the served prediction matches the one the reported metrics describe.
+		self.tta = bool(self.checkpoint.get("tta", False)) if tta is None else bool(tta)
 
 		self.class_names = list(self.checkpoint["class_names"])
 		self.num_classes = len(self.class_names)
