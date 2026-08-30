@@ -1,21 +1,17 @@
+import time
+from contextlib import asynccontextmanager
+from pathlib import Path
+
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.backend.services.task1_service import Task1Service
 from app.backend.services.task2_service import Task2Service
 from app.backend.services.task3_service import Task3Service
 from app.backend.services.task4_service import Task4Service
 
-
-app = FastAPI(title="Fashion Intelligence System API", version="0.2.0")
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 task1_service = None
 task1_error = None
@@ -27,10 +23,13 @@ task4_service = None
 task4_error = None
 
 
-
-
-@app.on_event("startup")
 def load_models():
+    """Load each task's checkpoint, recording failures instead of raising them.
+
+    One dead checkpoint must not take the whole API down, so every load is
+    caught separately: /api/health reports each task's ``loaded`` flag and
+    error string, and the frontend banners the ones that failed.
+    """
     global task1_service, task1_error, task2_service, task2_error
     global task3_service, task3_error
     global task4_service, task4_error
@@ -41,7 +40,6 @@ def load_models():
     except Exception as error:
         task1_service = None
         task1_error = "{}: {}".format(type(error).__name__, error)
-
         print("Task 1 failed:", task1_error)
 
     try:
@@ -72,10 +70,24 @@ def load_models():
         print("Task 4 failed:", task4_error)
 
 
-@app.get("/")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    load_models()
+    yield
 
-def root():
-    return {"message": "Fashion Intelligence System backend is running"}
+
+app = FastAPI(
+    title="Fashion Intelligence System API",
+    version="0.2.0",
+    lifespan=lifespan,
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def _live_meta():
@@ -148,7 +160,6 @@ async def predict_task1(image: UploadFile = File(...)):
     if not image_bytes:
         raise HTTPException(status_code=400, detail="Empty image")
     try:
-
         prediction = task1_service.predict(image_bytes)
     except Exception as error:
         raise HTTPException(status_code=500, detail="{}: {}".format(type(error).__name__, error))
@@ -173,7 +184,6 @@ async def predict_task2(image: UploadFile = File(...)):
 async def predict_task3(image: UploadFile = File(...)):
     if task3_service is None:
         raise HTTPException(status_code=503, detail=task3_error)
-
     image_bytes = await image.read()
     if not image_bytes:
         raise HTTPException(status_code=400, detail="Empty image")
@@ -269,6 +279,7 @@ async def analyze(
     if not image_bytes:
         raise HTTPException(status_code=400, detail="Empty image")
 
+    started = time.perf_counter()
     try:
         article_type = task1_service.predict(image_bytes)
         season = task2_service.predict(image_bytes)
@@ -288,6 +299,7 @@ async def analyze(
 
     return {
         "filename": image.filename,
+        "latency_ms": round((time.perf_counter() - started) * 1000, 1),
         "predictions": {
             "articleType": article_type,
             "season": season,
@@ -302,3 +314,7 @@ async def analyze(
         },
         "backend_stage": "all_tasks_connected",
     }
+
+
+FRONTEND = Path(__file__).resolve().parents[1] / "frontend"
+app.mount("/", StaticFiles(directory=FRONTEND, html=True), name="frontend")
