@@ -1,0 +1,3 @@
+source,n,mean top-1 similarity,mean coherence
+images_test (catalogue),16,0.837,0.833
+input_images (uploads),31,0.664,0.489

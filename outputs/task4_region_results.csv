@@ -1,0 +1,187 @@
+file,region,match,colour,similarity,coherence,vs whole,accepted
+1017_women_0023_a36fe2486db54e,whole,Stoles,Lavender,0.672,0.33,0.0,False
+1017_women_0023_a36fe2486db54e,upper,Bra,White,0.719,0.83,0.048,True
+1017_women_0023_a36fe2486db54e,lower,Mufflers,Navy Blue,0.602,0.67,-0.07,False
+1017_women_0023_a36fe2486db54e,top3,Bra,Black,0.706,1.0,0.034,True
+1017_women_0023_a36fe2486db54e,mid3,Socks,White,0.647,1.0,-0.024,False
+1017_women_0023_a36fe2486db54e,low3,Leggings,Black,0.648,0.5,-0.023,False
+25637193-carousel-block-earrin,whole,Casual Shoes,White,0.686,0.33,0.0,False
+25637193-carousel-block-earrin,upper,Sports Shoes,Purple,0.57,0.17,-0.116,False
+25637193-carousel-block-earrin,lower,Socks,White,0.67,0.17,-0.016,False
+25637193-carousel-block-earrin,top3,Handbags,Brown,0.664,1.0,-0.022,False
+25637193-carousel-block-earrin,mid3,Sunglasses,Purple,0.609,0.83,-0.077,False
+25637193-carousel-block-earrin,low3,Watches,White,0.719,0.5,0.033,True
+2b3f6ff00db7a1efae21d85cfb8995,whole,Night suits,Yellow,0.725,0.17,0.0,False
+2b3f6ff00db7a1efae21d85cfb8995,upper,Deodorant,Gold,0.587,0.67,-0.138,False
+2b3f6ff00db7a1efae21d85cfb8995,lower,Clothing Set,White,0.586,0.17,-0.139,False
+2b3f6ff00db7a1efae21d85cfb8995,top3,Socks,Cream,0.579,0.83,-0.146,False
+2b3f6ff00db7a1efae21d85cfb8995,mid3,Tshirts,Yellow,0.696,0.33,-0.029,False
+2b3f6ff00db7a1efae21d85cfb8995,low3,Boxers,Multi,0.582,0.17,-0.143,False
+3-Stripes_High_Crew_Socks_3_Pa,whole,Socks,White,0.762,1.0,0.0,True
+3-Stripes_High_Crew_Socks_3_Pa,upper,Sports Shoes,White,0.713,1.0,-0.049,False
+3-Stripes_High_Crew_Socks_3_Pa,lower,Socks,White,0.694,1.0,-0.068,False
+3-Stripes_High_Crew_Socks_3_Pa,top3,Socks,White,0.741,0.33,-0.021,False
+3-Stripes_High_Crew_Socks_3_Pa,mid3,Watches,Silver,0.722,0.17,-0.04,False
+3-Stripes_High_Crew_Socks_3_Pa,low3,Socks,White,0.707,1.0,-0.055,False
+4130636080047_004_b14.webp,whole,Sarees,White,0.634,1.0,0.0,True
+4130636080047_004_b14.webp,upper,Shirts,Black,0.659,0.33,0.025,False
+4130636080047_004_b14.webp,lower,Socks,Beige,0.659,1.0,0.025,True
+4130636080047_004_b14.webp,top3,Tshirts,Black,0.595,0.17,-0.039,False
+4130636080047_004_b14.webp,mid3,Scarves,Brown,0.646,1.0,0.012,True
+4130636080047_004_b14.webp,low3,Leggings,Brown,0.73,0.83,0.096,True
+4793e3cb1e694edeb25651fb1ae578,whole,Backpacks,Grey,0.644,1.0,0.0,True
+4793e3cb1e694edeb25651fb1ae578,upper,Backpacks,Black,0.706,0.83,0.062,True
+4793e3cb1e694edeb25651fb1ae578,lower,Jewellery Set,Multi,0.526,0.33,-0.118,False
+4793e3cb1e694edeb25651fb1ae578,top3,Backpacks,Black,0.597,1.0,-0.047,False
+4793e3cb1e694edeb25651fb1ae578,mid3,Backpacks,White,0.594,0.83,-0.05,False
+4793e3cb1e694edeb25651fb1ae578,low3,Kurtas,Beige,0.569,0.5,-0.075,False
+509.png,whole,Socks,Lavender,0.729,0.5,0.0,True
+509.png,upper,Socks,Lavender,0.667,0.5,-0.061,False
+509.png,lower,Socks,Lavender,0.693,1.0,-0.036,False
+509.png,top3,Sunglasses,Purple,0.701,0.83,-0.027,False
+509.png,mid3,Scarves,Purple,0.607,0.5,-0.122,False
+509.png,low3,Socks,Lavender,0.701,0.17,-0.028,False
+600_google-pattern-socks.jpg,whole,Socks,White,0.633,0.5,0.0,True
+600_google-pattern-socks.jpg,upper,Fragrance Gift Set,Red,0.626,0.5,-0.007,True
+600_google-pattern-socks.jpg,lower,Leggings,Black,0.593,1.0,-0.04,False
+600_google-pattern-socks.jpg,top3,Perfume and Body Mist,White,0.741,1.0,0.108,True
+600_google-pattern-socks.jpg,mid3,Socks,Red,0.603,0.67,-0.03,False
+600_google-pattern-socks.jpg,low3,Watches,White,0.531,0.67,-0.102,False
+83123110.webp,whole,Earrings,Purple,0.64,0.5,0.0,True
+83123110.webp,upper,Heels,Black,0.608,0.33,-0.032,False
+83123110.webp,lower,Earrings,Black,0.696,0.33,0.055,False
+83123110.webp,top3,Dupatta,Green,0.63,0.17,-0.01,False
+83123110.webp,mid3,Flip Flops,Black,0.675,0.33,0.034,False
+83123110.webp,low3,Heels,Black,0.612,0.83,-0.029,False
+ae9d94dee29112613a6fae774382a2,whole,Heels,Beige,0.737,0.83,0.0,True
+ae9d94dee29112613a6fae774382a2,upper,Sarees,Beige,0.688,1.0,-0.049,False
+ae9d94dee29112613a6fae774382a2,lower,Lounge Pants,Multi,0.714,0.17,-0.023,False
+ae9d94dee29112613a6fae774382a2,top3,Bra,Beige,0.619,1.0,-0.118,False
+ae9d94dee29112613a6fae774382a2,mid3,Skirts,Cream,0.56,0.33,-0.177,False
+ae9d94dee29112613a6fae774382a2,low3,Patiala,Beige,0.599,0.33,-0.138,False
+Afternoon_ensemble_MET_63.212a,whole,Skirts,Blue,0.766,0.5,0.0,True
+Afternoon_ensemble_MET_63.212a,upper,Backpacks,Blue,0.719,1.0,-0.047,False
+Afternoon_ensemble_MET_63.212a,lower,Skirts,Blue,0.812,1.0,0.046,True
+Afternoon_ensemble_MET_63.212a,top3,Kurtas,Blue,0.683,0.17,-0.083,False
+Afternoon_ensemble_MET_63.212a,mid3,Skirts,Blue,0.721,0.83,-0.045,False
+Afternoon_ensemble_MET_63.212a,low3,Skirts,Blue,0.776,0.83,0.009,True
+Collier_ruban_or_vermeil_2.web,whole,Briefs,White,0.746,1.0,0.0,True
+Collier_ruban_or_vermeil_2.web,upper,Lip Plumper,Copper,0.545,0.33,-0.201,False
+Collier_ruban_or_vermeil_2.web,lower,Briefs,Peach,0.838,1.0,0.093,True
+Collier_ruban_or_vermeil_2.web,top3,Camisoles,Beige,0.637,0.83,-0.109,False
+Collier_ruban_or_vermeil_2.web,mid3,Socks,White,0.528,0.17,-0.218,False
+Collier_ruban_or_vermeil_2.web,low3,Briefs,White,0.766,1.0,0.02,True
+d8ff992811e561202194328c9562a8,whole,Sandals,Black,0.596,0.5,0.0,False
+d8ff992811e561202194328c9562a8,part1,Bra,Black,0.628,1.0,0.032,True
+d8ff992811e561202194328c9562a8,part2,Earrings,Black,0.558,0.67,-0.038,False
+d8ff992811e561202194328c9562a8,part3,Bra,Black,0.705,1.0,0.109,True
+d8ff992811e561202194328c9562a8,upper,Watches,Black,0.579,0.17,-0.017,False
+d8ff992811e561202194328c9562a8,lower,Trousers,Black,0.483,0.17,-0.113,False
+d8ff992811e561202194328c9562a8,top3,Trousers,Black,0.681,0.17,0.084,False
+d8ff992811e561202194328c9562a8,mid3,Casual Shoes,Black,0.644,0.83,0.048,True
+d8ff992811e561202194328c9562a8,low3,Belts,Black,0.622,0.17,0.025,False
+giay-local-brand-viet-nam_b140,whole,Handbags,White,0.575,0.17,0.0,False
+giay-local-brand-viet-nam_b140,upper,Socks,Grey,0.611,1.0,0.035,False
+giay-local-brand-viet-nam_b140,lower,Socks,Brown,0.716,1.0,0.14,True
+giay-local-brand-viet-nam_b140,top3,Socks,Beige,0.717,1.0,0.142,True
+giay-local-brand-viet-nam_b140,mid3,Skirts,Brown,0.623,0.33,0.048,False
+giay-local-brand-viet-nam_b140,low3,Sunglasses,Brown,0.715,0.83,0.139,True
+images (1).jpg,whole,Wallets,White,0.62,0.17,0.0,False
+images (1).jpg,upper,Headband,White,0.673,0.33,0.053,False
+images (1).jpg,lower,Leggings,White,0.605,0.33,-0.014,False
+images (1).jpg,top3,Headband,White,0.677,0.33,0.058,False
+images (1).jpg,mid3,Headband,White,0.645,0.33,0.025,False
+images (1).jpg,low3,Leggings,White,0.499,0.33,-0.12,False
+images (10).jpg,whole,Handbags,Blue,0.6,0.83,0.0,False
+images (10).jpg,upper,Watches,White,0.545,0.33,-0.055,False
+images (10).jpg,lower,Rucksacks,Green,0.639,0.17,0.04,False
+images (10).jpg,top3,Necklace and Chains,Silver,0.632,0.33,0.032,False
+images (10).jpg,mid3,Watches,Gold,0.486,0.17,-0.114,False
+images (10).jpg,low3,Boxers,Green,0.685,0.5,0.086,True
+images (11).jpg,whole,Backpacks,Olive,0.759,1.0,0.0,True
+images (11).jpg,upper,Handbags,Green,0.684,1.0,-0.075,False
+images (11).jpg,lower,Socks,Black,0.649,1.0,-0.111,False
+images (11).jpg,top3,Handbags,Beige,0.741,1.0,-0.018,False
+images (11).jpg,mid3,Backpacks,Black,0.705,1.0,-0.055,False
+images (11).jpg,low3,Socks,White,0.731,1.0,-0.029,False
+images (2).jpg,whole,Jeans,Black,0.659,0.67,0.0,True
+images (2).jpg,upper,Jeans,Grey,0.653,0.67,-0.005,True
+images (2).jpg,lower,Sweatshirts,Navy Blue,0.623,0.83,-0.036,False
+images (3).jpg,whole,Nightdress,White,0.6,0.67,0.0,False
+images (3).jpg,upper,Bra,Beige,0.686,0.83,0.086,True
+images (3).jpg,lower,Leggings,Cream,0.58,0.17,-0.02,False
+images (3).jpg,top3,Bangle,Beige,0.669,0.17,0.069,False
+images (3).jpg,mid3,Shapewear,Brown,0.584,0.17,-0.016,False
+images (3).jpg,low3,Leggings,Cream,0.649,0.5,0.049,True
+images (4).jpg,whole,Briefs,White,0.787,1.0,0.0,True
+images (4).jpg,upper,Briefs,White,0.681,0.67,-0.105,False
+images (4).jpg,lower,Tshirts,Black,0.622,0.17,-0.164,False
+images (4).jpg,top3,Briefs,White,0.605,0.83,-0.182,False
+images (4).jpg,mid3,Briefs,White,0.697,1.0,-0.09,False
+images (4).jpg,low3,Briefs,Blue,0.668,1.0,-0.118,False
+images (5).jpg,whole,Pendant,Silver,0.697,0.83,0.0,True
+images (5).jpg,upper,Pendant,Silver,0.697,0.83,0.0,True
+images (5).jpg,lower,Perfume and Body Mist,Grey,0.637,0.33,-0.06,False
+images (5).jpg,top3,Necklace and Chains,Silver,0.701,0.83,0.004,True
+images (5).jpg,mid3,Pendant,Silver,0.728,1.0,0.031,True
+images (5).jpg,low3,Pendant,Silver,0.661,0.83,-0.035,False
+images (6).jpg,whole,Flats,Purple,0.689,0.33,0.0,False
+images (6).jpg,upper,Bra,Pink,0.696,1.0,0.007,True
+images (6).jpg,lower,Socks,Black,0.565,0.17,-0.124,False
+images (6).jpg,top3,Tops,Pink,0.609,0.17,-0.08,False
+images (6).jpg,mid3,Briefs,Pink,0.651,1.0,-0.038,False
+images (6).jpg,low3,Socks,Brown,0.602,0.17,-0.087,False
+images (7).jpg,whole,Tshirts,Maroon,0.611,0.67,0.0,False
+images (7).jpg,upper,Tshirts,Orange,0.646,0.67,0.035,True
+images (7).jpg,lower,Socks,White,0.541,0.17,-0.069,False
+images (7).jpg,top3,Kurtas,Pink,0.588,0.33,-0.023,False
+images (7).jpg,mid3,Boxers,Red,0.488,0.83,-0.122,False
+images (7).jpg,low3,Watches,White,0.568,0.83,-0.042,False
+images (8).jpg,whole,Dresses,Navy Blue,0.621,0.67,0.0,True
+images (8).jpg,upper,Sarees,Blue,0.697,0.67,0.076,True
+images (8).jpg,lower,Skirts,Mustard,0.649,0.5,0.028,True
+images (8).jpg,top3,Clothing Set,Blue,0.722,0.17,0.101,False
+images (8).jpg,mid3,Skirts,Blue,0.576,0.5,-0.044,False
+images (8).jpg,low3,Leggings,Turquoise Blue,0.634,1.0,0.013,True
+images (9).jpg,whole,Sports Shoes,Blue,0.727,0.17,0.0,False
+images (9).jpg,upper,Sports Shoes,Blue,0.72,0.17,-0.007,False
+images (9).jpg,lower,Track Pants,Navy Blue,0.621,0.67,-0.106,False
+images (9).jpg,top3,Sandals,Navy Blue,0.673,0.17,-0.054,False
+images (9).jpg,mid3,Socks,White,0.697,1.0,-0.03,False
+images (9).jpg,low3,Leggings,Beige,0.63,0.17,-0.097,False
+images.jpg,whole,Casual Shoes,Black,0.747,1.0,0.0,True
+images.jpg,upper,Scarves,Grey,0.597,0.67,-0.15,False
+images.jpg,lower,Socks,Black,0.566,0.33,-0.181,False
+images.jpg,top3,Stoles,Grey,0.674,0.33,-0.073,False
+images.jpg,mid3,Briefs,Pink,0.616,0.17,-0.131,False
+images.jpg,low3,Socks,Navy Blue,0.652,1.0,-0.096,False
+istockphoto-1018293976-612x612,whole,Jackets,Beige,0.767,0.17,0.0,False
+istockphoto-1018293976-612x612,upper,Bra,Beige,0.647,0.83,-0.12,False
+istockphoto-1018293976-612x612,lower,Duffel Bag,Beige,0.666,0.33,-0.101,False
+istockphoto-1018293976-612x612,top3,Scarves,Beige,0.643,0.5,-0.125,False
+istockphoto-1018293976-612x612,mid3,Leggings,Beige,0.575,0.67,-0.192,False
+istockphoto-1018293976-612x612,low3,Bra,Beige,0.617,0.5,-0.15,False
+mygoods_34_475601_3x4-ezgif.co,whole,Tops,Brown,0.68,0.17,0.0,False
+mygoods_34_475601_3x4-ezgif.co,upper,Handbags,Brown,0.719,0.83,0.039,True
+mygoods_34_475601_3x4-ezgif.co,lower,Socks,Brown,0.712,1.0,0.032,True
+mygoods_34_475601_3x4-ezgif.co,top3,Tshirts,Black,0.57,0.5,-0.11,False
+mygoods_34_475601_3x4-ezgif.co,mid3,Handbags,Brown,0.621,1.0,-0.059,False
+mygoods_34_475601_3x4-ezgif.co,low3,Socks,Brown,0.712,1.0,0.032,True
+nike-5644799_640.jpg,whole,Watches,Yellow,0.726,0.17,0.0,False
+nike-5644799_640.jpg,upper,Tshirts,Yellow,0.732,0.67,0.007,True
+nike-5644799_640.jpg,lower,Patiala,White,0.525,0.5,-0.201,False
+nike-5644799_640.jpg,top3,Tshirts,Yellow,0.794,0.33,0.068,False
+nike-5644799_640.jpg,mid3,Patiala,Black,0.613,0.83,-0.113,False
+nike-5644799_640.jpg,low3,Stoles,Blue,0.661,0.33,-0.064,False
+sm_s_c_mint___short_summer__3_,whole,Handbags,Blue,0.755,1.0,0.0,True
+sm_s_c_mint___short_summer__3_,upper,Shirts,White,0.749,0.33,-0.006,False
+sm_s_c_mint___short_summer__3_,lower,Handbags,Brown,0.728,0.83,-0.027,False
+sm_s_c_mint___short_summer__3_,top3,Sweatshirts,Black,0.781,0.17,0.026,False
+sm_s_c_mint___short_summer__3_,mid3,Handbags,Brown,0.613,0.83,-0.142,False
+sm_s_c_mint___short_summer__3_,low3,Handbags,Brown,0.608,0.17,-0.147,False
+The_dress_blueblackwhitegold.j,whole,Backpacks,Black,0.713,1.0,0.0,True
+The_dress_blueblackwhitegold.j,upper,Backpacks,Blue,0.657,0.83,-0.056,False
+The_dress_blueblackwhitegold.j,lower,Handbags,Blue,0.688,0.5,-0.025,False
+The_dress_blueblackwhitegold.j,top3,Backpacks,Blue,0.63,1.0,-0.083,False
+The_dress_blueblackwhitegold.j,mid3,Handbags,Purple,0.762,0.5,0.049,True
+The_dress_blueblackwhitegold.j,low3,Handbags,Blue,0.65,0.33,-0.063,False

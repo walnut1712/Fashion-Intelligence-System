@@ -22,13 +22,13 @@
   "uses_reranking": false,
   "background_augmented": true,
   "deployment_metrics": {
-    "P@10": 0.8022,
-    "colour@10": 0.5394,
-    "both@10": 0.4304
+    "P@10": 0.7981999999999999,
+    "colour@10": 0.5368999999999999,
+    "both@10": 0.4276
   },
   "hard_benchmark_metrics": {
-    "P@10": 0.5276,
-    "colour@10": 0.4522,
-    "both@10": 0.2662
+    "P@10": 0.4966,
+    "colour@10": 0.4422,
+    "both@10": 0.248
   }
 }
