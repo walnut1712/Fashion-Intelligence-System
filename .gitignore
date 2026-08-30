@@ -21,3 +21,7 @@ venv/
 Thumbs.db
 .train_cache/
 artifacts/task1/_superseded_*/
+
+# Claude Code: personal overrides and runtime state (shared settings.json is not ignored)
+.claude/settings.local.json
+.claude/*.lock
