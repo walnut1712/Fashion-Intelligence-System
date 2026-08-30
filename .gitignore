@@ -20,3 +20,4 @@ venv/
 .DS_Store
 Thumbs.db
 .train_cache/
+artifacts/task1/_superseded_*/

@@ -1,7 +1,7 @@
-Model,accuracy,macro_f1,weighted_f1,balanced_acc,top3_acc,top5_acc
-CNN_tuned,82.41,70.39,82.68,73.76,96.16,98.11
-CNN_aug_none,83.38,71.01,83.6,74.81,96.73,98.36
-CNN_aug_heavy,80.21,67.14,80.42,72.85,95.44,97.82
-CNN_weights_none,86.43,69.43,85.67,68.86,97.22,98.87
-CNN_weights_balanced,69.83,57.51,72.17,70.35,90.16,94.47
-CNN_sched_plateau,79.21,65.23,80.35,72.44,95.25,97.64
+Model,split,accuracy,macro_f1,weighted_f1,balanced_acc,top3_acc,top5_acc
+CNN_tuned,validation,80.57,62.95,80.84,66.79,94.71,97.25
+CNN_aug_none,validation,80.72,60.95,80.9,64.06,94.98,97.4
+CNN_aug_heavy,validation,78.26,54.96,78.22,59.66,93.45,96.58
+CNN_weights_none,validation,83.37,59.87,82.2,59.72,96.31,98.04
+CNN_weights_balanced,validation,64.03,50.69,66.88,63.59,86.52,92.23
+CNN_sched_plateau,validation,77.41,55.03,76.65,59.74,93.72,96.51

@@ -1,6 +1,6 @@
-Model,accuracy,macro_f1,weighted_f1,balanced_acc,top3_acc,top5_acc
-Baseline_majority,17.61,0.33,5.28,1.09,,
-Classical_LogReg,50.92,37.3,54.74,51.74,76.01,85.02
-MLP,72.52,45.24,71.7,48.29,90.98,94.76
-CNN_gap_head,80.11,60.06,79.49,62.68,95.34,97.6
-CNN_start,82.25,68.49,82.47,71.84,95.96,98.07
+Model,split,accuracy,macro_f1,weighted_f1,balanced_acc,top3_acc,top5_acc
+Baseline_majority,validation,17.63,0.33,5.28,1.1,,
+Classical_LogReg,validation,52.36,37.4,56.15,48.4,76.15,85.05
+MLP,validation,69.24,39.59,67.81,41.56,88.59,93.25
+CNN_gap_head,validation,79.08,55.35,79.04,59.45,94.47,96.94
+CNN_start,validation,80.3,60.0,80.14,65.04,94.51,96.98
