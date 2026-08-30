@@ -134,6 +134,33 @@
   }
   function hideBanner() { $("banner").hidden = true; }
 
+  /* The server publishes a model-card row only for tasks whose checkpoint is
+     actually loaded. Merge those over the static copy by id, so a live task
+     can never advertise demo-data.js numbers while the others keep theirs. */
+  function mergeMetrics(live) {
+    if (!live || !live.tasks) return;
+    if (live.source) FI.metrics.source = live.source;
+    live.tasks.forEach(function (row) {
+      for (var i = 0; i < FI.metrics.tasks.length; i++) {
+        if (FI.metrics.tasks[i].id === row.id) { FI.metrics.tasks[i] = row; return; }
+      }
+      FI.metrics.tasks.push(row);
+    });
+  }
+
+  /* A reachable server with a dead model is the dangerous case: the page stays
+     in "live" mode and would quietly show nothing for that attribute. Say so. */
+  function reportDeadModels(info) {
+    var models = (info && info.models) || {};
+    var dead = Object.keys(models).filter(function (k) { return models[k].loaded === false; });
+    if (!dead.length) { hideBanner(); return; }
+    var detail = dead.map(function (k) {
+      return "<b>" + esc(k) + "</b> (" + esc(models[k].error || "not loaded") + ")";
+    }).join(", ");
+    showBanner("Backend is up but these models failed to load: " + detail +
+               ". Their predictions are unavailable.");
+  }
+
   function detectBackend() {
     return withTimeout(fetch(API_BASE + "/api/health", { method: "GET" }), 1800)
       .then(function (r) {
@@ -144,7 +171,8 @@
         setMode("live");
         /* Let the server be the authority on labels and published metrics. */
         if (info && info.meta) Object.assign(FI.meta, info.meta);
-        if (info && info.metrics) FI.metrics = info.metrics;
+        if (info && info.metrics) mergeMetrics(info.metrics);
+        reportDeadModels(info);
         renderModelCard();
       })
       .catch(function (err) {
