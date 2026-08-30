@@ -91,7 +91,8 @@ def test_saved_predictions_are_reproducible(service):
     if not all(path.exists() for path in paths):
         pytest.skip("sampled images missing")
 
-    probabilities = predict_proba(service.model, service.checkpoint, paths, batch_size=64)
+    probabilities = predict_proba(service.model, service.checkpoint, paths,
+                                  batch_size=64, tta=service.tta)
     predicted = [service.class_names[index] for index in probabilities.argmax(1)]
 
     assert predicted == list(saved["articleType"])
