@@ -4,7 +4,9 @@
 
    Every metric below is copied from the committed run artifacts; the source
    file for each block is named in a comment so the figures stay auditable.
-   When the backend is live, /api/meta overrides FI.meta and FI.metrics.
+   When the backend is live, /api/health supplies meta and per-task metrics,
+   which app.js merges over the values below by task id. These are the offline
+   fallback only — a live task never shows the numbers written here.
    ========================================================================== */
 window.FI = window.FI || {};
 
@@ -45,14 +47,15 @@ FI.metrics = {
     {
       id: "Task 1",
       name: "Item type",
-      headline: 20.8,
+      headline: 87.6,
       headlineLabel: "top-1 accuracy",
-      detail: "Top-3 <b>37.2%</b> · top-5 <b>47.7%</b> · weighted F1 <b>15.1</b> over 44 classes. " +
-              "Majority-class baseline is <b>18.6%</b>.",
-      flag: "warn",
-      flagText: "Barely above baseline — read the alternatives, not the top-1",
-      note: "A classical feature pipeline reached 56.4 weighted F1 on the same split, so the " +
-            "deployed CNN is the weaker of the two options investigated."
+      detail: "Top-3 <b>97.5%</b> · top-5 <b>98.8%</b> · weighted F1 <b>87.1</b> over 92 classes. " +
+              "Majority-class baseline is <b>17.6%</b>.",
+      flag: "ok",
+      flagText: "Held-out test split, run 20260830_215803",
+      note: "Macro F1 is <b>73.1</b>: the long tail of rare item types is much weaker than the " +
+            "headline suggests. A classical feature pipeline reaches only 56.2 weighted F1 on " +
+            "the same split."
     },
     {
       id: "Task 2",

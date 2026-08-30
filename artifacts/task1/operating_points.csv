@@ -1,0 +1,5 @@
+Model,accuracy,macro_f1,weighted_f1,balanced_acc,top3_acc,top5_acc
+plain argmax,87.64,73.09,87.13,71.52,97.55,98.78
+horizontal-flip TTA (deployed),87.77,71.63,87.21,70.33,97.73,98.85
+snapshot ensemble (3 epochs),87.71,71.75,87.17,70.48,97.76,98.85
+logit adjustment (tau=0.2),87.91,72.73,87.54,72.46,,
