@@ -1,0 +1,32 @@
+file,match_whole,similarity_whole,coherence_whole,region,match_best_region,similarity_best_region,coherence_best_region,coherence gain,similarity gain
+1017_women_0023_a36fe2486db54e,Stoles,0.672,0.33,upper,Bra,0.719,0.83,0.5,0.047
+25637193-carousel-block-earrin,Casual Shoes,0.686,0.33,low3,Watches,0.719,0.5,0.17,0.033
+2b3f6ff00db7a1efae21d85cfb8995,Night suits,0.725,0.17,mid3,Tshirts,0.696,0.33,0.16,-0.029
+3-Stripes_High_Crew_Socks_3_Pa,Socks,0.762,1.0,top3,Socks,0.741,0.33,-0.67,-0.021
+4130636080047_004_b14.webp,Sarees,0.634,1.0,low3,Leggings,0.73,0.83,-0.17,0.096
+4793e3cb1e694edeb25651fb1ae578,Backpacks,0.644,1.0,upper,Backpacks,0.706,0.83,-0.17,0.062
+509.png,Socks,0.729,0.5,low3,Socks,0.701,0.17,-0.33,-0.028
+600_google-pattern-socks.jpg,Socks,0.633,0.5,top3,Perfume and Body Mist,0.741,1.0,0.5,0.108
+83123110.webp,Earrings,0.64,0.5,lower,Earrings,0.696,0.33,-0.17,0.056
+ae9d94dee29112613a6fae774382a2,Heels,0.737,0.83,lower,Lounge Pants,0.714,0.17,-0.66,-0.023
+Afternoon_ensemble_MET_63.212a,Skirts,0.766,0.5,lower,Skirts,0.812,1.0,0.5,0.046
+Collier_ruban_or_vermeil_2.web,Briefs,0.746,1.0,lower,Briefs,0.838,1.0,0.0,0.092
+d8ff992811e561202194328c9562a8,Sandals,0.596,0.5,part3,Bra,0.705,1.0,0.5,0.109
+giay-local-brand-viet-nam_b140,Handbags,0.575,0.17,top3,Socks,0.717,1.0,0.83,0.142
+images (1).jpg,Wallets,0.62,0.17,top3,Headband,0.677,0.33,0.16,0.057
+images (10).jpg,Handbags,0.6,0.83,low3,Boxers,0.685,0.5,-0.33,0.085
+images (11).jpg,Backpacks,0.759,1.0,top3,Handbags,0.741,1.0,0.0,-0.018
+images (2).jpg,Jeans,0.659,0.67,upper,Jeans,0.653,0.67,0.0,-0.006
+images (3).jpg,Nightdress,0.6,0.67,upper,Bra,0.686,0.83,0.16,0.086
+images (4).jpg,Briefs,0.787,1.0,mid3,Briefs,0.697,1.0,0.0,-0.09
+images (5).jpg,Pendant,0.697,0.83,mid3,Pendant,0.728,1.0,0.17,0.031
+images (6).jpg,Flats,0.689,0.33,upper,Bra,0.696,1.0,0.67,0.007
+images (7).jpg,Tshirts,0.611,0.67,upper,Tshirts,0.646,0.67,0.0,0.035
+images (8).jpg,Dresses,0.621,0.67,top3,Clothing Set,0.722,0.17,-0.5,0.101
+images (9).jpg,Sports Shoes,0.727,0.17,upper,Sports Shoes,0.72,0.17,0.0,-0.007
+images.jpg,Casual Shoes,0.747,1.0,top3,Stoles,0.674,0.33,-0.67,-0.073
+istockphoto-1018293976-612x612,Jackets,0.767,0.17,lower,Duffel Bag,0.666,0.33,0.16,-0.101
+mygoods_34_475601_3x4-ezgif.co,Tops,0.68,0.17,upper,Handbags,0.719,0.83,0.66,0.039
+nike-5644799_640.jpg,Watches,0.726,0.17,top3,Tshirts,0.794,0.33,0.16,0.068
+sm_s_c_mint___short_summer__3_,Handbags,0.755,1.0,top3,Sweatshirts,0.781,0.17,-0.83,0.026
+The_dress_blueblackwhitegold.j,Backpacks,0.713,1.0,mid3,Handbags,0.762,0.5,-0.5,0.049

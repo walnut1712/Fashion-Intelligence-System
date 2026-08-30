@@ -4,14 +4,14 @@ id,predicted type,baseline top-1,augmented top-1,agree on top-1,baseline coheren
 53680,Handbags,Handbags,Handbags,True,1.0,1.0
 52862,Earrings,Earrings,Earrings,True,1.0,1.0
 53777,Sports Shoes,Sports Shoes,Sports Shoes,True,1.0,1.0
-57645,Lipstick,Deodorant,Perfume and Body Mist,False,0.17,0.5
-57200,Dresses,Dresses,Dresses,True,0.67,1.0
-59883,Tops,Tops,Tops,True,0.67,0.83
-57484,Flip Flops,Flip Flops,Flip Flops,True,0.33,0.17
-58586,Necklace and Chains,Jewellery Set,Jewellery Set,True,0.17,0.17
+57645,Kajal and Eyeliner,Ties,Ties,True,1.0,0.83
+57200,Dresses,Dresses,Dresses,True,0.83,0.67
+59883,Tops,Tops,Tops,True,1.0,1.0
+57484,Flip Flops,Flip Flops,Flip Flops,True,1.0,1.0
+58586,Necklace and Chains,Necklace and Chains,Necklace and Chains,True,0.83,0.83
 59091,Bra,Bra,Bra,True,1.0,1.0
-53815,Kurtas,Kurtas,Kurtas,True,0.83,0.83
-58460,Tshirts,Tshirts,Tshirts,True,1.0,1.0
-57548,Lip Liner,Lip Gloss,Lip Gloss,True,0.67,0.83
-54911,Tshirts,Tshirts,Tops,False,0.83,0.17
-55955,Shoe Accessories,Perfume and Body Mist,Deodorant,False,0.83,0.33
+53815,Kurtas,Dresses,Kurtas,False,0.17,0.83
+58460,Tshirts,Tshirts,Tshirts,True,1.0,0.83
+57548,Bangle,Lip Gloss,Lip Gloss,True,0.83,0.67
+54911,Tshirts,Tops,Tshirts,False,0.5,0.33
+55955,Deodorant,Perfume and Body Mist,Perfume and Body Mist,True,0.5,0.33
