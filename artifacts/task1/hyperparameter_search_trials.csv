@@ -1,2 +1,4 @@
-learning_rate,dropout,head_hidden,widths,WeightedF1,MacroF1,Top3Acc,Epochs
-0.0005,0.5,256,"(16, 32, 64, 128)",5.78,4.02,23.39,2
+learning_rate,dropout,head_hidden,widths,pool_grid,WeightedF1,MacroF1,Top3Acc,Epochs
+0.002,0.2,384,"(16, 32, 64, 128)","(1, 1)",80.84,62.95,94.71,3
+0.001,0.4,384,"(16, 32, 64, 128)","(2, 1)",79.24,58.4,94.23,3
+0.002,0.4,384,"(24, 48, 96, 192)","(2, 2)",76.66,53.18,92.78,3

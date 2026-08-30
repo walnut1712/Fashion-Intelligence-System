@@ -78,10 +78,35 @@ def root():
     return {"message": "Fashion Intelligence System backend is running"}
 
 
+def _live_meta():
+    """Label vocabularies the server can vouch for, for the frontend to adopt."""
+    meta = {}
+    if task1_service is not None:
+        meta["itemType"] = task1_service.class_names
+    return meta
+
+
+def _live_metrics():
+    """Published model-card rows sourced from the loaded checkpoints.
+
+    Only tasks whose service is loaded contribute a row; the frontend merges
+    these over its own copy by id, so the others keep their static values.
+    """
+    tasks = []
+    if task1_service is not None:
+        tasks.append(task1_service.model_card())
+    if not tasks:
+        return None
+    return {"source": "artifacts/task{1,2,3,4}/*.json (live from loaded checkpoints)",
+            "tasks": tasks}
+
+
 @app.get("/api/health")
 def health():
     return {
         "status": "ok",
+        "meta": _live_meta(),
+        "metrics": _live_metrics(),
         "models": {
             "task1": {
                 "loaded": task1_service is not None,
