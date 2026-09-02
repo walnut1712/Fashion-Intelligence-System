@@ -1,11 +1,12 @@
 {
-  "final_model": "EarlyBranch",
+  "final_model": "base",
   "parameters": 4249577,
-  "test_gender_accuracy": 90.23,
-  "test_gender_macro_f1": 76.17,
-  "test_usage_accuracy": 90.99,
-  "test_usage_macro_f1": 84.44,
-  "test_exact_match": 82.2,
+  "noise_floor": 0.674,
+  "test_gender_accuracy": 90.08,
+  "test_gender_macro_f1": 77.08,
+  "test_usage_accuracy": 91.17,
+  "test_usage_macro_f1": 84.28,
+  "test_exact_match": 82.09,
   "baseline_gender_accuracy": 54.2,
   "baseline_usage_accuracy": 77.11
 }

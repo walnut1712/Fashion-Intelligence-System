@@ -1,3 +1,21 @@
+"""Task 3 - gender and occasion prediction.
+
+Serves the model trained in ``notebooks/04_task3_cnn_architectures.ipynb``: a
+VGG-style convolutional network with early task branching, where the first two
+blocks are shared and each attribute then has its own convolutional pathway and
+classifier.
+
+Artefact: ``artifacts/task3/task3_cnn_model.pt``
+
+The checkpoint records its own architecture, so the network is rebuilt from what
+was saved rather than from assumptions held here. It also carries a per-class
+probability multiplier for each attribute, applied before the argmax so the served
+output matches the notebook's evaluation. Threshold adjustment was evaluated in the
+notebook and not adopted, so those multipliers are currently all ones and prediction
+is a plain argmax; the multiply is kept so that a checkpoint which does use them
+serves correctly without a code change.
+"""
+
 from io import BytesIO
 from pathlib import Path
 
@@ -5,7 +23,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, ImageOps, UnidentifiedImageError
 
 
 def choose_device():
@@ -16,95 +34,136 @@ def choose_device():
     return torch.device("cpu")
 
 
-class ConvBlock(nn.Module):
-    def __init__(self, in_channels, out_channels):
-        super().__init__()
-        self.block = nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, 3, padding=1, bias=False),
-            nn.BatchNorm2d(out_channels),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(out_channels, out_channels, 3, padding=1, bias=False),
-            nn.BatchNorm2d(out_channels),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(2),
-        )
+# --------------------------------------------------------------- network ----
+ACTIVATIONS = {"relu": nn.ReLU, "tanh": nn.Tanh, "sigmoid": nn.Sigmoid}
+POOLINGS = {"max": nn.MaxPool2d, "avg": nn.AvgPool2d}
 
-    def forward(self, x):
-        return self.block(x)
+
+def conv_block(in_channels, width, activation="relu", pooling="max"):
+    """Two 3x3 convolutions, each with batch normalisation and a non-linearity,
+    then a 2x2 downsample. Must match the training definition exactly."""
+    act = ACTIVATIONS[activation]
+    pool = POOLINGS[pooling]
+    return [
+        nn.Conv2d(in_channels, width, 3, padding=1, bias=False),
+        nn.BatchNorm2d(width), act(),
+        nn.Conv2d(width, width, 3, padding=1, bias=False),
+        nn.BatchNorm2d(width), act(),
+        pool(2),
+    ]
+
+
+def make_classifier(in_features, n_classes, hidden=256, dropout=0.5):
+    return nn.Sequential(
+        nn.Flatten(),
+        nn.Dropout(dropout),
+        nn.Linear(in_features, hidden),
+        nn.ReLU(inplace=True),
+        nn.Dropout(dropout),
+        nn.Linear(hidden, n_classes),
+    )
 
 
 class EarlyBranchCNN(nn.Module):
-    def __init__(self, num_classes, dropout=0.4, head_hidden=256):
+    """Shared low-level blocks, then one convolutional pathway per attribute."""
+
+    def __init__(self, num_classes, input_shape=(3, 80, 60), shared_widths=(32, 64),
+                 branch_widths=(128, 256), hidden=256, dropout=0.5,
+                 activation="relu", pooling="max", head="flatten"):
         super().__init__()
+        layers, channels = [], input_shape[0]
+        for width in shared_widths:
+            layers += conv_block(channels, width, activation, pooling)
+            channels = width
+        self.shared = nn.Sequential(*layers)
 
-        def make_block(in_channels, out_channels):
-            return nn.Sequential(
-                nn.Conv2d(in_channels, out_channels, 3, padding=1, bias=False),
-                nn.BatchNorm2d(out_channels),
-                nn.ReLU(inplace=True),
-                nn.Conv2d(out_channels, out_channels, 3, padding=1, bias=False),
-                nn.BatchNorm2d(out_channels),
-                nn.ReLU(inplace=True),
-                nn.MaxPool2d(2),
-            )
+        self.branches = nn.ModuleDict()
+        self.heads = nn.ModuleDict()
+        for target, n_classes in num_classes.items():
+            branch_layers, branch_channels = [], channels
+            for width in branch_widths:
+                branch_layers += conv_block(branch_channels, width, activation, pooling)
+                branch_channels = width
+            branch = nn.Sequential(*branch_layers)
+            self.branches[target] = branch
 
-        self.shared = nn.Sequential(
-            *make_block(3, 32),
-            *make_block(32, 64),
-        )
-        self.branches = nn.ModuleDict({
-            target: nn.Sequential(
-                *make_block(64, 128),
-                *make_block(128, 256),
-            )
-            for target in num_classes
-        })
-
-        def make_head(n_out):
-            return nn.Sequential(
-                nn.Dropout(dropout),
-                nn.Flatten(),
-                nn.Linear(256 * 3 * 5, head_hidden),
-                nn.ReLU(inplace=True),
-                nn.Dropout(dropout),
-                nn.Linear(head_hidden, n_out),
-            )
-
-        self.heads = nn.ModuleDict({
-            target: make_head(n_classes)
-            for target, n_classes in num_classes.items()
-        })
+            if head == "flatten":
+                probe = nn.Sequential(self.shared, branch).eval()
+                with torch.no_grad():
+                    flat = int(np.prod(probe(torch.zeros(1, *input_shape)).shape[1:]))
+                self.heads[target] = make_classifier(flat, n_classes, hidden, dropout)
+            else:
+                self.heads[target] = nn.Sequential(
+                    nn.AdaptiveAvgPool2d(1), nn.Flatten(), nn.Dropout(dropout),
+                    nn.Linear(branch_channels, hidden), nn.ReLU(inplace=True),
+                    nn.Dropout(dropout), nn.Linear(hidden, n_classes))
 
     def forward(self, x):
-        shared_features = self.shared(x)
-        return {
-            target: self.heads[target](self.branches[target](shared_features))
-            for target in self.branches
-        }
+        shared = self.shared(x)
+        return {target: self.heads[target](self.branches[target](shared))
+                for target in self.branches}
 
 
+# ------------------------------------------------------------- service ----
 class Task3Service:
+    TARGETS = ("gender", "usage")
+
     def __init__(self):
         self.device = choose_device()
         self.project_root = Path(__file__).resolve().parents[3]
         self.model_path = self.project_root / "artifacts" / "task3" / "task3_cnn_model.pt"
         if not self.model_path.exists():
-            raise FileNotFoundError("Task 3 model not found: {}".format(self.model_path))
+            raise FileNotFoundError(
+                "Task 3 model not found: {}. Run notebooks/04_task3_cnn_architectures.ipynb"
+                .format(self.model_path))
 
-        self.checkpoint = self._load_checkpoint()
-        self.class_names = self.checkpoint["class_names"]
-        self.model = EarlyBranchCNN(
-            num_classes=self.checkpoint["num_classes"],
-        )
-        self.model.load_state_dict(self.checkpoint["state_dict"])
-        self.model.to(self.device)
-        self.model.eval()
-        self.num_classes = {
-            target: len(classes) for target, classes in self.class_names.items()
+        checkpoint = self._load_checkpoint()
+        self.model_name = checkpoint.get("model_name", "early-branch CNN")
+
+        state_dict = checkpoint["state_dict"]
+        if not any(key.startswith("branches.") for key in state_dict):
+            raise ValueError(
+                "Checkpoint '{}' is not an early-branching model.".format(self.model_name))
+
+        self.class_names = {t: list(v) for t, v in checkpoint["class_names"].items()}
+        self.num_classes = {t: len(v) for t, v in self.class_names.items()}
+        self.image_size = tuple(checkpoint["image_size_pil"])          # (width, height)
+
+        architecture = checkpoint.get("architecture", {})
+        self.architecture = {
+            "shared_widths": tuple(architecture.get("shared_widths", (32, 64))),
+            "branch_widths": tuple(architecture.get("branch_widths", (128, 256))),
+            "hidden": int(architecture.get("hidden", 256)),
+            "dropout": float(architecture.get("dropout", 0.5)),
+            "activation": architecture.get("activation", "relu"),
+            "pooling": architecture.get("pooling", "max"),
+            "head": architecture.get("head", "flatten"),
         }
-        self.mean = np.array(self.checkpoint["channel_mean"], dtype=np.float32).reshape(1, 1, 3)
-        self.std = np.array(self.checkpoint["channel_std"], dtype=np.float32).reshape(1, 1, 3)
-        self.image_size = tuple(self.checkpoint["image_size_pil"])
+
+        self.model = EarlyBranchCNN(
+            self.num_classes,
+            input_shape=(3, self.image_size[1], self.image_size[0]),
+            **self.architecture)
+        self.model.load_state_dict(state_dict)
+        self.model.to(self.device).eval()
+
+        # Probability multipliers from threshold adjustment; ones when not applied.
+        saved_weights = checkpoint.get("class_weights", {})
+        self.class_weights = {
+            target: np.asarray(saved_weights.get(target,
+                                                 np.ones(self.num_classes[target])),
+                               dtype=np.float32)
+            for target in self.TARGETS
+        }
+        self.uses_thresholds = any(not np.allclose(w, 1.0)
+                                   for w in self.class_weights.values())
+
+        self.mean = np.array(checkpoint["channel_mean"], dtype=np.float32).reshape(1, 1, 3)
+        self.std = np.array(checkpoint["channel_std"], dtype=np.float32).reshape(1, 1, 3)
+        self.test_metrics = checkpoint.get("test_metrics", {})
+
+        print("Task 3 loaded:", self.model_name,
+              "| threshold adjustment:", "on" if self.uses_thresholds else "off")
 
     def _load_checkpoint(self):
         try:
@@ -113,36 +172,40 @@ class Task3Service:
             return torch.load(self.model_path, map_location=self.device)
 
     def preprocess(self, image_bytes):
+        """Match the training pipeline: RGB on white, resized, normalised."""
         try:
-            image = Image.open(BytesIO(image_bytes)).convert("RGB")
+            image = Image.open(BytesIO(image_bytes))
+            image = ImageOps.exif_transpose(image)
+            if image.mode == "P":
+                image = image.convert("RGBA" if "transparency" in image.info else "RGB")
+            if image.mode in ("RGBA", "LA"):
+                canvas = Image.new("RGB", image.size, (255, 255, 255))
+                canvas.paste(image, mask=image.split()[-1])
+                image = canvas
+            else:
+                image = image.convert("RGB")
             image = image.resize(self.image_size, Image.BILINEAR)
         except (UnidentifiedImageError, OSError):
             raise ValueError("Cannot decode uploaded image")
+
         array = np.asarray(image, dtype=np.float32) / 255.0
         array = ((array - self.mean) / self.std).transpose(2, 0, 1)
         return torch.from_numpy(array).float().unsqueeze(0).to(self.device)
 
     @torch.no_grad()
-    def predict(self, image_bytes):
+    def predict(self, image_bytes, top_k=4):
+        """Ranked labels with probabilities, for each attribute."""
         logits = self.model(self.preprocess(image_bytes))
         output = {}
-        for target, values in logits.items():
-            probabilities = F.softmax(values.float(), dim=1)[0]
-            top_probs, top_indices = torch.topk(
-                probabilities, k=min(3, len(self.class_names[target]))
-            )
-            results = [
-                {
-                    "label": self.class_names[target][index],
-                    "confidence": round(float(probability), 4),
-                }
-                for probability, index in zip(
-                    top_probs.cpu().tolist(), top_indices.cpu().tolist()
-                )
+        for target in self.TARGETS:
+            names = self.class_names[target]
+            probabilities = F.softmax(logits[target][0].float(), dim=0).cpu().numpy()
+
+            # Ranking uses the adjusted scores; the reported figure stays the
+            # model's own probability, which is what a confidence display needs.
+            order = np.argsort(-(probabilities * self.class_weights[target]))
+            output[target] = [
+                {"label": names[index], "p": round(float(probabilities[index]), 4)}
+                for index in order[:min(top_k, len(names))]
             ]
-            output[target] = {
-                "label": results[0]["label"],
-                "confidence": results[0]["confidence"],
-                "top3": results,
-            }
         return output

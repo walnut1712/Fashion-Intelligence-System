@@ -1,0 +1,4 @@
+approach,mean macro-F1,usage macro-F1,weakest usage recall,change vs none
+no correction,82.16,83.01,63.77,0.0
+balanced sampling,80.98,84.09,64.12,-1.18
+balanced + augmentation,78.64,82.46,77.09,-3.52
