@@ -1,0 +1,5 @@
+change,tag,mean macro-F1,difference,parameters
+"reference (ReLU, max pool, flatten)",base_short,79.85,0.0,4249577
+tanh instead of ReLU,tanh,76.36,-3.49,4249577
+average pooling instead of max,avgpool,76.52,-3.33,4249577
+global average pooling instead of flatten,gap_head,78.51,-1.34,2414569
