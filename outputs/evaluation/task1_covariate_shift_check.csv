@@ -1,0 +1,6 @@
+statistic,train,graded,abs_difference,tolerance,pass,n_train,n_graded
+white_fraction,0.68,0.7405,0.0605,0.15,True,1200,1200
+border_white_fraction,0.9509,0.9596,0.0088,0.05,True,1200,1200
+mean,213.2843,221.7174,8.4331,20.0,True,1200,1200
+std,65.0271,56.6937,8.3334,20.0,True,1200,1200
+fraction_border_white_over_0.9,0.8858,0.8992,0.0133,0.1,True,1200,1200

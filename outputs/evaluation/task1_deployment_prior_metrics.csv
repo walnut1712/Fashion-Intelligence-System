@@ -1,0 +1,9 @@
+checkpoint,run_id,split,accuracy,weighted_f1,macro_f1,dep_accuracy,dep_weighted_f1,dep_accuracy_lo,dep_accuracy_hi,dep_weighted_f1_lo,dep_weighted_f1_hi,kish_ess,max_row_weight_share,n,target_prior,em_converged
+task1_cnn.pt,20260830_215803,test,87.766,87.206,71.627,83.615,82.857,81.887,85.278,80.956,84.576,1943.178,0.001,5501,"EM(graded, shrunk) from task1_cnn.pt",True
+task1_cnn.pt,20260830_215803,val+test,88.289,87.809,72.476,84.713,84.05,83.574,85.773,82.756,85.237,3920.296,0.001,10998,"EM(graded, shrunk) from task1_cnn.pt",True
+candidate_baseline_augnone.pt,20260902_215643,test,88.402,87.867,73.697,84.866,84.178,83.34,86.519,82.404,85.853,1943.178,0.001,5501,"EM(graded, shrunk) from task1_cnn.pt",True
+candidate_baseline_augnone.pt,20260902_215643,val+test,88.643,88.18,73.775,85.33,84.732,84.212,86.478,83.42,85.86,3920.296,0.001,10998,"EM(graded, shrunk) from task1_cnn.pt",True
+candidate_tail_sqrt_dep.pt,20260902_165821,test,84.021,84.509,75.372,84.579,85.11,83.11,86.149,83.549,86.65,1943.178,0.001,5501,"EM(graded, shrunk) from task1_cnn.pt",True
+candidate_tail_sqrt_dep.pt,20260902_165821,val+test,84.57,85.116,76.507,84.877,85.394,83.845,85.883,84.36,86.342,3920.296,0.001,10998,"EM(graded, shrunk) from task1_cnn.pt",True
+candidate_balanced_softmax_dep.pt,20260902_142500,test,86.003,86.969,70.02,83.629,84.679,81.925,85.123,83.185,86.283,1943.178,0.001,5501,"EM(graded, shrunk) from task1_cnn.pt",True
+candidate_balanced_softmax_dep.pt,20260902_142500,val+test,86.052,87.134,70.344,84.148,85.289,82.95,85.188,84.249,86.268,3920.296,0.001,10998,"EM(graded, shrunk) from task1_cnn.pt",True

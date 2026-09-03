@@ -535,3 +535,17 @@ button { font: inherit; color: inherit; }
     transition-duration: .001ms !important;
   }
 }
+
+/* Task 1's coarse answer: the subCategory the predicted articleType rolls up to.
+   Shown because it is measurably more reliable than the fine label on a real
+   photograph - 66.95% against 54.86% - so when the exact type is wrong this
+   line is often still right. */
+.attr-family {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted, #6b7280);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.attr-family b { color: inherit; font-weight: 600; }

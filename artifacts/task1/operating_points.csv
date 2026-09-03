@@ -1,5 +1,6 @@
-Model,accuracy,macro_f1,weighted_f1,balanced_acc,top3_acc,top5_acc
-plain argmax,87.64,73.09,87.13,71.52,97.55,98.78
-horizontal-flip TTA (deployed),87.77,71.63,87.21,70.33,97.73,98.85
-snapshot ensemble (3 epochs),87.71,71.75,87.17,70.48,97.76,98.85
-logit adjustment (tau=0.2),87.91,72.73,87.54,72.46,,
+Model,accuracy,macro_f1,weighted_f1,balanced_acc,top3_acc,top5_acc,tau_selected_on,source
+plain argmax,87.64,73.09,87.13,71.52,97.55,98.78,,reproducible: ood_benchmark.write_operating_points
+horizontal-flip TTA,87.77,71.63,87.21,70.33,97.73,98.85,,reproducible: ood_benchmark.write_operating_points
+plain argmax + logit adjustment (tau=0.20),87.51,73.62,87.17,73.67,97.49,98.71,validation weighted-F1,reproducible: ood_benchmark.write_operating_points
+horizontal-flip TTA + logit adjustment (tau=0.20) (deployed),87.8,72.51,87.44,72.15,97.58,98.8,validation weighted-F1,reproducible: ood_benchmark.write_operating_points
+snapshot ensemble (3 epochs),87.71,71.75,87.17,70.48,97.76,98.85,,"notebook-only: per-epoch states were never saved, not reproducible"
