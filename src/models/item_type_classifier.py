@@ -56,6 +56,7 @@ __all__ = [
     "preprocess_arrays",
     "preprocess_image",
     "predict_proba",
+    "ensemble_proba",
 ]
 
 # Pooling head layouts. "bn_spatial" is the current one; "legacy_gap" only
@@ -367,3 +368,52 @@ def predict_proba(model, checkpoint, sources, batch_size=256, device=None, tta=F
     if not chunks:
         return np.zeros((0, int(checkpoint["num_classes"])), dtype=np.float32)
     return np.concatenate(chunks)
+
+
+@torch.no_grad()
+def ensemble_proba(pairs, sources, batch_size=256, device=None, tta=False,
+                   ingest="squash", adjust=True):
+    """Mean posterior over several checkpoints.
+
+    ``pairs`` is a list of ``(model, checkpoint)`` tuples as returned by
+    ``load_item_type_model``. Two genuinely different recipes fail on different
+    rows - ``candidate_baseline_augnone`` carries the head, ``candidate_tail_sqrt_dep``
+    the tail - so their average beats either alone on both the weighted and the
+    macro metric, which no single checkpoint here does.
+
+    Every checkpoint must list ``class_names`` in the same order. A mismatch would
+    average the probability of one class onto another's column silently, which is
+    the exact failure mode ``load_item_type_model``'s history warns about, so it
+    is asserted rather than trusted.
+
+    Each model's *raw* posteriors are averaged - no per-model tau, no per-model
+    temperature - and then the shared post-hoc logit adjustment is applied once,
+    from the first checkpoint. ``adjust=False`` returns the raw mean untouched,
+    which is what the label-shift estimators in ``src/evaluation/prior_shift.py``
+    require: tau is itself a blind push away from the training prior, so running a
+    measured correction on top of it corrects twice.
+    """
+    pairs = list(pairs)
+    if not pairs:
+        raise ValueError("ensemble_proba needs at least one (model, checkpoint) pair")
+
+    reference = list(pairs[0][1]["class_names"])
+    for _, checkpoint in pairs[1:]:
+        if list(checkpoint["class_names"]) != reference:
+            raise ValueError(
+                "ensemble checkpoints disagree on class order - averaging them "
+                "would mix classes; retrain or re-export so class_names match")
+
+    sources = list(sources)
+    accumulated = None
+    for model, checkpoint in pairs:
+        part = predict_proba(model, checkpoint, sources, batch_size=batch_size,
+                             device=device, tta=tta, ingest=ingest, adjust=False)
+        accumulated = part if accumulated is None else accumulated + part
+    mean_proba = accumulated / len(pairs)
+
+    if adjust:
+        first = pairs[0][1]
+        adjusted = apply_logit_adjustment(torch.from_numpy(mean_proba), first)
+        mean_proba = adjusted.numpy()
+    return mean_proba

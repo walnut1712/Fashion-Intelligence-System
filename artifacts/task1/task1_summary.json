@@ -1,5 +1,5 @@
 {
-  "run_id": "20260830_215803",
+  "run_id": "20260902_215643",
   "rows_after_target_cleaning": 38612,
   "rows_after_rare_class_drop": 38491,
   "classes_before_drop": 124,
@@ -10,7 +10,7 @@
   "train_rows": 27493,
   "val_rows": 5497,
   "test_rows": 5501,
-  "final_model": "CNN_weights_none_full",
+  "final_model": "CNN_baseline_augnone",
   "final_architecture": {
     "widths": [
       16,
@@ -33,18 +33,7 @@
   "tta_deployed": true,
   "lr_schedule": "onecycle",
   "parameters": 428620,
-  "test_accuracy": 87.64,
-  "test_weighted_f1": 87.13,
-  "test_macro_f1": 73.09,
-  "test_balanced_acc": 71.52,
-  "test_top3_acc": 97.55,
-  "test_top5_acc": 98.78,
-  "test_accuracy_tta": 87.77,
-  "test_weighted_f1_tta": 87.21,
-  "test_weighted_f1_ensemble": 87.17,
-  "test_macro_f1_logit_adjusted": 72.73,
-  "test_weighted_f1_logit_adjusted": 87.54,
-  "logit_adjustment_tau": 0.2,
+  "logit_adjustment_tau": 0.4,
   "baseline_accuracy": 17.6,
   "baseline_weighted_f1": 5.27,
   "classical_weighted_f1": 56.15,
@@ -57,43 +46,53 @@
   "pretrained_reference_test_weighted_f1": 76.4,
   "headroom_vs_pretrained_reference": -10.72,
   "unlabelled_distribution_shift_tvd": 44.6,
-  "headline_operating_point": "horizontal-flip TTA + logit adjustment (tau=0.2)",
-  "headline_note": "what predict.py actually runs; the plain-argmax numbers below are retained for comparability with the notebook",
-  "test_accuracy_deployed": 87.8,
-  "test_weighted_f1_deployed": 87.44,
-  "test_macro_f1_deployed": 72.51,
-  "test_balanced_acc_deployed": 72.15,
-  "test_top3_acc_deployed": 97.58,
+  "headline_operating_point": "horizontal-flip TTA + logit adjustment (tau=0.4)",
+  "headline_note": "what predict.py / the FastAPI service actually run for a single-image query; the graded submission additionally soft-votes candidate_tail_sqrt_dep and applies the label-shift correction - see scripts/promote_checkpoint.py",
+  "test_accuracy_deployed": 88.40210870750772,
+  "test_weighted_f1_deployed": 87.86693394189166,
+  "test_macro_f1_deployed": 73.6970678837295,
+  "test_balanced_acc_deployed": 72.09512973011142,
+  "test_top3_acc_deployed": 97.65497182330486,
   "val_metrics": {
-    "accuracy": 88.81207931599054,
-    "macro_f1": 72.26430443292621,
-    "weighted_f1": 88.32318888821126,
-    "balanced_acc": 71.46527382020295
+    "accuracy": 88.88484627978897,
+    "macro_f1": 71.9785255966728,
+    "weighted_f1": 88.3888059272557,
+    "balanced_acc": 70.41232824678109
   },
-  "config_contradictions_repaired": {
-    "head_hidden": {
-      "config_said": 256,
-      "truth": 384
-    },
-    "dropout": {
-      "config_said": 0.3,
-      "truth": 0.2
-    },
-    "pool_grid": {
-      "config_said": [
-        2,
-        1
-      ],
-      "truth": [
-        1,
-        1
-      ]
-    },
-    "use_class_weights": {
-      "config_said": true,
-      "truth": false
-    }
-  },
+  "config_contradictions_repaired": null,
   "estimated_unseen_rows_with_dropped_true_class_note": "estimated per masterCategory under the deployment prior, not the flat training prior. The floor drops 2.60% of Personal Care rows and the graded set is ~21% Personal Care, so the two multiply rather than cancel. The previous figure, 18.3, assumed the graded set had the training composition. See artifacts/task1/dropped_class_graded_cost.csv",
-  "deployment_prior_note": "The graded set sits ~43% total-variation from the training class prior. Under that prior the deployed checkpoint scores 83.96 accuracy / 83.44 weighted-F1 against the 87.80 / 87.44 reported on the train-prior test split. See outputs/evaluation/task1_deployment_prior_metrics.csv"
+  "deployment_prior_note": "The graded ids sit ~44-49% total-variation from the training class prior (a prior shift, not covariate - see task1_covariate_shift_check.csv). Served single model (task1_cnn.pt, no ensemble/correction): ~84.8 deployment-prior weighted-F1. The graded SUBMISSION additionally soft-votes candidate_tail_sqrt_dep and applies a half-strength Saerens-Latinne-Decaestecker label-shift correction (alpha=0.5, gated on graded_prior.json). On the labelled split reweighted to the estimated graded prior that reaches ~86-87 weighted-F1; the non-circular simulation (task1_prior_shift_simulation.csv) puts alpha=0.5 at +1.4 graded weighted-F1 and within noise of zero under no shift. See outputs/evaluation/task1_recipe_comparison.csv and task1_submission_operating_points.csv.",
+  "headline_superseded": {
+    "run_id": "20260830_215803",
+    "final_model": "CNN_weights_none_full",
+    "note": "plain-argmax numbers from the notebook run that first wrote this file; the shipped model is now CNN_baseline_augnone (run 20260902_215643) - see the _deployed fields and outputs/evaluation/task1_recipe_comparison.csv",
+    "test_accuracy": 87.64,
+    "test_weighted_f1": 87.13,
+    "test_macro_f1": 73.09,
+    "test_balanced_acc": 71.52,
+    "test_top3_acc": 97.55,
+    "test_top5_acc": 98.78,
+    "test_accuracy_tta": 87.77,
+    "test_weighted_f1_tta": 87.21,
+    "test_weighted_f1_ensemble": 87.17,
+    "test_macro_f1_logit_adjusted": 72.73,
+    "test_weighted_f1_logit_adjusted": 87.54
+  },
+  "train_accuracy": 99.87269486778453,
+  "train_test_gap": 11.47,
+  "submission_pipeline": {
+    "served_model": "artifacts/task1/task1_cnn.pt (CNN_baseline_augnone)",
+    "submission_ensemble": [
+      "task1_cnn.pt",
+      "candidate_tail_sqrt_dep.pt"
+    ],
+    "label_shift_correction": "EM (Saerens-Latinne-Decaestecker), alpha=0.5, guarded by graded_prior.json",
+    "built_by": "scripts/promote_checkpoint.py -> predict.py --submission --models ... --prior-correct",
+    "shared_split_ensemble_metrics": {
+      "test_weighted_f1": 88.22,
+      "test_macro_f1": 76.44,
+      "test_top3_acc": 98.27,
+      "deployment_prior_weighted_f1": 85.71
+    }
+  }
 }
