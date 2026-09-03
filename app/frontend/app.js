@@ -234,12 +234,19 @@
             "</div></details>"
         : "";
 
+      var fam = (a.key === "item_type" && p.item_family) ? p.item_family : null;
+      var famHtml = fam
+        ? '<div class="attr-family">category <b>' + esc(fam.label) + "</b> " +
+            '<span class="chip chip-' + confTier(fam.confidence) + '">' + pct(fam.confidence) + "</span></div>"
+        : "";
+
       return '<div class="attr">' +
         '<div class="attr-label">' + esc(a.label) + '<span class="attr-task">' + a.task + "</span></div>" +
         '<div class="attr-value">' +
           '<span class="attr-name" title="' + esc(top.label) + '">' + esc(top.label) + "</span>" +
           '<span class="chip chip-' + t + '">' + pct(top.p) + "</span>" +
         "</div>" +
+        famHtml +
         '<div class="bar bar-' + t + '" role="progressbar" aria-label="' + esc(a.label) + ' confidence"' +
           ' aria-valuenow="' + Math.round(top.p * 100) + '" aria-valuemin="0" aria-valuemax="100">' +
           '<span style="width:' + Math.max(top.p * 100, 2).toFixed(1) + '%"></span>' +
@@ -389,6 +396,11 @@
         return {
           prediction: {
             latency_ms: data.latency_ms,
+            /* Task 1 also returns the subCategory it rolls up to. Worth showing:
+               on a shifted photograph the family is right 66.95% of the time
+               against articleType's 54.86%, because most errors are within-family
+               (Casual Shoes for Sports Shoes) and the roll-up absorbs them. */
+            item_family: (predictions.articleType || {}).family || null,
             predictions: {
               item_type: normalizePrediction(predictions.articleType),
               season: normalizePrediction(predictions.season),

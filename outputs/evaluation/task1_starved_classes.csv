@@ -1,0 +1,93 @@
+articleType,train_rows,test_rows,test_recall,recall_is_measurable,graded_rows,graded_share_pct,graded_mean_confidence,graded_rows_at_risk
+Perfume and Body Mist,399,79,0.8861,True,337,5.781,0.5434,38.4
+Handbags,1029,205,0.9122,True,322,5.524,0.8212,28.3
+Watches,1609,322,0.9907,True,306,5.25,0.8791,2.9
+Lipstick,11,2,1.0,False,294,5.044,0.4556,0.0
+Tshirts,4843,968,0.9504,True,277,4.752,0.7501,13.7
+Sarees,110,22,0.9545,False,276,4.735,0.8213,12.5
+Kurtas,1111,223,0.9596,True,272,4.666,0.7497,11.0
+Dresses,247,49,0.7347,True,257,4.409,0.6874,68.2
+Heels,750,149,0.7852,True,237,4.066,0.7246,50.9
+Tops,1154,230,0.7652,True,226,3.877,0.6606,53.1
+Bra,213,42,0.9286,True,190,3.26,0.9182,13.6
+Briefs,478,95,0.9263,True,187,3.208,0.8945,13.8
+Earrings,138,82,1.0,True,179,3.071,0.8637,0.0
+Kajal and Eyeliner,9,2,1.0,False,174,2.985,0.5106,0.0
+Casual Shoes,1917,383,0.8329,True,144,2.47,0.7664,24.1
+Wallets,593,118,0.9831,True,141,2.419,0.7662,2.4
+Shirts,2205,441,0.9546,True,139,2.385,0.7248,6.3
+Nail Polish,14,2,1.0,False,126,2.162,0.6694,0.0
+Flats,299,60,0.4,True,122,2.093,0.577,73.2
+Foundation and Primer,9,1,1.0,False,108,1.853,0.3021,0.0
+Deodorant,210,42,0.9524,True,99,1.698,0.7346,4.7
+Necklace and Chains,44,9,1.0,False,81,1.39,0.743,0.0
+Lip Liner,8,2,1.0,False,80,1.372,0.4444,0.0
+Socks,438,88,0.9773,True,79,1.355,0.8006,1.8
+Formal Shoes,436,87,0.908,True,69,1.184,0.8751,6.3
+Night suits,49,10,0.7,False,69,1.184,0.6485,20.7
+Pendant,60,6,0.6667,False,64,1.098,0.5429,21.3
+Jeans,399,80,0.8875,True,63,1.081,0.7299,7.1
+Cufflinks,34,5,1.0,False,57,0.978,0.8903,0.0
+Clutches,160,31,0.5806,True,55,0.944,0.6998,23.1
+Ties,154,30,1.0,True,50,0.858,0.9442,0.0
+Flip Flops,617,123,0.8943,True,49,0.841,0.7437,5.2
+Sports Shoes,1423,284,0.8415,True,47,0.806,0.6301,7.4
+Jackets,163,33,0.5152,True,44,0.755,0.679,21.3
+Sandals,619,123,0.8618,True,41,0.703,0.7991,5.7
+Tunics,125,25,0.4,True,37,0.635,0.4113,22.2
+Shoe Accessories,17,3,0.3333,False,35,0.6,0.3705,23.3
+Belts,569,113,1.0,True,35,0.6,0.6772,0.0
+Nightdress,28,6,0.1667,False,33,0.566,0.4277,27.5
+Kurta Sets,55,10,1.0,False,27,0.463,0.6482,0.0
+Sunglasses,749,149,1.0,True,27,0.463,0.9255,0.0
+Leggings,114,23,0.7391,False,26,0.446,0.6262,6.8
+Backpacks,508,101,0.9208,True,25,0.429,0.7285,2.0
+Ring,84,2,1.0,False,24,0.412,0.6161,0.0
+Trousers,367,73,0.8904,True,20,0.343,0.5956,2.2
+Shorts,376,75,0.9333,True,20,0.343,0.638,1.3
+Jewellery Set,36,5,0.8,False,19,0.326,0.6213,3.8
+Bracelet,40,5,0.6,False,19,0.326,0.6473,7.6
+Capris,115,23,0.3913,False,17,0.292,0.5365,10.3
+Kurtis,145,29,0.2759,True,17,0.292,0.3629,12.3
+Basketballs,10,1,1.0,False,15,0.257,0.5252,0.0
+Boxers,28,5,0.2,False,13,0.223,0.8236,10.4
+Mobile Pouch,33,7,0.7143,False,12,0.206,0.3835,3.4
+Caps,196,39,0.8974,True,11,0.189,0.7355,1.1
+Skirts,83,17,0.7647,False,10,0.172,0.6256,2.4
+Patiala,19,4,0.5,False,10,0.172,0.5986,5.0
+Accessory Gift Set,76,15,1.0,False,9,0.154,0.4764,0.0
+Jumpsuit,8,2,0.5,False,8,0.137,0.2894,4.0
+Dupatta,83,17,0.7059,False,8,0.137,0.3298,2.4
+Fragrance Gift Set,40,8,0.375,False,8,0.137,0.2621,5.0
+Duffel Bag,62,12,0.6667,False,7,0.12,0.4728,2.3
+Bangle,48,5,1.0,False,7,0.12,0.5433,0.0
+Innerwear Vests,174,34,0.8529,True,6,0.103,0.6424,0.9
+Free Gifts,50,10,0.0,False,6,0.103,0.4861,6.0
+Lounge Shorts,24,5,0.0,False,6,0.103,0.4026,6.0
+Jeggings,19,3,0.0,False,6,0.103,0.4725,6.0
+Trunk,100,20,1.0,False,5,0.086,0.5791,0.0
+Stoles,64,13,0.8462,False,4,0.069,0.1956,0.6
+Laptop Bag,57,11,0.3636,False,4,0.069,0.5376,2.5
+Waist Pouch,13,2,0.5,False,4,0.069,0.4194,2.0
+Tracksuits,20,4,1.0,False,4,0.069,0.4242,0.0
+Sweatshirts,200,40,0.6,True,3,0.051,0.624,1.2
+Swimwear,12,2,0.0,False,3,0.051,0.4602,3.0
+Sweaters,197,39,0.6154,True,3,0.051,0.1917,1.2
+Track Pants,211,42,0.9048,True,3,0.051,0.3009,0.3
+Gloves,14,3,1.0,False,3,0.051,0.1772,0.0
+Lounge Pants,38,8,0.125,False,2,0.034,0.3872,1.8
+Sports Sandals,45,9,0.2222,False,2,0.034,0.9054,1.6
+Scarves,79,15,0.7333,False,2,0.034,0.2006,0.5
+Messenger Bag,31,6,0.1667,False,1,0.017,0.6805,0.8
+Travel Accessory,10,1,0.0,False,1,0.017,0.2957,1.0
+Rompers,8,1,1.0,False,1,0.017,0.1348,0.0
+Booties,8,2,0.5,False,0,0.0,,0.0
+Camisoles,10,2,0.0,False,0,0.0,,0.0
+Churidar,22,4,0.75,False,0,0.0,,0.0
+Mufflers,28,5,0.4,False,0,0.0,,0.0
+Rucksacks,9,1,0.0,False,0,0.0,,0.0
+Salwar,22,5,0.8,False,0,0.0,,0.0
+Suspenders,30,5,0.8,False,0,0.0,,0.0
+Stockings,14,3,1.0,False,0,0.0,,0.0
+Waistcoat,10,2,0.5,False,0,0.0,,0.0
+Water Bottle,8,2,0.5,False,0,0.0,,0.0

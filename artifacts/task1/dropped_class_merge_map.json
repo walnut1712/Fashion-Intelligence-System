@@ -1,0 +1,139 @@
+{
+  "_why": [
+    "The min_class_size=10 floor deletes 32 classes and 121 rows. Deleting is the",
+    "right call for the *label* - a class with 2 examples cannot be predicted - but",
+    "it is not obviously the right call for the *pixels*. A Lip Gloss tile is a",
+    "photograph of a lipstick-shaped object on white, and the model has only 15",
+    "Lipstick tiles to learn that shape from.",
+    "",
+    "So instead of deleting the row, relabel it to the nearest KEPT class. The test",
+    "applied to every candidate below is deliberately strict: would a person",
+    "shown the two products at 60x80 struggle to tell them apart, or is one",
+    "literally a subtype of the other? Where the answer is no, the class stays",
+    "dropped - a merge that is merely same-family is how Task 3's catch-all 'Other'",
+    "class ended up with F1 = 0.000.",
+    "",
+    "This is why 'Blazers -> Tshirts' is absent even though both are Topwear, and",
+    "why Umbrellas, Wristbands, Cushion Covers, Ipad, Key chain, Body Wash and",
+    "Scrub and Eyeshadow are absent entirely: they have no kept sibling that looks",
+    "anything like them.",
+    "",
+    "The payoff concentrates exactly where the graded submission needs it:",
+    "Lipstick 15 -> 25 rows (+67%), Foundation and Primer 12 -> 22 (+83%). Those",
+    "two classes carry 6.9% of the deliverable between them.",
+    "",
+    "Rows merged this way are scored under their NEW label in val and test, so any",
+    "run using this map must be labelled as a variant and never compared silently",
+    "against a run that does not."
+  ],
+  "merges": {
+    "Lip Gloss": {
+      "into": "Lipstick",
+      "rows": 6,
+      "why": "same product form factor - a small cylindrical tube shot upright on white"
+    },
+    "Lip Plumper": {
+      "into": "Lipstick",
+      "rows": 4,
+      "why": "same tube form factor; the difference is the formulation, not the picture"
+    },
+    "Compact": {
+      "into": "Foundation and Primer",
+      "rows": 4,
+      "why": "flat round face-base product; indistinguishable from a pressed foundation at 60x80"
+    },
+    "Concealer": {
+      "into": "Foundation and Primer",
+      "rows": 2,
+      "why": "face-base product in the same tube/wand packaging"
+    },
+    "Highlighter and Blush": {
+      "into": "Foundation and Primer",
+      "rows": 4,
+      "why": "pressed face powder in the same compact packaging"
+    },
+    "Shoe Laces": {
+      "into": "Shoe Accessories",
+      "rows": 1,
+      "why": "literally a member of the target class"
+    },
+    "Ties and Cufflinks": {
+      "into": "Cufflinks",
+      "rows": 1,
+      "why": "literally a superset naming of the target class"
+    },
+    "Blazers": {
+      "into": "Jackets",
+      "rows": 8,
+      "why": "structured long-sleeved outerwear, front-opening; the same silhouette"
+    },
+    "Nehru Jackets": {
+      "into": "Jackets",
+      "rows": 5,
+      "why": "a jacket subtype; differs by collar, which 60x80 does not resolve"
+    },
+    "Rain Jacket": {
+      "into": "Jackets",
+      "rows": 2,
+      "why": "a jacket subtype; differs by fabric, not by shape"
+    },
+    "Tights": {
+      "into": "Leggings",
+      "rows": 9,
+      "why": "same garment silhouette; the distinction is denier, invisible at this size"
+    },
+    "Rain Trousers": {
+      "into": "Track Pants",
+      "rows": 2,
+      "why": "loose technical trouser with an elasticated waist - the same outline"
+    },
+    "Lounge Tshirts": {
+      "into": "Tshirts",
+      "rows": 1,
+      "why": "a t-shirt; the label records where it is worn, not what it looks like"
+    },
+    "Robe": {
+      "into": "Nightdress",
+      "rows": 2,
+      "why": "long loose nightwear garment shot flat"
+    },
+    "Baby Dolls": {
+      "into": "Nightdress",
+      "rows": 2,
+      "why": "short nightwear dress; the same category of garment"
+    },
+    "Trolley Bag": {
+      "into": "Duffel Bag",
+      "rows": 3,
+      "why": "large soft-sided travel bag - nearest kept luggage class"
+    },
+    "Tablet Sleeve": {
+      "into": "Laptop Bag",
+      "rows": 3,
+      "why": "flat padded device carrier; differs only in size, which a tile does not convey"
+    },
+    "Footballs": {
+      "into": "Basketballs",
+      "rows": 8,
+      "why": "spherical sports ball on white; nearest kept class in Sports Equipment"
+    },
+    "Hat": {
+      "into": "Caps",
+      "rows": 3,
+      "why": "brimmed headwear; nearest kept class in Headwear"
+    },
+    "Clothing Set": {
+      "into": "Kurta Sets",
+      "rows": 8,
+      "why": "multi-piece outfit photographed together; the only kept Apparel Set class"
+    }
+  },
+  "still_dropped": {
+    "_why": "no kept sibling that resembles them - merging would repeat Task 3's 'Other' mistake",
+    "classes": [
+      "Body Wash and Scrub", "Cushion Covers", "Eyeshadow", "Ipad", "Key chain",
+      "Lehenga Choli", "Salwar and Dupatta", "Shapewear", "Shrug", "Umbrellas",
+      "Wristbands", "Headband"
+    ]
+  }
+}
