@@ -1,7 +1,8 @@
 name,file,tta,tau,val_weighted_f1,val_macro_f1,train_acc,top3,accuracy,macro_f1,weighted_f1,balanced_acc,dep_accuracy,dep_weighted_f1
-CNN_weights_none_full,task1_cnn.pt,True,0.2,88.714,74.077,,97.582,87.802,72.51,87.439,72.151,83.957,83.439
+CNN_weights_none_full,superseded_task1_cnn_20260830_215803.pt,True,0.2,88.714,74.077,,97.582,87.802,72.51,87.439,72.151,83.957,83.439
 CNN_baseline_augnone,candidate_baseline_augnone.pt,True,0.4,88.935,72.196,99.873,97.055,88.093,73.266,87.93,74.322,84.97,84.776
-CNN_balanced_softmax_dep,candidate_balanced_softmax_dep.pt,True,0.0,87.259,70.352,92.547,96.001,86.003,70.02,86.969,80.165,83.629,84.679
 CNN_tail_sqrt_dep,candidate_tail_sqrt_dep.pt,True,0.0,85.639,76.447,89.597,97.746,84.021,75.372,84.509,77.374,84.579,85.11
+CNN_balanced_softmax_dep,candidate_balanced_softmax_dep.pt,True,0.0,87.259,70.352,92.547,96.001,86.003,70.02,86.969,80.165,83.629,84.679
 CNN_tail_mixup_dep,candidate_tail_mixup_dep.pt,True,0.0,85.113,63.924,87.979,92.947,82.44,65.39,84.639,78.035,81.563,83.599
 CNN_cutout,candidate_cutout.pt,True,0.2,88.037,70.184,92.842,98.182,87.439,69.895,87.047,70.687,83.526,83.28
+ens(baseline_augnone+tail_sqrt_dep),candidate_baseline_augnone.pt+candidate_tail_sqrt_dep.pt,True,0.0,89.246,75.775,99.873,98.273,88.42,76.439,88.217,75.527,85.906,85.707
