@@ -53,8 +53,47 @@
   "cnn_spatial_head_val_weighted_f1": 80.14,
   "seed_mean_weighted_f1": 80.48,
   "seed_std_weighted_f1": 0.24,
-  "estimated_unseen_rows_with_dropped_true_class": 18.3,
+  "estimated_unseen_rows_with_dropped_true_class": 49.9,
   "pretrained_reference_test_weighted_f1": 76.4,
   "headroom_vs_pretrained_reference": -10.72,
-  "unlabelled_distribution_shift_tvd": 44.6
+  "unlabelled_distribution_shift_tvd": 44.6,
+  "headline_operating_point": "horizontal-flip TTA + logit adjustment (tau=0.2)",
+  "headline_note": "what predict.py actually runs; the plain-argmax numbers below are retained for comparability with the notebook",
+  "test_accuracy_deployed": 87.8,
+  "test_weighted_f1_deployed": 87.44,
+  "test_macro_f1_deployed": 72.51,
+  "test_balanced_acc_deployed": 72.15,
+  "test_top3_acc_deployed": 97.58,
+  "val_metrics": {
+    "accuracy": 88.81207931599054,
+    "macro_f1": 72.26430443292621,
+    "weighted_f1": 88.32318888821126,
+    "balanced_acc": 71.46527382020295
+  },
+  "config_contradictions_repaired": {
+    "head_hidden": {
+      "config_said": 256,
+      "truth": 384
+    },
+    "dropout": {
+      "config_said": 0.3,
+      "truth": 0.2
+    },
+    "pool_grid": {
+      "config_said": [
+        2,
+        1
+      ],
+      "truth": [
+        1,
+        1
+      ]
+    },
+    "use_class_weights": {
+      "config_said": true,
+      "truth": false
+    }
+  },
+  "estimated_unseen_rows_with_dropped_true_class_note": "estimated per masterCategory under the deployment prior, not the flat training prior. The floor drops 2.60% of Personal Care rows and the graded set is ~21% Personal Care, so the two multiply rather than cancel. The previous figure, 18.3, assumed the graded set had the training composition. See artifacts/task1/dropped_class_graded_cost.csv",
+  "deployment_prior_note": "The graded set sits ~43% total-variation from the training class prior. Under that prior the deployed checkpoint scores 83.96 accuracy / 83.44 weighted-F1 against the 87.80 / 87.44 reported on the train-prior test split. See outputs/evaluation/task1_deployment_prior_metrics.csv"
 }

@@ -1,0 +1,5 @@
+configuration,classes,train_rows,rows_discarded,starved_train_rows,train_Lipstick,train_Foundation and Primer,train_Kajal and Eyeliner,train_Nail Polish,train_Lip Liner,graded_share_unreachable_pct
+drop@10 (current),92,27493,121,51,11,9,9,14,8,0.0
+drop@4,106,27554,34,50,10,8,10,14,8,0.0
+merge-to-sibling,92,27546,43,68,19,16,9,15,9,0.0
+merge + drop@4,97,27569,12,68,19,16,10,14,9,0.0

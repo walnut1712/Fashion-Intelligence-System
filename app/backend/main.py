@@ -151,7 +151,7 @@ def health():
 
 
 @app.post("/api/task1/predict")
-async def predict_task1(image: UploadFile = File(...)):
+async def predict_task1(image: UploadFile = File(...), ingest: str = None):
     if task1_service is None:
         raise HTTPException(status_code=503, detail=task1_error)
     if image.content_type and not image.content_type.startswith("image/"):
@@ -160,7 +160,9 @@ async def predict_task1(image: UploadFile = File(...)):
     if not image_bytes:
         raise HTTPException(status_code=400, detail="Empty image")
     try:
-        prediction = task1_service.predict(image_bytes)
+        prediction = task1_service.predict(image_bytes, ingest=ingest)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error))
     except Exception as error:
         raise HTTPException(status_code=500, detail="{}: {}".format(type(error).__name__, error))
     return {"filename": image.filename, "prediction": prediction}
@@ -253,6 +255,7 @@ async def analyze(
     image: UploadFile = File(...),
     k: int = 10,
     search_mode: str = "nobg",
+    ingest: str = None,
 ):
     if task1_service is None:
         raise HTTPException(
@@ -281,7 +284,7 @@ async def analyze(
 
     started = time.perf_counter()
     try:
-        article_type = task1_service.predict(image_bytes)
+        article_type = task1_service.predict(image_bytes, ingest=ingest)
         season = task2_service.predict(image_bytes)
         task3_result = task3_service.predict(image_bytes)
         similar_items = task4_service.search(

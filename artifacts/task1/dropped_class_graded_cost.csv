@@ -1,0 +1,10 @@
+masterCategory,train_rows,train_drop_rate_pct,graded_share_pct,estimated_affected_rows
+Personal Care,1001,2.597,21.033,31.8
+Sporting Goods,25,48.0,0.257,7.2
+Apparel,19142,0.277,39.252,6.3
+Accessories,9819,0.285,27.157,4.5
+Free Items,83,1.205,0.103,0.1
+Footwear,8541,0.0,12.198,0.0
+Home,1,100.0,0.0,0.0
+TOTAL (prior-aware),38612,,100.0,49.9
+"TOTAL (flat train prior, as recorded)",38612,,100.0,18.3

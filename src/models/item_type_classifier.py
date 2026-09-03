@@ -27,6 +27,12 @@ Checkpoint contract
     config          the notebook CONFIG dict for the run
     test_metrics    dict of held-out metrics
     run_id          timestamp of the run that produced the file
+
+Two further keys are optional, and absent from checkpoints written before
+post-hoc logit adjustment was adopted::
+
+    class_log_prior       list[float], log of the TRAIN class frequencies
+    logit_adjustment_tau  float, 0 or missing disables the adjustment
 """
 
 from io import BytesIO
@@ -41,9 +47,11 @@ from PIL import Image, UnidentifiedImageError
 __all__ = [
     "ConvBlock",
     "ItemTypeCNN",
+    "apply_logit_adjustment",
     "build_from_checkpoint",
     "choose_device",
     "load_item_type_model",
+    "logit_adjustment_shift",
     "load_image_array",
     "preprocess_arrays",
     "preprocess_image",
@@ -90,10 +98,19 @@ class ItemTypeCNN(nn.Module):
     reduced before the classifier head:
 
     * ``pool_grid=(1, 1)``, ``pool_mode="avg"`` - plain global average pool.
-    * ``pool_grid=(2, 1)``, ``pool_mode="avgmax"`` - keep a 2x1 spatial grid
-      and concatenate average- and max-pooled features. Catalogue photos are
-      vertically structured, so keeping one vertical division is worth about
-      +3 validation weighted-F1 over a plain global pool.
+    * ``pool_grid=(1, 1)``, ``pool_mode="avgmax"`` - global pool, concatenating
+      average- and max-pooled features. **This is what ships.** The random
+      hyper-parameter search sampled it and it won; ``best_config.json`` records
+      it, and so does ``task1_cnn.pt["architecture"]``.
+    * ``pool_grid=(2, 1)``, ``pool_mode="avgmax"`` - keeps one vertical division
+      of the feature map. Supported, and used by some earlier checkpoints, but
+      not adopted.
+
+    An earlier version of this docstring claimed the 2x1 spatial head was the
+    shipped one and worth "+3 validation weighted-F1". Neither half was true: the
+    deployed model pools 1x1, and the measured gap between the plain-GAP head and
+    the spatial head is ``CNN_gap_head`` 79.04 against ``CNN_start`` 80.14, which
+    is +1.10 (``outputs/evaluation/item_type_results.csv``).
 
     ``head_style`` selects the head module layout, and therefore the
     ``state_dict`` key indices. Do not reorder these ``Sequential`` members -
@@ -208,12 +225,16 @@ def load_item_type_model(path, device=None):
 def load_image_array(source, size):
     """Read one image as a uint8 HWC array. The single decode path.
 
-    ``source`` may be a path, raw bytes, or a PIL image. ``size`` is
-    ``(width, height)``, matching ``checkpoint["image_size_pil"]``.
+    ``source`` may be a path, raw bytes, a PIL image, or a uint8 HWC array -
+    the same set ``src.data.user_image.load_user_image`` accepts, so an ingestion
+    mode can be swapped in without changing what a caller is allowed to pass.
+    ``size`` is ``(width, height)``, matching ``checkpoint["image_size_pil"]``.
     """
     try:
         if isinstance(source, Image.Image):
             image = source
+        elif isinstance(source, np.ndarray):
+            image = Image.fromarray(np.ascontiguousarray(source.astype(np.uint8)))
         elif isinstance(source, (bytes, bytearray)):
             image = Image.open(BytesIO(bytes(source)))
         else:
@@ -241,16 +262,87 @@ def preprocess_image(source, checkpoint, device=None):
     return tensor.to(device) if device is not None else tensor
 
 
+def logit_adjustment_shift(checkpoint, device=None, dtype=torch.float32):
+    """``tau * log(train prior)``, or ``None`` if this checkpoint wants none.
+
+    Both keys are optional, so checkpoints written before logit adjustment
+    existed keep their exact previous behaviour.
+    """
+    tau = float(checkpoint.get("logit_adjustment_tau") or 0.0)
+    log_prior = checkpoint.get("class_log_prior")
+    if tau <= 0.0 or log_prior is None:
+        return None
+    shift = torch.as_tensor(log_prior, dtype=dtype) * tau
+    return shift.to(device) if device is not None else shift
+
+
+def apply_logit_adjustment(probabilities, checkpoint):
+    """Post-hoc logit adjustment (Menon et al. 2021) over a probability tensor.
+
+    Scores ``argmax_y [ f_y(x) - tau * log(prior_y) ]``, which removes the
+    training prior the head's bias has absorbed. Nothing is retrained; the
+    rare classes simply stop being penalised for being rare.
+
+    Applied to probabilities rather than raw logits so it composes with the
+    flip-TTA average above it - ``log`` of the averaged probability is the same
+    quantity the tau sweep was tuned against, so the deployed operating point
+    is the one that was measured.
+    """
+    shift = logit_adjustment_shift(checkpoint, device=probabilities.device,
+                                   dtype=probabilities.dtype)
+    if shift is None:
+        return probabilities
+    return F.softmax(torch.log(probabilities.clamp_min(1e-12)) - shift, dim=1)
+
+
+def _loader(ingest):
+    """The decode function for an ingestion mode.
+
+    ``"squash"`` is ``load_image_array`` - resize to 60x80 and let the aspect
+    ratio distort - which is what every Task 1 number to date was measured with.
+    The other modes come from ``src.data.user_image`` and coerce a photograph
+    towards catalogue framing first. Imported lazily so this module keeps working
+    if the data package is unavailable and only "squash" is asked for.
+    """
+    if ingest in (None, "squash"):
+        return load_image_array
+    from src.data.user_image import PREPROCESS_MODES, load_user_image
+    if ingest not in PREPROCESS_MODES:
+        raise ValueError("ingest must be 'squash' or one of {}".format(PREPROCESS_MODES))
+    return lambda source, size: load_user_image(source, size=tuple(size), mode=ingest)
+
+
 @torch.no_grad()
-def predict_proba(model, checkpoint, sources, batch_size=256, device=None, tta=False):
+def predict_proba(model, checkpoint, sources, batch_size=256, device=None, tta=False,
+                  ingest="squash", adjust=True):
     """Softmax probabilities for an iterable of images.
 
     ``tta=True`` averages the probabilities of each image and its horizontal
     mirror. Catalogue photos are near-symmetric and training already uses
     random horizontal flips, so this is a free consistency gain at inference.
+
+    ``ingest`` selects how a source becomes a 60x80 tile. It matters far more
+    than it sounds: this model was trained on cutouts against white, and on
+    held-out rows composited onto a textured background its accuracy falls from
+    87.92 to 25.80.
+
+    Temperature scaling is applied to the logits when the checkpoint carries a
+    ``temperature``, exactly as ``Task1Service.predict`` does. Dividing logits by
+    a positive constant cannot change the argmax, so every recorded accuracy is
+    unaffected; it only makes the reported confidence mean what it says. This
+    lives here rather than in the service so the batch path and the serving path
+    are the same code, which the module docstring has always claimed.
+
+    Logit adjustment is applied afterwards when the checkpoint carries a tau.
+    Pass ``adjust=False`` to get the raw posteriors instead. Label-shift
+    estimators need those: tau is itself a blind push away from the training
+    prior, so running one on top of the other corrects twice. On the graded set
+    tau=0.2 moves Foundation and Primer from 48 predicted rows to 108.
     """
     device = device or next(model.parameters()).device
     size = checkpoint["image_size_pil"]
+    load = _loader(ingest)
+    temperature = float(checkpoint.get("temperature") or 1.0)
     sources = list(sources)
     was_training = model.training
     model.eval()
@@ -258,13 +350,16 @@ def predict_proba(model, checkpoint, sources, batch_size=256, device=None, tta=F
     chunks = []
     for start in range(0, len(sources), batch_size):
         arrays = np.stack(
-            [load_image_array(s, size) for s in sources[start:start + batch_size]]
+            [load(s, size) for s in sources[start:start + batch_size]]
         )
         tensor = preprocess_arrays(arrays, checkpoint).to(device)
-        probabilities = F.softmax(model(tensor).float(), dim=1)
+        probabilities = F.softmax(model(tensor).float() / temperature, dim=1)
         if tta:
-            flipped = F.softmax(model(torch.flip(tensor, dims=[3])).float(), dim=1)
+            flipped = F.softmax(
+                model(torch.flip(tensor, dims=[3])).float() / temperature, dim=1)
             probabilities = (probabilities + flipped) / 2
+        if adjust:
+            probabilities = apply_logit_adjustment(probabilities, checkpoint)
         chunks.append(probabilities.cpu().numpy())
 
     if was_training:
