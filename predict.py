@@ -30,6 +30,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.models.item_type_classifier import (  # noqa: E402
     choose_device,
+    ensemble_proba,
     load_item_type_model,
     predict_proba,
 )
@@ -46,6 +47,13 @@ def parse_args(argv=None):
     parser.add_argument("--out", required=True, type=Path, help="CSV to write")
     parser.add_argument("--model", type=Path, default=DEFAULT_MODEL,
                         help="checkpoint (default: %(default)s)")
+    parser.add_argument("--models", type=Path, nargs="+", default=None, metavar="CHECKPOINT",
+                        help="two or more checkpoints to soft-vote: the raw posteriors "
+                             "are averaged, then one post-hoc adjustment is applied. "
+                             "Overrides --model. The checkpoints must share class order. "
+                             "candidate_baseline_augnone carries the head and "
+                             "candidate_tail_sqrt_dep the tail, so their mean beats "
+                             "either alone on both weighted-F1 and macro-F1")
     parser.add_argument("--batch-size", type=int, default=256)
     parser.add_argument("--top-k", type=int, default=1,
                         help="also write the top-K alternatives with their confidences")
@@ -152,8 +160,10 @@ def write_review_queue(path, ids, probabilities, class_names, baseline_labels=No
 def main(argv=None):
     args = parse_args(argv)
 
-    if not args.model.exists():
-        raise SystemExit("Checkpoint not found: {}".format(args.model))
+    model_paths = list(args.models) if args.models else [args.model]
+    missing = [p for p in model_paths if not p.exists()]
+    if missing:
+        raise SystemExit("Checkpoint not found: {}".format(", ".join(map(str, missing))))
     if not args.images.is_dir():
         raise SystemExit("Not a directory: {}".format(args.images))
 
@@ -162,21 +172,31 @@ def main(argv=None):
         raise SystemExit("No images found in {}".format(args.images))
 
     device = choose_device()
-    model, checkpoint = load_item_type_model(args.model, device)
+    pairs = [load_item_type_model(p, device) for p in model_paths]
+    model, checkpoint = pairs[0]
     tta = checkpoint.get("tta", False) if args.tta is None else args.tta
     class_names = np.asarray(checkpoint["class_names"])
 
-    print("Model    : {} (run {}, {} classes)".format(
-        checkpoint.get("model_name", "?"), checkpoint.get("run_id", "?"), len(class_names)))
+    if len(pairs) == 1:
+        print("Model    : {} (run {}, {} classes)".format(
+            checkpoint.get("model_name", "?"), checkpoint.get("run_id", "?"), len(class_names)))
+    else:
+        print("Ensemble : {} checkpoints - {}".format(
+            len(pairs), ", ".join(p.name for p in model_paths)))
     print("Device   : {} | TTA: {} | ingest: {}".format(device, tta, args.ingest))
     print("Images   : {}".format(len(paths)))
 
     # Prior correction needs the *raw* posteriors. The checkpoint's tau adjustment
     # is itself a blind push away from the training prior, so running a measured
     # correction on top of it corrects twice - see src/evaluation/prior_shift.py.
-    probabilities = predict_proba(model, checkpoint, paths,
-                                  batch_size=args.batch_size, device=device, tta=tta,
-                                  ingest=args.ingest, adjust=not args.prior_correct)
+    if len(pairs) == 1:
+        probabilities = predict_proba(model, checkpoint, paths,
+                                      batch_size=args.batch_size, device=device, tta=tta,
+                                      ingest=args.ingest, adjust=not args.prior_correct)
+    else:
+        probabilities = ensemble_proba(pairs, paths,
+                                       batch_size=args.batch_size, device=device, tta=tta,
+                                       ingest=args.ingest, adjust=not args.prior_correct)
 
     baseline_labels = None
     if args.prior_correct:
@@ -196,7 +216,7 @@ def main(argv=None):
                 "class's prior rests on is unknown - and that is exactly what damps "
                 "the correction for the starved classes. Run "
                 "`python -m src.training.train_item_type --calibrate {}` first."
-                .format(args.model))
+                .format(model_paths[0]))
 
         train_prior = train_counts / train_counts.sum()
         shrink = support_shrink(train_counts)

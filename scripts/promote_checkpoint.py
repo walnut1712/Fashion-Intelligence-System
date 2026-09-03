@@ -35,6 +35,7 @@ Usage
 """
 
 import argparse
+import json
 import shutil
 import subprocess
 import sys
@@ -55,6 +56,23 @@ FIXTURE = ARTIFACT_DIR / "task1_predictions.csv"
 TASK1_OUT = PROJECT_ROOT / "outputs" / "task1_item_type_predictions.csv"
 TEST_IMAGES = (PROJECT_ROOT / "A2_FashionDataset" / "FashionDataset" / "test"
                / "images_test")
+GRADED_PRIOR = ARTIFACT_DIR / "graded_prior.json"
+
+# The submission is not just the deployed model at argmax. Two changes, both
+# measured on the graded population and both no-ops on the serving fixture:
+#
+#   * soft-vote the deployed checkpoint with the tail specialist. The deployed
+#     model carries the head, candidate_tail_sqrt_dep the tail; their mean beats
+#     either alone on weighted- and macro-F1 at once
+#     (outputs/evaluation/task1_recipe_comparison.csv). Set to None to disable.
+#   * correct for the ~44% total-variation label shift between the training prior
+#     and the graded set (a pure prior shift - the covariate check passes). The
+#     EM correction ships at half strength and only while graded_prior.json's
+#     guard still reads safe; the simulation puts alpha=0.5 at +1.4 weighted-F1
+#     on the graded scenario and within noise of zero when there is no shift
+#     (outputs/evaluation/task1_prior_shift_simulation.csv).
+SUBMISSION_TAIL_MODEL = ARTIFACT_DIR / "candidate_tail_sqrt_dep.pt"
+SUBMISSION_PRIOR_ALPHA = 0.5
 
 
 def _check_calibrated(path):
@@ -70,8 +88,35 @@ def _check_calibrated(path):
     return checkpoint
 
 
+def _prior_correction_safe(verbose=True):
+    """Whether the label-shift correction still clears its own guard.
+
+    ``src/evaluation/prior_shift.py`` writes ``graded_prior.json`` with a ``safe``
+    flag that folds in the covariate precondition and the EM stability checks. If
+    it ever flips, the submission drops back to the plain adjusted path rather
+    than shipping a correction the guard no longer vouches for.
+    """
+    if not GRADED_PRIOR.exists():
+        if verbose:
+            print("no graded_prior.json - submission uses the plain adjusted path")
+        return False
+    payload = json.loads(GRADED_PRIOR.read_text(encoding="utf-8"))
+    safe = bool(payload.get("safe") or (payload.get("checks") or {}).get("safe"))
+    if verbose and not safe:
+        print("graded_prior.json guard is not safe - submission uses the plain "
+              "adjusted path")
+    return safe
+
+
 def _regenerate_predictions(verbose=True):
-    """Rewrite the regression fixture and the Task 1 submission column."""
+    """Rewrite the serving regression fixture and the Task 1 submission column.
+
+    The two diverge on purpose. The fixture must stay on the serving path - one
+    deployed checkpoint, tau adjustment on - because
+    ``test_saved_predictions_are_reproducible`` replays it through exactly that
+    path. The submission is the best-effort deliverable: an ensemble, and a
+    label-shift correction the serving path has no business applying.
+    """
     from src.models.item_type_classifier import (choose_device, load_item_type_model,
                                                  predict_proba)
 
@@ -81,27 +126,39 @@ def _regenerate_predictions(verbose=True):
     paths = sorted((p for p in TEST_IMAGES.iterdir() if p.suffix.lower() == ".jpg"),
                    key=lambda p: int(p.stem))
     if verbose:
-        print("scoring {} graded tiles".format(len(paths)))
+        print("scoring {} graded tiles for the serving fixture".format(len(paths)))
 
     probabilities = predict_proba(model, checkpoint, paths, device=device,
                                   tta=bool(checkpoint.get("tta", False)))
-    labels = class_names[probabilities.argmax(1)]
     ids = [int(p.stem) for p in paths]
 
     # The fixture carries two extra columns the submission does not: the image
     # path, and the confidence the test asserts against.
     pd.DataFrame({
-        "id": ids, "gender": "", "articleType": labels, "season": "", "usage": "",
+        "id": ids, "gender": "", "articleType": class_names[probabilities.argmax(1)],
+        "season": "", "usage": "",
         "image_path": ["A2_FashionDataset/FashionDataset/test/images_test/{}.jpg".format(i)
                        for i in ids],
         "articleType_confidence": probabilities.max(1).round(4),
     }).to_csv(FIXTURE, index=False)
-
-    pd.DataFrame({"id": ids, "gender": "", "articleType": labels,
-                  "season": "", "usage": ""}).to_csv(TASK1_OUT, index=False)
     if verbose:
-        print("wrote {} and {}".format(FIXTURE.name, TASK1_OUT.name))
-    return labels
+        print("wrote {} (serving fixture)".format(FIXTURE.name))
+
+    # The submission goes through predict.py so the ensemble, the guard and the
+    # 500-image floor are the ones the tests already cover, not a second copy.
+    models = [DEPLOYED]
+    if SUBMISSION_TAIL_MODEL is not None and SUBMISSION_TAIL_MODEL.exists():
+        models.append(SUBMISSION_TAIL_MODEL)
+    command = [sys.executable, str(PROJECT_ROOT / "predict.py"), "--submission",
+               "--images", str(TEST_IMAGES), "--out", str(TASK1_OUT),
+               "--models", *[str(m) for m in models]]
+    if _prior_correction_safe(verbose=verbose):
+        command += ["--prior-correct", "--alpha", str(SUBMISSION_PRIOR_ALPHA)]
+    if verbose:
+        print("\n$ " + " ".join(["predict.py"] + command[3:]))
+    subprocess.run(command, cwd=PROJECT_ROOT, check=True)
+
+    return pd.read_csv(TASK1_OUT)["articleType"].to_numpy()
 
 
 def promote(candidate, dry_run=False, verbose=True):
