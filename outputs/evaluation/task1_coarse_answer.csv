@@ -1,0 +1,4 @@
+severity,articleType_top1,subCategory_via_argmax,subCategory_marginalised,subCategory_marginalised_top2,coarse_gain
+mild,54.86,66.44,66.95,73.25,12.09
+moderate,45.49,60.14,61.67,71.21,16.18
+severe,24.87,36.8,40.2,52.64,15.33

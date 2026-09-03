@@ -1,0 +1,3 @@
+variant,accuracy,weighted_f1,macro_f1,dep_accuracy,dep_weighted_f1,family_accuracy,rows_changed
+argmax (no re-rank),88.289,87.809,72.476,84.713,84.05,96.972,0
+within-family re-rank,88.271,87.791,72.478,84.572,83.944,97.018,35

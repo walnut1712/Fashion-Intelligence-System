@@ -1,0 +1,1514 @@
+id,articleType,confidence,alt1,alt1_confidence,alt2,alt2_confidence,family,family_confidence,label_before_prior_correction,flags
+52003,Jeans,0.161,Briefs,0.1521,Bra,0.0617,Bottomwear,0.2288,Tshirts,low_confidence|changed_by_prior
+52017,Bra,0.4891,Briefs,0.1064,Nightdress,0.0827,Innerwear,0.6013,Sports Shoes,low_confidence|changed_by_prior
+52021,Bra,0.3077,Nightdress,0.0593,Sarees,0.0551,Innerwear,0.3631,Shirts,low_confidence|changed_by_prior
+52028,Kurtas,0.1401,Jackets,0.1388,Tunics,0.0913,Topwear,0.5125,Kurtis,low_confidence|changed_by_prior
+52029,Jackets,0.7889,Sweatshirts,0.176,Watches,0.0049,Topwear,0.968,Sweatshirts,changed_by_prior
+52051,Tshirts,0.3796,Tops,0.0608,Jackets,0.0403,Topwear,0.5514,Tshirts,low_confidence
+52066,Tops,0.2922,Tshirts,0.2426,Jackets,0.0261,Topwear,0.6068,Tshirts,low_confidence|changed_by_prior
+52077,Shirts,0.423,Tshirts,0.0572,Jackets,0.0534,Topwear,0.5641,Shirts,low_confidence
+52083,Tops,0.4037,Tshirts,0.2705,Perfume and Body Mist,0.0121,Topwear,0.6981,Tshirts,low_confidence|changed_by_prior
+52084,Tops,0.5681,Tshirts,0.2227,Perfume and Body Mist,0.0385,Topwear,0.8174,Tshirts,changed_by_prior
+52086,Tshirts,0.2833,Tops,0.1438,Dresses,0.0476,Topwear,0.4952,Tshirts,low_confidence
+52091,Tops,0.3511,Scarves,0.0781,Shirts,0.0689,Topwear,0.4847,Tops,low_confidence
+52093,Tops,0.4241,Camisoles,0.1464,Tshirts,0.0714,Topwear,0.5086,Tops,low_confidence
+52103,Nightdress,0.4984,Dresses,0.1674,Tunics,0.085,Loungewear and Nightwear,0.503,Nightdress,low_confidence
+52106,Dresses,0.5706,Nightdress,0.2257,Kurtas,0.1432,Dress,0.5718,Kurtas,changed_by_prior
+52109,Dresses,0.6506,Kurtas,0.1416,Tunics,0.1039,Dress,0.6527,Kurtas,changed_by_prior
+52111,Tunics,0.3694,Tops,0.2329,Dresses,0.1096,Topwear,0.7721,Tops,low_confidence|changed_by_prior
+52112,Nightdress,0.6937,Tops,0.0856,Kurtis,0.0649,Loungewear and Nightwear,0.6962,Kurtis,changed_by_prior
+52113,Tunics,0.3471,Kurtas,0.2795,Tops,0.0928,Topwear,0.7745,Kurtas,low_confidence|changed_by_prior
+52118,Nightdress,0.4092,Stoles,0.0864,Bra,0.0841,Loungewear and Nightwear,0.421,Stoles,low_confidence|changed_by_prior
+52134,Lounge Shorts,0.2664,Shorts,0.1591,Leggings,0.0526,Bottomwear,0.3523,Shorts,low_confidence|family_disagrees|changed_by_prior
+52135,Tshirts,0.457,Tops,0.1322,Perfume and Body Mist,0.0192,Topwear,0.6315,Tshirts,low_confidence
+52145,Tops,0.4131,Tshirts,0.249,Perfume and Body Mist,0.0361,Topwear,0.6832,Tshirts,low_confidence|changed_by_prior
+52155,Tops,0.3548,Dresses,0.3416,Night suits,0.0874,Topwear,0.4046,Tops,low_confidence
+52158,Tops,0.2464,Dresses,0.1124,Nightdress,0.0833,Topwear,0.3305,Tops,low_confidence
+52159,Dresses,0.2748,Shirts,0.152,Jackets,0.0812,Topwear,0.3829,Shirts,low_confidence|family_disagrees|changed_by_prior
+52163,Tops,0.4527,Dresses,0.1649,Tshirts,0.1087,Topwear,0.5893,Tops,low_confidence
+52164,Dresses,0.3539,Tops,0.3004,Night suits,0.0514,Dress,0.3618,Tops,low_confidence|changed_by_prior
+52166,Pendant,0.4298,Necklace and Chains,0.0937,Jewellery Set,0.0732,Jewellery,0.6649,Pendant,low_confidence
+52168,Perfume and Body Mist,0.3305,Earrings,0.0536,Ring,0.046,Fragrance,0.3425,Perfume and Body Mist,low_confidence
+52169,Bracelet,0.1843,Caps,0.1079,Necklace and Chains,0.0692,Jewellery,0.4304,Caps,low_confidence|changed_by_prior
+52172,Basketballs,0.1414,Swimwear,0.0731,Tops,0.0694,Bottomwear,0.173,Tops,low_confidence|family_disagrees|changed_by_prior
+52173,Bra,0.0662,Nightdress,0.0512,Briefs,0.0451,Innerwear,0.1294,Sports Shoes,low_confidence|changed_by_prior
+52176,Bracelet,0.3443,Pendant,0.0819,Necklace and Chains,0.0657,Jewellery,0.5618,Bracelet,low_confidence
+52177,Flats,0.2017,Sports Shoes,0.0734,Nightdress,0.0688,Shoes,0.2804,Sports Shoes,low_confidence|changed_by_prior
+52178,Pendant,0.1766,Earrings,0.1313,Casual Shoes,0.0779,Jewellery,0.3764,Casual Shoes,low_confidence|changed_by_prior
+52179,Bracelet,0.2256,Earrings,0.2134,Necklace and Chains,0.1912,Jewellery,0.6984,Flip Flops,low_confidence|changed_by_prior
+52182,Necklace and Chains,0.2189,Earrings,0.2026,Pendant,0.0766,Jewellery,0.5651,Sports Shoes,low_confidence|changed_by_prior
+52185,Earrings,0.2493,Necklace and Chains,0.184,Pendant,0.1129,Jewellery,0.6265,Sports Shoes,low_confidence|changed_by_prior
+52186,Earrings,0.3043,Pendant,0.0806,Sports Shoes,0.0582,Jewellery,0.5031,Sports Shoes,low_confidence|changed_by_prior
+52190,Jewellery Set,0.244,Perfume and Body Mist,0.2212,Briefs,0.1064,Jewellery,0.3531,Jewellery Set,low_confidence
+52191,Briefs,0.2877,Pendant,0.1816,Jewellery Set,0.1785,Jewellery,0.4714,Briefs,low_confidence|family_disagrees
+52193,Bracelet,0.1217,Bra,0.1153,Earrings,0.0854,Jewellery,0.3458,Sports Shoes,low_confidence|changed_by_prior
+52195,Earrings,0.1619,Sports Shoes,0.1608,Sarees,0.1179,Jewellery,0.4843,Sports Shoes,low_confidence|changed_by_prior
+52209,Pendant,0.4863,Necklace and Chains,0.2697,Earrings,0.0467,Jewellery,0.8373,Pendant,low_confidence
+52210,Necklace and Chains,0.3787,Pendant,0.3583,Sarees,0.0469,Jewellery,0.8026,Necklace and Chains,low_confidence
+52211,Necklace and Chains,0.4646,Pendant,0.2954,Bracelet,0.0531,Jewellery,0.8366,Necklace and Chains,low_confidence
+52222,Bra,0.1959,Handbags,0.0839,Perfume and Body Mist,0.072,Innerwear,0.2764,Handbags,low_confidence|changed_by_prior
+52223,Pendant,0.3004,Necklace and Chains,0.1317,Sarees,0.0975,Jewellery,0.5057,Pendant,low_confidence
+52224,Necklace and Chains,0.4112,Pendant,0.1944,Watches,0.0449,Jewellery,0.6563,Necklace and Chains,low_confidence
+52228,Bra,0.4415,Perfume and Body Mist,0.0856,Earrings,0.0632,Innerwear,0.469,Sports Shoes,low_confidence|changed_by_prior
+52230,Watches,0.2616,Shirts,0.1942,Necklace and Chains,0.1013,Watches,0.2616,Shirts,low_confidence|changed_by_prior
+52254,Briefs,0.4767,Trunk,0.203,Boxers,0.133,Innerwear,0.8292,Trunk,low_confidence|changed_by_prior
+52255,Boxers,0.5708,Briefs,0.232,Trunk,0.1127,Innerwear,0.9231,Trunk,changed_by_prior
+52256,Boxers,0.4794,Trunk,0.3379,Briefs,0.1171,Innerwear,0.9407,Trunk,low_confidence|changed_by_prior
+52257,Boxers,0.5603,Trunk,0.2252,Briefs,0.1513,Innerwear,0.9424,Trunk,changed_by_prior
+52299,Shorts,0.273,Lounge Shorts,0.1751,Boxers,0.1672,Bottomwear,0.3932,Shorts,low_confidence
+52303,Necklace and Chains,0.2682,Jewellery Set,0.1651,Pendant,0.13,Jewellery,0.597,Necklace and Chains,low_confidence
+52313,Belts,0.1885,Shoe Accessories,0.0825,Bracelet,0.0665,Jewellery,0.1908,Belts,low_confidence|family_disagrees
+52315,Bracelet,0.2576,Shoe Accessories,0.2003,Handbags,0.1049,Jewellery,0.3363,Belts,low_confidence|changed_by_prior
+52316,Belts,0.3736,Shoe Accessories,0.1309,Travel Accessory,0.0779,Belts,0.3736,Belts,low_confidence
+52317,Belts,0.2641,Shoe Accessories,0.113,Laptop Bag,0.0529,Belts,0.2641,Belts,low_confidence
+52318,Bracelet,0.1492,Shoe Accessories,0.1348,Bangle,0.1247,Jewellery,0.3582,Belts,low_confidence|changed_by_prior
+52320,Bracelet,0.2156,Bangle,0.139,Shoe Accessories,0.1046,Jewellery,0.4394,Belts,low_confidence|changed_by_prior
+52322,Bracelet,0.3477,Shoe Accessories,0.0793,Belts,0.0664,Jewellery,0.4933,Belts,low_confidence|changed_by_prior
+52323,Bracelet,0.3092,Bangle,0.2856,Ring,0.1888,Jewellery,0.8158,Bangle,low_confidence|changed_by_prior
+52324,Mobile Pouch,0.149,Belts,0.1175,Shoe Accessories,0.083,Bags,0.24,Belts,low_confidence|changed_by_prior
+52325,Travel Accessory,0.1189,Bracelet,0.0999,Swimwear,0.0699,Jewellery,0.1905,Tshirts,low_confidence|family_disagrees|changed_by_prior
+52326,Belts,0.1287,Bracelet,0.1253,Shoe Accessories,0.0825,Jewellery,0.2488,Belts,low_confidence|family_disagrees
+52327,Belts,0.1832,Travel Accessory,0.1036,Swimwear,0.0695,Belts,0.1832,Belts,low_confidence
+52328,Handbags,0.1044,Bracelet,0.1018,Basketballs,0.07,Jewellery,0.1887,Belts,low_confidence|family_disagrees|changed_by_prior
+52329,Belts,0.199,Basketballs,0.0898,Bracelet,0.0654,Belts,0.199,Belts,low_confidence
+52351,Dresses,0.3107,Nightdress,0.2233,Tunics,0.0347,Dress,0.3136,Nightdress,low_confidence|changed_by_prior
+52352,Dresses,0.6065,Kurtas,0.1845,Nightdress,0.0305,Dress,0.6108,Kurtas,changed_by_prior
+52355,Sarees,0.3305,Nightdress,0.107,Dresses,0.1041,Saree,0.3305,Sarees,low_confidence
+52359,Nightdress,0.1725,Dresses,0.17,Night suits,0.0485,Loungewear and Nightwear,0.2306,Nightdress,low_confidence
+52375,Dresses,0.4602,Nightdress,0.2626,Jumpsuit,0.0706,Dress,0.5309,Nightdress,low_confidence|changed_by_prior
+52378,Dresses,0.5181,Nightdress,0.3773,Sarees,0.0122,Dress,0.5269,Nightdress,changed_by_prior
+52379,Dresses,0.4512,Nightdress,0.4384,Bra,0.0112,Dress,0.4537,Nightdress,low_confidence|changed_by_prior
+52381,Night suits,0.4272,Dresses,0.3203,Sarees,0.0564,Loungewear and Nightwear,0.4554,Night suits,low_confidence
+52382,Kurta Sets,0.3761,Kurtas,0.1812,Night suits,0.1218,Apparel Set,0.3761,Kurtas,low_confidence|changed_by_prior
+52383,Night suits,0.385,Kurta Sets,0.2722,Dresses,0.1104,Loungewear and Nightwear,0.3988,Night suits,low_confidence
+52385,Dresses,0.4499,Nightdress,0.137,Kurtas,0.1284,Dress,0.4553,Kurtas,low_confidence|changed_by_prior
+52386,Dresses,0.5039,Nightdress,0.3932,Sarees,0.0263,Dress,0.508,Nightdress,changed_by_prior
+52393,Dresses,0.2613,Nightdress,0.1221,Sarees,0.0972,Dress,0.3035,Tops,low_confidence|changed_by_prior
+52402,Dresses,0.4965,Tunics,0.0493,Jumpsuit,0.047,Dress,0.5434,Dresses,low_confidence
+52404,Dresses,0.612,Kurtas,0.1635,Nightdress,0.0493,Dress,0.6166,Kurtas,changed_by_prior
+52417,Dresses,0.6552,Nightdress,0.1165,Tops,0.1073,Dress,0.6877,Tops,changed_by_prior
+52420,Dresses,0.6011,Nightdress,0.3723,Tunics,0.0037,Dress,0.6021,Nightdress,changed_by_prior
+52429,Dresses,0.5276,Nightdress,0.3365,Jumpsuit,0.0226,Dress,0.5502,Nightdress,changed_by_prior
+52432,Dresses,0.2605,Tops,0.1964,Nightdress,0.0763,Dress,0.3311,Tops,low_confidence|changed_by_prior
+52438,Nightdress,0.4412,Dresses,0.3626,Sarees,0.0711,Loungewear and Nightwear,0.4466,Nightdress,low_confidence
+52443,Dresses,0.5704,Nightdress,0.3205,Sarees,0.0211,Dress,0.5846,Nightdress,changed_by_prior
+52445,Nightdress,0.2972,Tops,0.2867,Dresses,0.0997,Loungewear and Nightwear,0.3238,Tops,low_confidence|changed_by_prior
+52446,Dresses,0.4062,Nightdress,0.3213,Swimwear,0.0772,Dress,0.4229,Nightdress,low_confidence|changed_by_prior
+52449,Nightdress,0.3262,Dresses,0.1593,Sarees,0.1562,Loungewear and Nightwear,0.3415,Nightdress,low_confidence
+52450,Dresses,0.6018,Nightdress,0.3534,Sarees,0.0127,Dress,0.6023,Nightdress,changed_by_prior
+52463,Night suits,0.4842,Jumpsuit,0.1427,Kurta Sets,0.1132,Loungewear and Nightwear,0.5555,Night suits,low_confidence
+52472,Dresses,0.2391,Leggings,0.1205,Night suits,0.0659,Dress,0.244,Leggings,low_confidence|changed_by_prior
+52473,Dresses,0.1584,Free Gifts,0.1451,Nightdress,0.1334,Dress,0.2325,Stoles,low_confidence|changed_by_prior
+52474,Sarees,0.1758,Pendant,0.1034,Dresses,0.101,Jewellery,0.1992,Sarees,low_confidence|family_disagrees
+52475,Dresses,0.314,Nightdress,0.2703,Sarees,0.0553,Dress,0.3297,Nightdress,low_confidence|changed_by_prior
+52476,Dresses,0.2083,Sarees,0.1308,Capris,0.055,Dress,0.2204,Capris,low_confidence|changed_by_prior
+52479,Nightdress,0.3199,Bra,0.2558,Camisoles,0.039,Loungewear and Nightwear,0.3656,Nightdress,low_confidence
+52481,Dresses,0.534,Nightdress,0.4612,Tunics,0.0006,Dress,0.5342,Nightdress,changed_by_prior
+52494,Leggings,0.2003,Dresses,0.1692,Nightdress,0.1048,Bottomwear,0.3149,Leggings,low_confidence
+52495,Dresses,0.4479,Capris,0.0677,Kurta Sets,0.0489,Dress,0.4568,Capris,low_confidence|changed_by_prior
+52499,Tunics,0.392,Dresses,0.184,Swimwear,0.0585,Topwear,0.5081,Tunics,low_confidence
+52503,Dresses,0.1683,Sarees,0.108,Leggings,0.1072,Bottomwear,0.2256,Capris,low_confidence|family_disagrees|changed_by_prior
+52505,Nightdress,0.464,Kurta Sets,0.1843,Night suits,0.0546,Loungewear and Nightwear,0.5198,Nightdress,low_confidence
+52507,Dresses,0.4508,Jumpsuit,0.1521,Kurta Sets,0.1464,Dress,0.6028,Dresses,low_confidence
+52508,Dresses,0.4317,Tunics,0.1358,Jewellery Set,0.059,Dress,0.4828,Dresses,low_confidence
+52509,Kurtas,0.269,Nightdress,0.1728,Tops,0.0835,Topwear,0.4083,Kurtas,low_confidence
+52510,Dresses,0.5328,Kurtas,0.1273,Nightdress,0.083,Dress,0.5512,Kurtas,changed_by_prior
+52512,Dresses,0.1345,Nightdress,0.112,Tops,0.1088,Topwear,0.2584,Tops,low_confidence|family_disagrees|changed_by_prior
+52513,Nightdress,0.3137,Dresses,0.2663,Free Gifts,0.0711,Loungewear and Nightwear,0.3202,Nightdress,low_confidence
+52519,Nightdress,0.4099,Dresses,0.4075,Jumpsuit,0.0159,Dress,0.4234,Nightdress,low_confidence|family_disagrees
+52524,Jeans,0.1501,Jeggings,0.1272,Leggings,0.0954,Bottomwear,0.5109,Jeans,low_confidence
+52525,Leggings,0.4156,Jeggings,0.3101,Trousers,0.0982,Bottomwear,0.8861,Trousers,low_confidence|changed_by_prior
+52536,Jeans,0.3895,Jeggings,0.349,Trousers,0.0983,Bottomwear,0.9367,Jeans,low_confidence
+52539,Jeggings,0.6676,Jeans,0.2439,Leggings,0.0369,Bottomwear,0.9647,Jeans,changed_by_prior
+52547,Jeans,0.4066,Jeggings,0.3897,Leggings,0.0568,Bottomwear,0.8775,Jeans,low_confidence
+52553,Jeans,0.4011,Jeggings,0.0739,Trousers,0.0455,Bottomwear,0.6476,Jeans,low_confidence
+52554,Jeans,0.4298,Jeggings,0.2975,Jewellery Set,0.024,Bottomwear,0.7734,Jeans,low_confidence
+52557,Jeggings,0.2881,Jeans,0.146,Leggings,0.1169,Bottomwear,0.6855,Trousers,low_confidence|changed_by_prior
+52558,Clutches,0.5274,Wallets,0.3363,Mobile Pouch,0.0361,Bags,0.5933,Wallets,changed_by_prior
+52570,Clutches,0.4398,Handbags,0.2243,Perfume and Body Mist,0.0595,Bags,0.6906,Clutches,low_confidence
+52576,Handbags,0.6482,Duffel Bag,0.178,Wallets,0.0237,Bags,0.8632,Duffel Bag,changed_by_prior
+52581,Waist Pouch,0.413,Clutches,0.2943,Mobile Pouch,0.0644,Bags,0.7943,Waist Pouch,low_confidence
+52582,Waist Pouch,0.3369,Handbags,0.1268,Clutches,0.0851,Bags,0.6846,Backpacks,low_confidence|changed_by_prior
+52593,Clutches,0.4944,Handbags,0.2329,Mobile Pouch,0.095,Bags,0.9054,Clutches,low_confidence
+52660,Laptop Bag,0.4916,Handbags,0.2691,Jackets,0.0621,Bags,0.8011,Laptop Bag,low_confidence
+52785,Wallets,0.4316,Handbags,0.2666,Perfume and Body Mist,0.0518,Wallets,0.4316,Wallets,low_confidence
+52822,Necklace and Chains,0.2119,Pendant,0.1067,Bracelet,0.0999,Jewellery,0.4807,Sports Shoes,low_confidence|changed_by_prior
+52836,Necklace and Chains,0.143,Pendant,0.0935,Sandals,0.0886,Jewellery,0.3317,Sandals,low_confidence|changed_by_prior
+52869,Earrings,0.4029,Perfume and Body Mist,0.1105,Bracelet,0.0752,Jewellery,0.5415,Earrings,low_confidence
+52924,Sarees,0.4623,Free Gifts,0.0724,Kurta Sets,0.0498,Saree,0.4623,Sarees,low_confidence
+53007,Sarees,0.4543,Dresses,0.171,Backpacks,0.0442,Saree,0.4543,Backpacks,low_confidence|changed_by_prior
+53048,Sarees,0.2787,Night suits,0.1514,Free Gifts,0.1467,Saree,0.2787,Sarees,low_confidence
+53050,Sarees,0.483,Free Gifts,0.1344,Night suits,0.1059,Saree,0.483,Sarees,low_confidence
+53078,Clutches,0.2462,Wallets,0.1418,Duffel Bag,0.0939,Bags,0.4872,Duffel Bag,low_confidence|changed_by_prior
+53079,Clutches,0.3441,Wallets,0.141,Handbags,0.1048,Bags,0.5513,Clutches,low_confidence
+53080,Clutches,0.6629,Duffel Bag,0.167,Handbags,0.0583,Bags,0.8997,Duffel Bag,changed_by_prior
+53081,Clutches,0.461,Handbags,0.4132,Duffel Bag,0.0163,Bags,0.8942,Handbags,low_confidence|changed_by_prior
+53083,Jewellery Set,0.2215,Dresses,0.1747,Kurta Sets,0.1414,Jewellery,0.3429,Jewellery Set,low_confidence
+53085,Pendant,0.2914,Necklace and Chains,0.122,Jewellery Set,0.0408,Jewellery,0.5231,Shirts,low_confidence|changed_by_prior
+53086,Pendant,0.2456,Necklace and Chains,0.1491,Jewellery Set,0.0831,Jewellery,0.539,Sunglasses,low_confidence|changed_by_prior
+53087,Pendant,0.3924,Necklace and Chains,0.1564,Bra,0.0509,Jewellery,0.6316,Pendant,low_confidence
+53114,Tshirts,0.4132,Tops,0.1893,Perfume and Body Mist,0.0312,Topwear,0.6299,Tshirts,low_confidence
+53117,Tops,0.4076,Tshirts,0.2942,Perfume and Body Mist,0.0151,Topwear,0.7305,Tshirts,low_confidence|changed_by_prior
+53118,Tops,0.4148,Tshirts,0.3629,Perfume and Body Mist,0.0175,Topwear,0.8146,Tshirts,low_confidence|changed_by_prior
+53120,Tshirts,0.4363,Tops,0.2665,Perfume and Body Mist,0.0206,Topwear,0.7222,Tshirts,low_confidence
+53124,Tops,0.5612,Tshirts,0.1469,Camisoles,0.0197,Topwear,0.7307,Tshirts,changed_by_prior
+53125,Tshirts,0.4633,Tops,0.224,Bra,0.0249,Topwear,0.7103,Tshirts,low_confidence
+53126,Tshirts,0.4204,Tops,0.1968,Dresses,0.0663,Topwear,0.6763,Tshirts,low_confidence
+53127,Flats,0.443,Casual Shoes,0.2544,Sports Sandals,0.161,Shoes,0.7188,Casual Shoes,low_confidence|changed_by_prior
+53137,Flats,0.6718,Heels,0.2685,Shoe Accessories,0.0104,Shoes,0.9415,Heels,changed_by_prior
+53141,Flats,0.5992,Heels,0.3531,Pendant,0.0028,Shoes,0.9536,Heels,changed_by_prior
+53142,Flats,0.6542,Heels,0.3249,Shoe Accessories,0.0027,Shoes,0.9794,Heels,changed_by_prior
+53248,Trousers,0.3244,Jeans,0.1588,Lounge Pants,0.0714,Bottomwear,0.5777,Trousers,low_confidence
+53264,Waistcoat,0.1515,Shirts,0.1386,Tshirts,0.1384,Topwear,0.5453,Shirts,low_confidence|changed_by_prior
+53269,Tshirts,0.3138,Shirts,0.1934,Flats,0.0224,Topwear,0.5453,Tshirts,low_confidence
+53278,Shirts,0.4796,Tshirts,0.0974,Tops,0.035,Topwear,0.6512,Shirts,low_confidence
+53313,Tshirts,0.3903,Innerwear Vests,0.0557,Perfume and Body Mist,0.0368,Topwear,0.466,Tshirts,low_confidence
+53357,Perfume and Body Mist,0.4342,Socks,0.1263,Shoe Accessories,0.1163,Fragrance,0.4362,Socks,low_confidence|changed_by_prior
+53363,Handbags,0.6692,Duffel Bag,0.2287,Clutches,0.0157,Bags,0.935,Duffel Bag,changed_by_prior
+53376,Waist Pouch,0.3508,Handbags,0.2927,Perfume and Body Mist,0.1956,Bags,0.7252,Handbags,low_confidence|changed_by_prior
+53378,Flip Flops,0.3033,Flats,0.2735,Heels,0.1959,Shoes,0.475,Flip Flops,low_confidence|family_disagrees
+53379,Sandals,0.4712,Sports Sandals,0.3424,Flats,0.04,Sandal,0.8136,Sandals,low_confidence
+53392,Tops,0.4925,Dresses,0.2525,Kurtas,0.0719,Topwear,0.651,Tops,low_confidence
+53402,Tops,0.306,Dresses,0.2117,Tunics,0.2049,Topwear,0.6645,Tops,low_confidence
+53412,Kurtas,0.2701,Tunics,0.1757,Dresses,0.0611,Topwear,0.5411,Kurtas,low_confidence
+53429,Kurtas,0.4202,Dresses,0.2445,Tunics,0.0695,Topwear,0.5359,Kurtas,low_confidence
+53436,Sports Shoes,0.4801,Casual Shoes,0.1017,Kurta Sets,0.0198,Shoes,0.601,Sports Shoes,low_confidence
+53438,Sports Shoes,0.3787,Casual Shoes,0.3488,Pendant,0.0108,Shoes,0.7335,Sports Shoes,low_confidence
+53439,Flip Flops,0.4129,Flats,0.3829,Heels,0.0491,Shoes,0.4351,Flip Flops,low_confidence|family_disagrees
+53442,Flats,0.6696,Flip Flops,0.1319,Heels,0.1008,Shoes,0.7719,Flip Flops,changed_by_prior
+53445,Flip Flops,0.4402,Flats,0.2846,Heels,0.0652,Flip Flops,0.4402,Flip Flops,low_confidence
+53449,Flip Flops,0.4635,Flats,0.2675,Heels,0.0244,Flip Flops,0.4635,Flip Flops,low_confidence
+53452,Casual Shoes,0.3833,Flats,0.3611,Heels,0.1467,Shoes,0.8929,Casual Shoes,low_confidence
+53453,Flats,0.3271,Heels,0.2981,Casual Shoes,0.269,Shoes,0.8966,Casual Shoes,low_confidence|changed_by_prior
+53454,Flats,0.565,Heels,0.3645,Perfume and Body Mist,0.0048,Shoes,0.931,Heels,changed_by_prior
+53455,Flats,0.518,Heels,0.2946,Flip Flops,0.0449,Shoes,0.815,Heels,changed_by_prior
+53456,Heels,0.3788,Flats,0.3492,Casual Shoes,0.0408,Shoes,0.7732,Heels,low_confidence
+53462,Bra,0.2977,Dresses,0.2277,Sarees,0.0607,Innerwear,0.3314,Bra,low_confidence
+53484,Briefs,0.3739,Swimwear,0.0894,Bra,0.0669,Innerwear,0.4587,Briefs,low_confidence
+53485,Briefs,0.259,Tshirts,0.169,Bra,0.1207,Innerwear,0.3966,Tshirts,low_confidence|changed_by_prior
+53487,Bra,0.7041,Tshirts,0.0954,Camisoles,0.0313,Innerwear,0.7505,Tshirts,changed_by_prior
+53488,Briefs,0.2284,Tops,0.1114,Swimwear,0.0749,Innerwear,0.3105,Tops,low_confidence|changed_by_prior
+53489,Briefs,0.1933,Bra,0.1508,Tops,0.0598,Innerwear,0.3817,Tshirts,low_confidence|changed_by_prior
+53541,Briefs,0.3053,Sarees,0.1916,Nightdress,0.0774,Innerwear,0.349,Briefs,low_confidence
+53580,Free Gifts,0.6538,Watches,0.2967,Sarees,0.0028,Free Gifts,0.6538,Watches,changed_by_prior
+53581,Free Gifts,0.4995,Watches,0.4357,Sarees,0.0044,Free Gifts,0.4995,Watches,low_confidence|changed_by_prior
+53636,Casual Shoes,0.3656,Sports Shoes,0.2314,Pendant,0.0154,Shoes,0.6128,Casual Shoes,low_confidence
+53637,Sports Shoes,0.2439,Casual Shoes,0.2084,Flats,0.0239,Shoes,0.484,Sports Shoes,low_confidence
+53724,Flip Flops,0.4638,Flats,0.3496,Heels,0.075,Flip Flops,0.4638,Flip Flops,low_confidence
+53725,Heels,0.4033,Flats,0.3968,Flip Flops,0.027,Shoes,0.8013,Heels,low_confidence
+53726,Flats,0.4662,Flip Flops,0.2837,Heels,0.0977,Shoes,0.5651,Flip Flops,low_confidence|changed_by_prior
+53727,Flats,0.5543,Casual Shoes,0.1455,Heels,0.0768,Shoes,0.7827,Casual Shoes,changed_by_prior
+53729,Flats,0.3201,Casual Shoes,0.1638,Sports Sandals,0.0551,Shoes,0.6041,Casual Shoes,low_confidence|changed_by_prior
+53731,Casual Shoes,0.3468,Sports Shoes,0.2706,Sarees,0.0165,Shoes,0.6359,Casual Shoes,low_confidence
+53737,Lounge Shorts,0.3459,Shorts,0.1574,Boxers,0.0892,Loungewear and Nightwear,0.4042,Shorts,low_confidence|changed_by_prior
+53738,Lounge Pants,0.1882,Jeggings,0.1097,Pendant,0.0676,Bottomwear,0.35,Track Pants,low_confidence|family_disagrees|changed_by_prior
+53740,Jeans,0.4062,Track Pants,0.0981,Free Gifts,0.035,Bottomwear,0.5774,Jeans,low_confidence
+53741,Jeans,0.4348,Lounge Pants,0.1932,Trousers,0.0609,Bottomwear,0.6087,Jeans,low_confidence
+53742,Lounge Shorts,0.197,Jeans,0.1666,Capris,0.0714,Bottomwear,0.3871,Jeans,low_confidence|family_disagrees|changed_by_prior
+53744,Lounge Shorts,0.2409,Capris,0.1475,Patiala,0.1153,Bottomwear,0.3854,Capris,low_confidence|family_disagrees|changed_by_prior
+53745,Lounge Shorts,0.4424,Lounge Pants,0.1543,Capris,0.1317,Loungewear and Nightwear,0.6035,Capris,low_confidence|changed_by_prior
+53750,Jeans,0.2885,Lounge Pants,0.1003,Track Pants,0.062,Bottomwear,0.4863,Jeans,low_confidence
+53751,Lounge Pants,0.265,Track Pants,0.0728,Jeans,0.0631,Loungewear and Nightwear,0.3125,Track Pants,low_confidence|changed_by_prior
+53756,Handbags,0.4637,Messenger Bag,0.1394,Dresses,0.0722,Bags,0.6575,Handbags,low_confidence
+53759,Shirts,0.355,Tshirts,0.1494,Jackets,0.0265,Topwear,0.5537,Shirts,low_confidence
+53770,Tshirts,0.4946,Tops,0.1051,Dresses,0.0183,Topwear,0.6474,Tshirts,low_confidence
+53784,Shirts,0.3803,Perfume and Body Mist,0.082,Jackets,0.0614,Topwear,0.5676,Shirts,low_confidence
+53805,Flats,0.3367,Heels,0.0906,Socks,0.0864,Shoes,0.4493,Socks,low_confidence|changed_by_prior
+53806,Socks,0.2409,Pendant,0.2076,Jewellery Set,0.0368,Jewellery,0.2817,Socks,low_confidence|family_disagrees
+53808,Kurtas,0.2148,Nightdress,0.1807,Dresses,0.1713,Topwear,0.3485,Kurtas,low_confidence
+53809,Dresses,0.5127,Tunics,0.2014,Tops,0.0427,Dress,0.5144,Tunics,changed_by_prior
+53813,Tunics,0.4499,Dresses,0.276,Kurtas,0.1472,Topwear,0.6681,Tunics,low_confidence
+53817,Jumpsuit,0.3193,Kurta Sets,0.1628,Night suits,0.1164,Dress,0.3236,Jumpsuit,low_confidence
+53822,Tops,0.1606,Jackets,0.1456,Night suits,0.0678,Topwear,0.4269,Tops,low_confidence
+53824,Dresses,0.6125,Tunics,0.2173,Kurtas,0.0511,Dress,0.614,Tunics,changed_by_prior
+53826,Dresses,0.2813,Tunics,0.2152,Kurtas,0.1978,Topwear,0.6017,Tops,low_confidence|family_disagrees|changed_by_prior
+53832,Dresses,0.6938,Kurtas,0.2127,Nightdress,0.0233,Dress,0.6949,Kurtas,changed_by_prior
+53843,Dresses,0.6635,Kurtas,0.2781,Tunics,0.0161,Dress,0.6673,Kurtas,changed_by_prior
+53866,Kurtas,0.3412,Tunics,0.0615,Nightdress,0.0502,Topwear,0.4846,Kurtas,low_confidence
+53867,Flats,0.6412,Heels,0.3026,Flip Flops,0.0089,Shoes,0.9442,Heels,changed_by_prior
+53881,Flip Flops,0.282,Flats,0.1878,Sandals,0.0945,Flip Flops,0.282,Flip Flops,low_confidence
+53882,Flip Flops,0.3906,Flats,0.1935,Sandals,0.034,Flip Flops,0.3906,Flip Flops,low_confidence
+54050,Jeggings,0.6419,Jeans,0.1692,Leggings,0.1215,Bottomwear,0.9418,Jeans,changed_by_prior
+54052,Leggings,0.4845,Salwar,0.1393,Patiala,0.0709,Bottomwear,0.796,Leggings,low_confidence
+54054,Leggings,0.3081,Jeggings,0.0878,Churidar,0.0671,Bottomwear,0.627,Leggings,low_confidence
+54056,Leggings,0.2498,Jeggings,0.0988,Churidar,0.0781,Bottomwear,0.5993,Leggings,low_confidence
+54058,Leggings,0.1788,Lounge Shorts,0.0909,Trousers,0.0831,Bottomwear,0.3562,Trousers,low_confidence|changed_by_prior
+54059,Leggings,0.4796,Trousers,0.1808,Pendant,0.1048,Bottomwear,0.7023,Trousers,low_confidence|changed_by_prior
+54069,Sandals,0.2558,Heels,0.1532,Flats,0.1211,Sandal,0.2783,Sandals,low_confidence
+54077,Flats,0.5309,Heels,0.3475,Flip Flops,0.0188,Shoes,0.8807,Heels,changed_by_prior
+54078,Sports Shoes,0.4896,Casual Shoes,0.131,Bra,0.0286,Shoes,0.6254,Sports Shoes,low_confidence
+54079,Tunics,0.4333,Dresses,0.3487,Kurtas,0.101,Topwear,0.5566,Tunics,low_confidence
+54080,Kurtas,0.4054,Tunics,0.1627,Dresses,0.1016,Topwear,0.6449,Kurtas,low_confidence
+54081,Kurtas,0.1864,Kurtis,0.1172,Tunics,0.0974,Topwear,0.5034,Kurtis,low_confidence|changed_by_prior
+54082,Shirts,0.3642,Kurtas,0.1089,Dresses,0.0503,Topwear,0.5613,Shirts,low_confidence
+54083,Shirts,0.369,Tunics,0.1832,Kurtis,0.1332,Topwear,0.7643,Shirts,low_confidence
+54084,Tops,0.4045,Tunics,0.1298,Jackets,0.0378,Topwear,0.6478,Tops,low_confidence
+54086,Tops,0.3486,Tunics,0.2981,Dresses,0.0886,Topwear,0.7626,Tops,low_confidence
+54089,Tshirts,0.3678,Tops,0.2055,Waistcoat,0.0344,Topwear,0.6317,Tshirts,low_confidence
+54090,Tunics,0.2054,Tops,0.095,Dresses,0.0828,Topwear,0.5414,Shirts,low_confidence|changed_by_prior
+54107,Flats,0.745,Heels,0.2293,Perfume and Body Mist,0.0016,Shoes,0.9747,Heels,changed_by_prior
+54113,Flats,0.5691,Heels,0.4186,Perfume and Body Mist,0.0008,Shoes,0.9878,Heels,changed_by_prior
+54115,Heels,0.4896,Flats,0.4839,Dresses,0.0016,Shoes,0.9741,Heels,low_confidence
+54117,Flats,0.5659,Heels,0.3654,Dresses,0.0029,Shoes,0.9321,Heels,changed_by_prior
+54118,Flats,0.5983,Heels,0.353,Dresses,0.0025,Shoes,0.9517,Heels,changed_by_prior
+54119,Flats,0.7264,Heels,0.2357,Bra,0.0016,Shoes,0.9625,Heels,changed_by_prior
+54120,Flats,0.5601,Heels,0.4106,Perfume and Body Mist,0.0022,Shoes,0.9713,Heels,changed_by_prior
+54123,Flats,0.5244,Heels,0.4599,Perfume and Body Mist,0.0014,Shoes,0.9844,Heels,changed_by_prior
+54129,Flats,0.5523,Heels,0.3588,Cufflinks,0.008,Shoes,0.9148,Heels,changed_by_prior
+54130,Flats,0.6385,Heels,0.3307,Perfume and Body Mist,0.0022,Shoes,0.9694,Heels,changed_by_prior
+54131,Flats,0.6811,Heels,0.2956,Perfume and Body Mist,0.0035,Shoes,0.9776,Heels,changed_by_prior
+54133,Flats,0.6822,Heels,0.246,Sarees,0.0049,Shoes,0.9305,Heels,changed_by_prior
+54136,Flats,0.5865,Heels,0.3702,Flip Flops,0.0025,Shoes,0.9573,Heels,changed_by_prior
+54137,Flats,0.5738,Heels,0.3937,Perfume and Body Mist,0.003,Shoes,0.9678,Heels,changed_by_prior
+54138,Flats,0.6882,Heels,0.2912,Bra,0.0011,Shoes,0.9796,Heels,changed_by_prior
+54139,Flats,0.6689,Heels,0.3078,Perfume and Body Mist,0.0025,Shoes,0.9769,Heels,changed_by_prior
+54141,Flats,0.6802,Heels,0.3015,Perfume and Body Mist,0.001,Shoes,0.9818,Heels,changed_by_prior
+54144,Flats,0.7473,Heels,0.2435,Handbags,0.0006,Shoes,0.9908,Heels,changed_by_prior
+54154,Pendant,0.4025,Necklace and Chains,0.3942,Jewellery Set,0.1696,Jewellery,0.9715,Necklace and Chains,low_confidence|changed_by_prior
+54167,Jewellery Set,0.4809,Pendant,0.3484,Necklace and Chains,0.1482,Jewellery,0.9827,Jewellery Set,low_confidence
+54175,Pendant,0.4191,Watches,0.2976,Necklace and Chains,0.0551,Jewellery,0.5045,Watches,low_confidence|changed_by_prior
+54194,Trousers,0.3625,Lounge Pants,0.3025,Tracksuits,0.0417,Bottomwear,0.4628,Trousers,low_confidence
+54226,Lounge Pants,0.3002,Trousers,0.2313,Jeans,0.1273,Bottomwear,0.4931,Trousers,low_confidence|family_disagrees|changed_by_prior
+54252,Shirts,0.2886,Perfume and Body Mist,0.0799,Tshirts,0.0523,Topwear,0.4521,Shirts,low_confidence
+54334,Jeggings,0.2747,Jeans,0.1951,Leggings,0.0873,Bottomwear,0.6201,Jeans,low_confidence|changed_by_prior
+54342,Leggings,0.4367,Jeggings,0.1101,Churidar,0.1081,Bottomwear,0.6952,Leggings,low_confidence
+54343,Dresses,0.0983,Casual Shoes,0.0922,Tops,0.0755,Shoes,0.1879,Casual Shoes,low_confidence|family_disagrees|changed_by_prior
+54344,Socks,0.3849,Sports Shoes,0.0611,Gloves,0.0523,Socks,0.3935,Socks,low_confidence
+54476,Briefs,0.1371,Handbags,0.1279,Accessory Gift Set,0.0932,Bags,0.1955,Accessory Gift Set,low_confidence|family_disagrees|changed_by_prior
+54487,Handbags,0.2329,Perfume and Body Mist,0.1304,Dresses,0.0881,Bags,0.4046,Backpacks,low_confidence|changed_by_prior
+54488,Handbags,0.3634,Waist Pouch,0.1406,Backpacks,0.1288,Bags,0.7046,Backpacks,low_confidence|changed_by_prior
+54489,Mobile Pouch,0.1221,Clutches,0.0975,Perfume and Body Mist,0.096,Bags,0.3267,Backpacks,low_confidence|changed_by_prior
+54490,Perfume and Body Mist,0.2076,Deodorant,0.1315,Messenger Bag,0.0842,Fragrance,0.3498,Backpacks,low_confidence|changed_by_prior
+54516,Casual Shoes,0.4072,Sports Shoes,0.1718,Flats,0.0279,Shoes,0.6114,Casual Shoes,low_confidence
+54518,Casual Shoes,0.3181,Sports Shoes,0.0669,Flats,0.0578,Shoes,0.4481,Casual Shoes,low_confidence
+54530,Sports Shoes,0.4644,Casual Shoes,0.2212,Flats,0.0222,Shoes,0.7095,Sports Shoes,low_confidence
+54539,Casual Shoes,0.4426,Sports Shoes,0.2276,Bracelet,0.0108,Shoes,0.6776,Casual Shoes,low_confidence
+54540,Sports Shoes,0.3454,Casual Shoes,0.1765,Earrings,0.0178,Shoes,0.5278,Sports Shoes,low_confidence
+54546,Handbags,0.3492,Dresses,0.2001,Travel Accessory,0.1177,Bags,0.4048,Handbags,low_confidence
+54548,Tunics,0.4116,Kurtas,0.2659,Dresses,0.095,Topwear,0.7511,Kurtas,low_confidence|changed_by_prior
+54549,Kurtis,0.4137,Tops,0.1733,Tunics,0.1628,Topwear,0.847,Kurtis,low_confidence
+54555,Kurtas,0.2817,Dupatta,0.2446,Stoles,0.1714,Topwear,0.5628,Dupatta,low_confidence|changed_by_prior
+54558,Kurtas,0.4071,Dresses,0.1173,Tunics,0.0907,Topwear,0.6113,Kurtas,low_confidence
+54575,Tops,0.3953,Tunics,0.2668,Kurtis,0.2332,Topwear,0.9094,Kurtis,low_confidence|changed_by_prior
+54680,Kurtas,0.3983,Stoles,0.0545,Tunics,0.0475,Topwear,0.5453,Kurtas,low_confidence
+54695,Tunics,0.4454,Kurtas,0.1794,Tops,0.1215,Topwear,0.7746,Tunics,low_confidence
+54697,Tunics,0.354,Dresses,0.2274,Tops,0.141,Topwear,0.6375,Tunics,low_confidence
+54698,Tunics,0.4189,Dresses,0.3748,Tops,0.1484,Topwear,0.5826,Tunics,low_confidence
+54702,Tunics,0.2298,Tops,0.1823,Kurtas,0.098,Topwear,0.6504,Shirts,low_confidence|changed_by_prior
+54704,Night suits,0.4735,Kurta Sets,0.228,Sarees,0.1284,Loungewear and Nightwear,0.4805,Night suits,low_confidence
+54705,Night suits,0.4185,Sarees,0.248,Kurta Sets,0.1625,Loungewear and Nightwear,0.4562,Night suits,low_confidence
+54716,Kurtas,0.3611,Dresses,0.3327,Tunics,0.189,Topwear,0.5677,Kurtas,low_confidence
+54724,Night suits,0.2819,Kurta Sets,0.1982,Sarees,0.1533,Loungewear and Nightwear,0.3029,Night suits,low_confidence
+54727,Kurtas,0.1884,Tunics,0.1813,Tops,0.1181,Topwear,0.5561,Kurtas,low_confidence
+54813,Dresses,0.3465,Backpacks,0.1371,Skirts,0.1047,Dress,0.3513,Backpacks,low_confidence|changed_by_prior
+54831,Clutches,0.4788,Gloves,0.1761,Booties,0.1438,Bags,0.5532,Clutches,low_confidence
+54836,Handbags,0.4418,Clutches,0.3261,Mobile Pouch,0.0156,Bags,0.8135,Handbags,low_confidence
+54842,Cufflinks,0.1347,Sports Shoes,0.1239,Heels,0.0794,Shoes,0.236,Sports Shoes,low_confidence|family_disagrees|changed_by_prior
+54851,Necklace and Chains,0.2897,Jewellery Set,0.251,Earrings,0.2059,Jewellery,0.7914,Tshirts,low_confidence|changed_by_prior
+54860,Necklace and Chains,0.4714,Jewellery Set,0.3662,Pendant,0.0638,Jewellery,0.9149,Necklace and Chains,low_confidence
+54864,Necklace and Chains,0.3454,Jewellery Set,0.2901,Pendant,0.1234,Jewellery,0.8234,Watches,low_confidence|changed_by_prior
+54865,Pendant,0.4241,Necklace and Chains,0.2687,Jewellery Set,0.1013,Jewellery,0.83,Pendant,low_confidence
+54880,Necklace and Chains,0.4369,Jewellery Set,0.3243,Patiala,0.028,Jewellery,0.8041,Necklace and Chains,low_confidence
+54882,Jewellery Set,0.3988,Necklace and Chains,0.3019,Pendant,0.208,Jewellery,0.9228,Jewellery Set,low_confidence
+54886,Jewellery Set,0.3184,Necklace and Chains,0.0853,Pendant,0.0604,Jewellery,0.5211,Jewellery Set,low_confidence
+54890,Tshirts,0.2455,Tops,0.2369,Bra,0.0312,Topwear,0.5505,Tshirts,low_confidence
+54894,Lounge Pants,0.6062,Track Pants,0.1539,Trousers,0.0565,Loungewear and Nightwear,0.6303,Track Pants,changed_by_prior
+54896,Jeans,0.2124,Capris,0.1669,Leggings,0.0873,Bottomwear,0.6004,Jeans,low_confidence
+54897,Tshirts,0.2751,Tops,0.2037,Jackets,0.0252,Topwear,0.5633,Tshirts,low_confidence
+54902,Kurtas,0.2058,Shirts,0.1096,Tshirts,0.0526,Topwear,0.4415,Shirts,low_confidence|changed_by_prior
+54911,Tshirts,0.2766,Jackets,0.1007,Tops,0.1005,Topwear,0.5289,Tshirts,low_confidence
+54918,Lounge Shorts,0.4707,Skirts,0.127,Lounge Pants,0.0846,Loungewear and Nightwear,0.5582,Skirts,low_confidence|changed_by_prior
+54919,Lounge Shorts,0.4948,Capris,0.1265,Shorts,0.0771,Loungewear and Nightwear,0.53,Shorts,low_confidence|changed_by_prior
+54921,Capris,0.4704,Lounge Shorts,0.242,Shorts,0.0757,Bottomwear,0.6354,Capris,low_confidence
+54929,Tshirts,0.3559,Tops,0.1938,Tunics,0.0422,Topwear,0.6355,Tshirts,low_confidence
+54932,Jackets,0.3379,Dresses,0.2591,Tops,0.1332,Topwear,0.5375,Jackets,low_confidence
+54933,Jackets,0.276,Tops,0.1299,Dresses,0.1063,Topwear,0.5561,Tshirts,low_confidence|changed_by_prior
+54940,Tshirts,0.3876,Tops,0.2666,Bra,0.0345,Topwear,0.6841,Tshirts,low_confidence
+54942,Jackets,0.1757,Tshirts,0.1304,Shirts,0.1225,Topwear,0.5112,Tshirts,low_confidence|changed_by_prior
+54943,Jackets,0.2417,Tshirts,0.1713,Kurtas,0.0736,Topwear,0.5574,Tshirts,low_confidence|changed_by_prior
+54944,Tshirts,0.1718,Shirts,0.0917,Dresses,0.0544,Topwear,0.4114,Tshirts,low_confidence
+54948,Jackets,0.5953,Sweatshirts,0.1265,Sweaters,0.0532,Topwear,0.8349,Sweatshirts,changed_by_prior
+54959,Tshirts,0.1423,Perfume and Body Mist,0.0851,Nail Polish,0.0749,Topwear,0.3081,Tshirts,low_confidence
+54975,Tops,0.3888,Tunics,0.2463,Tshirts,0.1224,Topwear,0.7757,Tshirts,low_confidence|changed_by_prior
+54983,Leggings,0.4555,Jeans,0.1841,Jeggings,0.0516,Bottomwear,0.78,Leggings,low_confidence
+54987,Kurtas,0.4587,Tunics,0.1756,Kurtis,0.084,Topwear,0.7986,Kurtas,low_confidence
+54989,Kurtas,0.2653,Dresses,0.2613,Tops,0.1782,Topwear,0.5617,Kurtas,low_confidence
+54993,Shirts,0.4694,Tops,0.1082,Jackets,0.0306,Topwear,0.6744,Shirts,low_confidence
+54995,Kajal and Eyeliner,0.4022,Lip Liner,0.2934,Ties,0.047,Makeup,0.4103,Kajal and Eyeliner,low_confidence
+54997,Kajal and Eyeliner,0.3972,Lip Liner,0.2686,Ties,0.0478,Makeup,0.4061,Kajal and Eyeliner,low_confidence
+55000,Kajal and Eyeliner,0.4125,Lip Liner,0.2614,Ties,0.0457,Makeup,0.4216,Kajal and Eyeliner,low_confidence
+55001,Kajal and Eyeliner,0.4537,Lip Liner,0.2819,Ties,0.0364,Makeup,0.4628,Kajal and Eyeliner,low_confidence
+55002,Kajal and Eyeliner,0.4025,Lip Liner,0.2743,Ties,0.0476,Makeup,0.4112,Kajal and Eyeliner,low_confidence
+55003,Kajal and Eyeliner,0.4481,Lip Liner,0.2422,Ties,0.0424,Makeup,0.4576,Kajal and Eyeliner,low_confidence
+55006,Lip Liner,0.2739,Perfume and Body Mist,0.2278,Kajal and Eyeliner,0.143,Lips,0.317,Lip Liner,low_confidence
+55007,Lip Liner,0.262,Perfume and Body Mist,0.2075,Kajal and Eyeliner,0.1738,Lips,0.3109,Lip Liner,low_confidence
+55008,Lip Liner,0.256,Perfume and Body Mist,0.2121,Kajal and Eyeliner,0.1771,Lips,0.3113,Lip Liner,low_confidence
+55009,Lip Liner,0.2552,Perfume and Body Mist,0.185,Kajal and Eyeliner,0.1682,Lips,0.3107,Lip Liner,low_confidence
+55010,Lip Liner,0.2828,Perfume and Body Mist,0.2123,Kajal and Eyeliner,0.1536,Lips,0.3275,Lip Liner,low_confidence
+55012,Lipstick,0.3197,Kajal and Eyeliner,0.2694,Lip Liner,0.1011,Lips,0.4208,Lipstick,low_confidence
+55015,Lipstick,0.3172,Kajal and Eyeliner,0.2728,Lip Liner,0.0966,Lips,0.4138,Lipstick,low_confidence
+55018,Lipstick,0.3221,Kajal and Eyeliner,0.2692,Lip Liner,0.0936,Lips,0.4157,Lipstick,low_confidence
+55020,Lipstick,0.3185,Kajal and Eyeliner,0.2727,Lip Liner,0.1041,Lips,0.4226,Lipstick,low_confidence
+55034,Lipstick,0.4936,Nail Polish,0.066,Foundation and Primer,0.0565,Lips,0.5499,Lipstick,low_confidence
+55045,Perfume and Body Mist,0.1483,Lipstick,0.1328,Deodorant,0.0955,Fragrance,0.2462,Lipstick,low_confidence|changed_by_prior
+55046,Perfume and Body Mist,0.1451,Lipstick,0.1352,Deodorant,0.0974,Fragrance,0.2449,Lipstick,low_confidence|changed_by_prior
+55048,Lipstick,0.1616,Perfume and Body Mist,0.1208,Lip Liner,0.1119,Lips,0.2735,Lipstick,low_confidence
+55049,Lipstick,0.1603,Lip Liner,0.1351,Perfume and Body Mist,0.1069,Lips,0.2955,Lipstick,low_confidence
+55050,Lipstick,0.1611,Perfume and Body Mist,0.123,Lip Liner,0.1141,Lips,0.2752,Lipstick,low_confidence
+55051,Lipstick,0.1676,Perfume and Body Mist,0.137,Lip Liner,0.0892,Lips,0.2568,Lipstick,low_confidence
+55052,Lipstick,0.1633,Perfume and Body Mist,0.123,Lip Liner,0.1149,Lips,0.2781,Lipstick,low_confidence
+55053,Perfume and Body Mist,0.1385,Lipstick,0.127,Lip Liner,0.1085,Lips,0.2354,Lipstick,low_confidence|family_disagrees|changed_by_prior
+55054,Lipstick,0.1726,Lip Liner,0.1226,Perfume and Body Mist,0.1077,Lips,0.2953,Lipstick,low_confidence
+55055,Lipstick,0.1615,Perfume and Body Mist,0.1204,Lip Liner,0.1161,Lips,0.2777,Lipstick,low_confidence
+55056,Lipstick,0.1416,Perfume and Body Mist,0.1313,Deodorant,0.0966,Fragrance,0.2304,Lipstick,low_confidence|family_disagrees
+55057,Nail Polish,0.1717,Lipstick,0.1703,Pendant,0.1387,Lips,0.2465,Lipstick,low_confidence|family_disagrees|changed_by_prior
+55058,Perfume and Body Mist,0.1471,Lipstick,0.1306,Deodorant,0.0963,Fragrance,0.2458,Lipstick,low_confidence|changed_by_prior
+55059,Lipstick,0.182,Lip Liner,0.1225,Perfume and Body Mist,0.1118,Lips,0.3045,Lipstick,low_confidence
+55060,Perfume and Body Mist,0.1402,Lipstick,0.1284,Lip Liner,0.1071,Lips,0.2355,Lipstick,low_confidence|family_disagrees|changed_by_prior
+55061,Lipstick,0.1451,Perfume and Body Mist,0.1313,Deodorant,0.0998,Fragrance,0.2337,Lipstick,low_confidence|family_disagrees
+55062,Lipstick,0.1645,Perfume and Body Mist,0.131,Lip Liner,0.0996,Lips,0.264,Lipstick,low_confidence
+55063,Lipstick,0.4567,Perfume and Body Mist,0.1366,Shoe Accessories,0.1301,Lips,0.4775,Lipstick,low_confidence
+55064,Lipstick,0.1638,Deodorant,0.1413,Perfume and Body Mist,0.1231,Fragrance,0.2671,Lipstick,low_confidence|family_disagrees
+55065,Lipstick,0.1716,Perfume and Body Mist,0.1291,Deodorant,0.0993,Lips,0.2666,Lipstick,low_confidence
+55066,Lipstick,0.1516,Perfume and Body Mist,0.1283,Deodorant,0.0961,Lips,0.2368,Lipstick,low_confidence
+55067,Lipstick,0.4349,Perfume and Body Mist,0.1728,Shoe Accessories,0.1085,Lips,0.4532,Lipstick,low_confidence
+55068,Perfume and Body Mist,0.4968,Shoe Accessories,0.1741,Leggings,0.0682,Fragrance,0.4982,Perfume and Body Mist,low_confidence
+55072,Kajal and Eyeliner,0.2385,Lip Liner,0.1773,Perfume and Body Mist,0.1034,Lips,0.2781,Kajal and Eyeliner,low_confidence|family_disagrees
+55075,Lip Liner,0.4824,Kajal and Eyeliner,0.3755,Ties,0.0371,Lips,0.4855,Lip Liner,low_confidence
+55078,Handbags,0.4304,Foundation and Primer,0.256,Flats,0.0722,Bags,0.4464,Handbags,low_confidence
+55079,Handbags,0.4147,Foundation and Primer,0.2875,Flats,0.0667,Bags,0.4293,Handbags,low_confidence
+55080,Perfume and Body Mist,0.2985,Handbags,0.1958,Mobile Pouch,0.0637,Bags,0.3271,Handbags,low_confidence|family_disagrees|changed_by_prior
+55081,Foundation and Primer,0.2284,Shoe Accessories,0.1433,Pendant,0.0931,Makeup,0.2352,Foundation and Primer,low_confidence
+55087,Deodorant,0.3246,Perfume and Body Mist,0.1628,Shoe Accessories,0.1311,Fragrance,0.4892,Deodorant,low_confidence
+55093,Foundation and Primer,0.4414,Watches,0.1706,Shoe Accessories,0.1477,Makeup,0.4428,Foundation and Primer,low_confidence
+55094,Deodorant,0.286,Perfume and Body Mist,0.1014,Foundation and Primer,0.0808,Fragrance,0.3888,Deodorant,low_confidence
+55098,Perfume and Body Mist,0.2077,Bracelet,0.0781,Handbags,0.0667,Fragrance,0.2117,Handbags,low_confidence|changed_by_prior
+55099,Perfume and Body Mist,0.4603,Lipstick,0.146,Pendant,0.0824,Fragrance,0.466,Perfume and Body Mist,low_confidence
+55100,Perfume and Body Mist,0.5551,Wallets,0.2115,Foundation and Primer,0.0196,Fragrance,0.559,Wallets,changed_by_prior
+55109,Mobile Pouch,0.439,Perfume and Body Mist,0.0854,Bangle,0.0647,Bags,0.5302,Mobile Pouch,low_confidence
+55110,Perfume and Body Mist,0.4434,Flats,0.0751,Basketballs,0.0346,Fragrance,0.4504,Perfume and Body Mist,low_confidence
+55111,Perfume and Body Mist,0.4635,Flats,0.0648,Basketballs,0.0308,Fragrance,0.471,Perfume and Body Mist,low_confidence
+55112,Perfume and Body Mist,0.445,Flats,0.0692,Basketballs,0.0327,Fragrance,0.4524,Perfume and Body Mist,low_confidence
+55113,Foundation and Primer,0.1987,Accessory Gift Set,0.0942,Perfume and Body Mist,0.052,Makeup,0.2034,Accessory Gift Set,low_confidence|changed_by_prior
+55114,Foundation and Primer,0.2241,Accessory Gift Set,0.0983,Perfume and Body Mist,0.0489,Makeup,0.2287,Accessory Gift Set,low_confidence|changed_by_prior
+55115,Foundation and Primer,0.1977,Accessory Gift Set,0.1017,Basketballs,0.0554,Makeup,0.2022,Accessory Gift Set,low_confidence|changed_by_prior
+55116,Handbags,0.2853,Perfume and Body Mist,0.1394,Foundation and Primer,0.0489,Bags,0.3968,Handbags,low_confidence
+55117,Handbags,0.2848,Perfume and Body Mist,0.1219,Foundation and Primer,0.0496,Bags,0.3985,Handbags,low_confidence
+55118,Handbags,0.2851,Perfume and Body Mist,0.1325,Foundation and Primer,0.0487,Bags,0.3977,Handbags,low_confidence
+55120,Nail Polish,0.459,Perfume and Body Mist,0.2214,Deodorant,0.0374,Nails,0.459,Nail Polish,low_confidence
+55122,Nail Polish,0.4809,Perfume and Body Mist,0.1951,Deodorant,0.0384,Nails,0.4809,Nail Polish,low_confidence
+55123,Foundation and Primer,0.2106,Nail Polish,0.1708,Perfume and Body Mist,0.086,Makeup,0.2203,Tshirts,low_confidence|changed_by_prior
+55124,Nail Polish,0.4909,Perfume and Body Mist,0.1967,Foundation and Primer,0.0472,Nails,0.4909,Nail Polish,low_confidence
+55126,Nail Polish,0.4419,Perfume and Body Mist,0.2591,Foundation and Primer,0.0488,Nails,0.4419,Nail Polish,low_confidence
+55128,Nail Polish,0.4681,Perfume and Body Mist,0.2045,Deodorant,0.0342,Nails,0.4681,Nail Polish,low_confidence
+55130,Perfume and Body Mist,0.4758,Nail Polish,0.1511,Foundation and Primer,0.0892,Fragrance,0.5092,Perfume and Body Mist,low_confidence
+55131,Nail Polish,0.3666,Perfume and Body Mist,0.3399,Foundation and Primer,0.0521,Nails,0.3666,Nail Polish,low_confidence
+55132,Nail Polish,0.3865,Perfume and Body Mist,0.2568,Foundation and Primer,0.0995,Nails,0.3865,Nail Polish,low_confidence
+55133,Nail Polish,0.4584,Perfume and Body Mist,0.2338,Foundation and Primer,0.0911,Nails,0.4584,Nail Polish,low_confidence
+55135,Nail Polish,0.4316,Perfume and Body Mist,0.2948,Foundation and Primer,0.0472,Nails,0.4316,Nail Polish,low_confidence
+55136,Perfume and Body Mist,0.4437,Deodorant,0.2397,Foundation and Primer,0.0908,Fragrance,0.6859,Deodorant,low_confidence|changed_by_prior
+55137,Nail Polish,0.4933,Perfume and Body Mist,0.1947,Deodorant,0.0311,Nails,0.4933,Nail Polish,low_confidence
+55139,Perfume and Body Mist,0.2597,Handbags,0.1717,Deodorant,0.0786,Fragrance,0.3389,Handbags,low_confidence|changed_by_prior
+55140,Lipstick,0.3464,Perfume and Body Mist,0.1107,Nail Polish,0.0811,Lips,0.3552,Lipstick,low_confidence
+55141,Nail Polish,0.495,Perfume and Body Mist,0.1811,Deodorant,0.0565,Nails,0.495,Nail Polish,low_confidence
+55142,Lipstick,0.2082,Perfume and Body Mist,0.1791,Foundation and Primer,0.116,Fragrance,0.2387,Lipstick,low_confidence|family_disagrees
+55144,Lipstick,0.1946,Foundation and Primer,0.1814,Nail Polish,0.1597,Lips,0.2013,Tshirts,low_confidence|changed_by_prior
+55145,Nail Polish,0.4349,Perfume and Body Mist,0.2731,Foundation and Primer,0.0697,Nails,0.4349,Nail Polish,low_confidence
+55146,Nail Polish,0.4483,Perfume and Body Mist,0.2812,Foundation and Primer,0.0781,Nails,0.4483,Nail Polish,low_confidence
+55150,Nail Polish,0.38,Perfume and Body Mist,0.3507,Foundation and Primer,0.0898,Fragrance,0.3855,Nail Polish,low_confidence|family_disagrees
+55157,Nail Polish,0.4675,Perfume and Body Mist,0.2623,Foundation and Primer,0.0804,Nails,0.4675,Nail Polish,low_confidence
+55161,Nail Polish,0.4828,Perfume and Body Mist,0.2647,Foundation and Primer,0.0587,Nails,0.4828,Nail Polish,low_confidence
+55162,Nail Polish,0.4905,Perfume and Body Mist,0.224,Foundation and Primer,0.0655,Nails,0.4905,Nail Polish,low_confidence
+55187,Perfume and Body Mist,0.4692,Dresses,0.0484,Pendant,0.0478,Fragrance,0.4799,Perfume and Body Mist,low_confidence
+55202,Perfume and Body Mist,0.3114,Mobile Pouch,0.0408,Handbags,0.0385,Fragrance,0.3258,Perfume and Body Mist,low_confidence
+55203,Perfume and Body Mist,0.3337,Earrings,0.0888,Bra,0.0343,Fragrance,0.3417,Perfume and Body Mist,low_confidence
+55205,Perfume and Body Mist,0.4287,Earrings,0.1618,Lipstick,0.1383,Fragrance,0.4409,Perfume and Body Mist,low_confidence
+55209,Perfume and Body Mist,0.4763,Earrings,0.1896,Lipstick,0.1197,Fragrance,0.4907,Perfume and Body Mist,low_confidence
+55210,Perfume and Body Mist,0.4779,Earrings,0.1877,Lipstick,0.1193,Fragrance,0.4921,Perfume and Body Mist,low_confidence
+55212,Lipstick,0.4758,Lounge Shorts,0.1034,Perfume and Body Mist,0.0773,Lips,0.4992,Lipstick,low_confidence
+55217,Lipstick,0.4879,Earrings,0.225,Perfume and Body Mist,0.0563,Lips,0.5207,Lipstick,low_confidence
+55218,Kajal and Eyeliner,0.483,Lip Liner,0.4059,Lipstick,0.0163,Makeup,0.4852,Kajal and Eyeliner,low_confidence
+55227,Perfume and Body Mist,0.2061,Lipstick,0.2023,Shoe Accessories,0.0737,Fragrance,0.2689,Lipstick,low_confidence|changed_by_prior
+55229,Lipstick,0.2106,Perfume and Body Mist,0.1721,Foundation and Primer,0.0673,Lips,0.2314,Lipstick,low_confidence
+55230,Lounge Shorts,0.2211,Socks,0.1544,Fragrance Gift Set,0.153,Fragrance,0.3176,Fragrance Gift Set,low_confidence|family_disagrees|changed_by_prior
+55231,Lounge Shorts,0.2201,Socks,0.1561,Fragrance Gift Set,0.1547,Fragrance,0.3206,Fragrance Gift Set,low_confidence|family_disagrees|changed_by_prior
+55232,Lounge Shorts,0.231,Socks,0.1501,Fragrance Gift Set,0.1486,Fragrance,0.3103,Fragrance Gift Set,low_confidence|family_disagrees|changed_by_prior
+55233,Lounge Shorts,0.4941,Deodorant,0.2563,Perfume and Body Mist,0.0391,Loungewear and Nightwear,0.4965,Lounge Shorts,low_confidence
+55244,Deodorant,0.2183,Perfume and Body Mist,0.0731,Shoe Accessories,0.0584,Fragrance,0.2935,Deodorant,low_confidence
+55245,Deodorant,0.2129,Perfume and Body Mist,0.0718,Shoe Accessories,0.0594,Fragrance,0.2867,Deodorant,low_confidence
+55246,Deodorant,0.2078,Perfume and Body Mist,0.0729,Shoe Accessories,0.0538,Fragrance,0.2828,Deodorant,low_confidence
+55247,Mobile Pouch,0.1736,Perfume and Body Mist,0.1169,Foundation and Primer,0.1102,Bags,0.2283,Mobile Pouch,low_confidence
+55248,Mobile Pouch,0.2108,Foundation and Primer,0.1077,Perfume and Body Mist,0.087,Bags,0.272,Mobile Pouch,low_confidence
+55249,Mobile Pouch,0.1687,Foundation and Primer,0.118,Perfume and Body Mist,0.0988,Bags,0.2301,Mobile Pouch,low_confidence
+55250,Perfume and Body Mist,0.3168,Foundation and Primer,0.2644,Handbags,0.0486,Fragrance,0.3183,Foundation and Primer,low_confidence|changed_by_prior
+55251,Heels,0.1858,Basketballs,0.1121,Flats,0.0852,Shoes,0.2865,Heels,low_confidence
+55256,Kajal and Eyeliner,0.4487,Lip Liner,0.1366,Perfume and Body Mist,0.1293,Makeup,0.4579,Kajal and Eyeliner,low_confidence
+55263,Lip Liner,0.4526,Kajal and Eyeliner,0.2661,Pendant,0.0509,Lips,0.4845,Lip Liner,low_confidence
+55264,Lip Liner,0.4901,Kajal and Eyeliner,0.2358,Pendant,0.0464,Lips,0.5222,Lip Liner,low_confidence
+55265,Lip Liner,0.4735,Kajal and Eyeliner,0.2898,Pendant,0.0427,Lips,0.5015,Lip Liner,low_confidence
+55266,Kajal and Eyeliner,0.4704,Lip Liner,0.2133,Deodorant,0.0844,Makeup,0.4733,Kajal and Eyeliner,low_confidence
+55270,Pendant,0.2662,Perfume and Body Mist,0.2367,Flats,0.1157,Jewellery,0.3184,Pendant,low_confidence
+55271,Kajal and Eyeliner,0.4986,Perfume and Body Mist,0.1108,Deodorant,0.093,Makeup,0.5031,Kajal and Eyeliner,low_confidence
+55275,Perfume and Body Mist,0.3509,Basketballs,0.0548,Mobile Pouch,0.0479,Fragrance,0.3633,Caps,low_confidence|changed_by_prior
+55276,Perfume and Body Mist,0.3401,Mobile Pouch,0.0552,Foundation and Primer,0.0537,Fragrance,0.3533,Caps,low_confidence|changed_by_prior
+55277,Perfume and Body Mist,0.4362,Wallets,0.4077,Handbags,0.037,Fragrance,0.4384,Wallets,low_confidence|changed_by_prior
+55278,Perfume and Body Mist,0.536,Wallets,0.3025,Handbags,0.0334,Fragrance,0.5384,Wallets,changed_by_prior
+55280,Wallets,0.4718,Perfume and Body Mist,0.2689,Handbags,0.0568,Wallets,0.4718,Wallets,low_confidence
+55281,Foundation and Primer,0.3286,Basketballs,0.1187,Flats,0.0982,Makeup,0.3342,Foundation and Primer,low_confidence
+55282,Perfume and Body Mist,0.2031,Mobile Pouch,0.1818,Foundation and Primer,0.1706,Bags,0.2196,Accessory Gift Set,low_confidence|family_disagrees|changed_by_prior
+55283,Perfume and Body Mist,0.2314,Mobile Pouch,0.2042,Foundation and Primer,0.1366,Bags,0.2408,Accessory Gift Set,low_confidence|family_disagrees|changed_by_prior
+55284,Foundation and Primer,0.1897,Mobile Pouch,0.1819,Perfume and Body Mist,0.1785,Bags,0.2197,Accessory Gift Set,low_confidence|family_disagrees|changed_by_prior
+55285,Basketballs,0.256,Shoe Accessories,0.2331,Foundation and Primer,0.1719,Sports Equipment,0.256,Backpacks,low_confidence|changed_by_prior
+55290,Jewellery Set,0.1564,Kajal and Eyeliner,0.1395,Earrings,0.0907,Jewellery,0.2742,Kajal and Eyeliner,low_confidence|changed_by_prior
+55291,Perfume and Body Mist,0.1319,Kajal and Eyeliner,0.131,Jewellery Set,0.0827,Fragrance,0.1586,Kajal and Eyeliner,low_confidence|changed_by_prior
+55292,Earrings,0.4157,Perfume and Body Mist,0.2062,Lipstick,0.0551,Jewellery,0.4775,Earrings,low_confidence
+55293,Lip Liner,0.3484,Lipstick,0.2416,Kajal and Eyeliner,0.147,Lips,0.59,Lip Liner,low_confidence
+55294,Kajal and Eyeliner,0.2181,Perfume and Body Mist,0.2172,Lip Liner,0.0877,Fragrance,0.2473,Kajal and Eyeliner,low_confidence|family_disagrees
+55295,Kajal and Eyeliner,0.232,Perfume and Body Mist,0.2011,Lip Liner,0.0769,Makeup,0.239,Kajal and Eyeliner,low_confidence
+55306,Foundation and Primer,0.136,Socks,0.1202,Flats,0.1178,Shoes,0.2263,Socks,low_confidence|family_disagrees|changed_by_prior
+55317,Nail Polish,0.2689,Foundation and Primer,0.2599,Perfume and Body Mist,0.1706,Nails,0.2689,Foundation and Primer,low_confidence|changed_by_prior
+55318,Foundation and Primer,0.2246,Tops,0.1541,Perfume and Body Mist,0.1304,Makeup,0.228,Tops,low_confidence|changed_by_prior
+55319,Perfume and Body Mist,0.5492,Foundation and Primer,0.0887,Tshirts,0.0602,Fragrance,0.5521,Tshirts,changed_by_prior
+55320,Nail Polish,0.4414,Foundation and Primer,0.1582,Tops,0.0465,Nails,0.4414,Nail Polish,low_confidence
+55322,Tops,0.2044,Foundation and Primer,0.189,Flats,0.0759,Topwear,0.2271,Tops,low_confidence
+55323,Perfume and Body Mist,0.4147,Nail Polish,0.2237,Lipstick,0.0802,Fragrance,0.4278,Nail Polish,low_confidence|changed_by_prior
+55325,Nail Polish,0.3242,Lipstick,0.071,Backpacks,0.0578,Nails,0.3242,Backpacks,low_confidence|changed_by_prior
+55329,Wallets,0.2943,Perfume and Body Mist,0.1404,Flats,0.1091,Wallets,0.2943,Wallets,low_confidence
+55330,Flats,0.1415,Foundation and Primer,0.1114,Handbags,0.1048,Bags,0.15,Handbags,low_confidence|family_disagrees|changed_by_prior
+55331,Wallets,0.3722,Perfume and Body Mist,0.1545,Nail Polish,0.1533,Wallets,0.3722,Wallets,low_confidence
+55332,Flats,0.3281,Foundation and Primer,0.1455,Perfume and Body Mist,0.1224,Shoes,0.3687,Casual Shoes,low_confidence|changed_by_prior
+55333,Perfume and Body Mist,0.3886,Lounge Shorts,0.1554,Nail Polish,0.0664,Fragrance,0.43,Perfume and Body Mist,low_confidence
+55334,Perfume and Body Mist,0.2887,Bra,0.2568,Wallets,0.0625,Fragrance,0.3142,Duffel Bag,low_confidence|changed_by_prior
+55335,Bra,0.2112,Perfume and Body Mist,0.0614,Briefs,0.0548,Innerwear,0.2862,Tshirts,low_confidence|changed_by_prior
+55336,Flats,0.308,Nail Polish,0.1807,Lounge Shorts,0.1175,Shoes,0.3091,Flats,low_confidence
+55349,Nail Polish,0.284,Wallets,0.2692,Perfume and Body Mist,0.106,Nails,0.284,Wallets,low_confidence|changed_by_prior
+55350,Handbags,0.3726,Wallets,0.2693,Perfume and Body Mist,0.1538,Bags,0.421,Wallets,low_confidence|changed_by_prior
+55351,Perfume and Body Mist,0.6148,Nail Polish,0.153,Tshirts,0.0442,Fragrance,0.6164,Tshirts,changed_by_prior
+55385,Lipstick,0.3876,Perfume and Body Mist,0.1499,Nail Polish,0.1025,Lips,0.3952,Lipstick,low_confidence
+55392,Nail Polish,0.4632,Foundation and Primer,0.3016,Perfume and Body Mist,0.0766,Nails,0.4632,Nail Polish,low_confidence
+55394,Shoe Accessories,0.3914,Perfume and Body Mist,0.1062,Foundation and Primer,0.0776,Shoe Accessories,0.3914,Shoe Accessories,low_confidence
+55397,Lipstick,0.1982,Deodorant,0.1414,Foundation and Primer,0.1335,Makeup,0.2592,Lipstick,low_confidence|family_disagrees
+55398,Pendant,0.1564,Earrings,0.1261,Flats,0.0969,Jewellery,0.4059,Pendant,low_confidence
+55409,Kajal and Eyeliner,0.4042,Perfume and Body Mist,0.2813,Lip Liner,0.0731,Makeup,0.407,Kajal and Eyeliner,low_confidence
+55418,Lip Liner,0.2423,Pendant,0.0912,Briefs,0.0849,Lips,0.2954,Lip Liner,low_confidence
+55419,Lip Liner,0.3679,Perfume and Body Mist,0.1513,Lipstick,0.0808,Lips,0.4487,Lip Liner,low_confidence
+55420,Lip Liner,0.2973,Perfume and Body Mist,0.1609,Lipstick,0.076,Lips,0.3733,Lip Liner,low_confidence
+55421,Lip Liner,0.2675,Briefs,0.128,Pendant,0.0904,Lips,0.3144,Lip Liner,low_confidence
+55423,Lip Liner,0.2431,Perfume and Body Mist,0.1997,Pendant,0.0821,Lips,0.3163,Lip Liner,low_confidence
+55424,Lip Liner,0.2321,Pendant,0.0908,Briefs,0.0834,Lips,0.2825,Lip Liner,low_confidence
+55425,Lip Liner,0.27,Briefs,0.0968,Pendant,0.0957,Lips,0.3165,Lip Liner,low_confidence
+55426,Lip Liner,0.3731,Perfume and Body Mist,0.133,Lipstick,0.0841,Lips,0.4573,Lip Liner,low_confidence
+55427,Lip Liner,0.2607,Briefs,0.1203,Pendant,0.0976,Lips,0.3063,Lip Liner,low_confidence
+55428,Lip Liner,0.2943,Perfume and Body Mist,0.1586,Lipstick,0.0792,Lips,0.3736,Lip Liner,low_confidence
+55429,Lip Liner,0.2925,Perfume and Body Mist,0.16,Lipstick,0.078,Lips,0.3706,Lip Liner,low_confidence
+55430,Dresses,0.3718,Mobile Pouch,0.0589,Tshirts,0.0562,Dress,0.3745,Tshirts,low_confidence|changed_by_prior
+55431,Dresses,0.3567,Tshirts,0.0634,Mobile Pouch,0.0538,Dress,0.3588,Tshirts,low_confidence|changed_by_prior
+55432,Dresses,0.3617,Tshirts,0.0611,Mobile Pouch,0.0566,Dress,0.3642,Tshirts,low_confidence|changed_by_prior
+55433,Dresses,0.4246,Mobile Pouch,0.0565,Tshirts,0.0547,Dress,0.4268,Tshirts,low_confidence|changed_by_prior
+55434,Dresses,0.3941,Tshirts,0.0523,Mobile Pouch,0.0503,Dress,0.3962,Tshirts,low_confidence|changed_by_prior
+55436,Dresses,0.3524,Tshirts,0.0641,Mobile Pouch,0.0558,Dress,0.3547,Tshirts,low_confidence|changed_by_prior
+55437,Dresses,0.432,Mobile Pouch,0.0505,Tshirts,0.0455,Dress,0.4344,Tshirts,low_confidence|changed_by_prior
+55438,Dresses,0.3357,Tshirts,0.0647,Mobile Pouch,0.0541,Dress,0.338,Tshirts,low_confidence|changed_by_prior
+55439,Dresses,0.308,Tshirts,0.0709,Mobile Pouch,0.0548,Dress,0.3104,Tshirts,low_confidence|changed_by_prior
+55440,Dresses,0.3598,Tshirts,0.0606,Mobile Pouch,0.0577,Dress,0.3622,Tshirts,low_confidence|changed_by_prior
+55441,Dresses,0.3125,Tshirts,0.0726,Mobile Pouch,0.0531,Dress,0.3148,Tshirts,low_confidence|changed_by_prior
+55442,Dresses,0.3561,Tshirts,0.0623,Mobile Pouch,0.055,Dress,0.3584,Tshirts,low_confidence|changed_by_prior
+55443,Lipstick,0.2541,Perfume and Body Mist,0.2136,Dresses,0.0634,Lips,0.2663,Lipstick,low_confidence
+55444,Perfume and Body Mist,0.3473,Foundation and Primer,0.1564,Lipstick,0.083,Fragrance,0.3711,Foundation and Primer,low_confidence|changed_by_prior
+55445,Lipstick,0.2091,Kajal and Eyeliner,0.1273,Perfume and Body Mist,0.0937,Lips,0.2924,Lipstick,low_confidence
+55446,Perfume and Body Mist,0.3108,Foundation and Primer,0.1482,Lipstick,0.1062,Fragrance,0.3431,Foundation and Primer,low_confidence|changed_by_prior
+55447,Lipstick,0.2031,Kajal and Eyeliner,0.1244,Perfume and Body Mist,0.1041,Lips,0.2956,Lipstick,low_confidence
+55448,Lipstick,0.229,Kajal and Eyeliner,0.1254,Perfume and Body Mist,0.094,Lips,0.2973,Lipstick,low_confidence
+55449,Perfume and Body Mist,0.3549,Foundation and Primer,0.1464,Lipstick,0.0846,Fragrance,0.3809,Foundation and Primer,low_confidence|changed_by_prior
+55450,Foundation and Primer,0.3879,Deodorant,0.202,Shoe Accessories,0.1285,Makeup,0.3957,Foundation and Primer,low_confidence
+55451,Lipstick,0.1841,Kajal and Eyeliner,0.1316,Perfume and Body Mist,0.1168,Lips,0.2886,Lipstick,low_confidence
+55454,Perfume and Body Mist,0.2334,Kajal and Eyeliner,0.1503,Lipstick,0.114,Fragrance,0.3151,Kajal and Eyeliner,low_confidence|changed_by_prior
+55455,Perfume and Body Mist,0.3683,Lipstick,0.2125,Shoe Accessories,0.0674,Fragrance,0.3771,Lipstick,low_confidence|changed_by_prior
+55456,Pendant,0.1867,Dresses,0.0655,Lipstick,0.0652,Jewellery,0.2516,Pendant,low_confidence
+55457,Lipstick,0.3325,Earrings,0.139,Shoe Accessories,0.1204,Lips,0.361,Lipstick,low_confidence
+55458,Lipstick,0.3409,Earrings,0.1336,Shoe Accessories,0.1208,Lips,0.3697,Lipstick,low_confidence
+55459,Pendant,0.2164,Lipstick,0.0643,Bra,0.0636,Jewellery,0.2803,Pendant,low_confidence
+55460,Earrings,0.4215,Lipstick,0.1847,Perfume and Body Mist,0.0393,Jewellery,0.464,Earrings,low_confidence
+55461,Pendant,0.1872,Dresses,0.0658,Lipstick,0.0656,Jewellery,0.2517,Pendant,low_confidence
+55462,Lipstick,0.3807,Earrings,0.1047,Shoe Accessories,0.1018,Lips,0.4071,Lipstick,low_confidence
+55463,Kajal and Eyeliner,0.178,Lipstick,0.1322,Deodorant,0.0787,Makeup,0.2041,Kajal and Eyeliner,low_confidence
+55464,Kajal and Eyeliner,0.1871,Lipstick,0.1335,Lip Liner,0.0728,Makeup,0.2143,Kajal and Eyeliner,low_confidence
+55465,Kajal and Eyeliner,0.2068,Lipstick,0.1389,Lip Liner,0.088,Makeup,0.2354,Kajal and Eyeliner,low_confidence
+55466,Pendant,0.1038,Dresses,0.0726,Lipstick,0.0585,Jewellery,0.1715,Shirts,low_confidence|changed_by_prior
+55467,Pendant,0.1711,Lipstick,0.0669,Dresses,0.0653,Jewellery,0.2356,Pendant,low_confidence
+55468,Kajal and Eyeliner,0.1972,Lipstick,0.1403,Lip Liner,0.0793,Makeup,0.2244,Kajal and Eyeliner,low_confidence
+55469,Kajal and Eyeliner,0.186,Lipstick,0.1347,Pendant,0.0757,Makeup,0.2129,Kajal and Eyeliner,low_confidence
+55470,Lipstick,0.2546,Jewellery Set,0.0756,Pendant,0.0588,Lips,0.2905,Lipstick,low_confidence
+55471,Pendant,0.1912,Dresses,0.0666,Lipstick,0.0651,Jewellery,0.2561,Pendant,low_confidence
+55472,Pendant,0.1929,Lipstick,0.0658,Dresses,0.0655,Jewellery,0.258,Pendant,low_confidence
+55473,Lipstick,0.3424,Earrings,0.1332,Shoe Accessories,0.1252,Lips,0.3727,Lipstick,low_confidence
+55488,Lipstick,0.2703,Kajal and Eyeliner,0.2447,Perfume and Body Mist,0.0876,Lips,0.3577,Lipstick,low_confidence
+55489,Perfume and Body Mist,0.365,Lipstick,0.219,Kajal and Eyeliner,0.0904,Fragrance,0.3828,Lipstick,low_confidence|changed_by_prior
+55490,Lipstick,0.2267,Kajal and Eyeliner,0.2168,Perfume and Body Mist,0.168,Lips,0.2807,Kajal and Eyeliner,low_confidence|changed_by_prior
+55491,Lipstick,0.2834,Kajal and Eyeliner,0.1779,Perfume and Body Mist,0.1494,Lips,0.3439,Lipstick,low_confidence
+55492,Perfume and Body Mist,0.4518,Lipstick,0.2258,Kajal and Eyeliner,0.0524,Fragrance,0.4608,Lipstick,low_confidence|changed_by_prior
+55494,Perfume and Body Mist,0.4435,Lipstick,0.2244,Kajal and Eyeliner,0.1035,Fragrance,0.4491,Lipstick,low_confidence|changed_by_prior
+55495,Perfume and Body Mist,0.4578,Kajal and Eyeliner,0.1525,Lipstick,0.1188,Fragrance,0.4694,Perfume and Body Mist,low_confidence
+55496,Perfume and Body Mist,0.4161,Kajal and Eyeliner,0.1595,Lipstick,0.1269,Fragrance,0.4326,Perfume and Body Mist,low_confidence
+55497,Kajal and Eyeliner,0.261,Lipstick,0.2541,Perfume and Body Mist,0.1022,Lips,0.3234,Kajal and Eyeliner,low_confidence|family_disagrees
+55498,Perfume and Body Mist,0.469,Lipstick,0.1336,Kajal and Eyeliner,0.1128,Fragrance,0.4831,Perfume and Body Mist,low_confidence
+55499,Lipstick,0.2766,Kajal and Eyeliner,0.2405,Perfume and Body Mist,0.1194,Lips,0.3143,Lipstick,low_confidence
+55500,Kajal and Eyeliner,0.3237,Perfume and Body Mist,0.172,Lipstick,0.1602,Makeup,0.3337,Kajal and Eyeliner,low_confidence
+55501,Perfume and Body Mist,0.2984,Lipstick,0.156,Shoe Accessories,0.1225,Fragrance,0.3315,Lipstick,low_confidence|changed_by_prior
+55502,Perfume and Body Mist,0.2247,Deodorant,0.1315,Shoe Accessories,0.1204,Fragrance,0.3596,Deodorant,low_confidence|changed_by_prior
+55504,Perfume and Body Mist,0.3195,Foundation and Primer,0.1322,Deodorant,0.1201,Fragrance,0.4403,Foundation and Primer,low_confidence|changed_by_prior
+55506,Perfume and Body Mist,0.4207,Lipstick,0.1021,Shoe Accessories,0.0923,Fragrance,0.4662,Perfume and Body Mist,low_confidence
+55507,Perfume and Body Mist,0.2352,Lipstick,0.169,Shoe Accessories,0.1194,Fragrance,0.3018,Lipstick,low_confidence|changed_by_prior
+55508,Perfume and Body Mist,0.2502,Foundation and Primer,0.1886,Lipstick,0.1307,Fragrance,0.3486,Foundation and Primer,low_confidence|changed_by_prior
+55509,Perfume and Body Mist,0.4546,Lipstick,0.1021,Foundation and Primer,0.1002,Fragrance,0.4761,Perfume and Body Mist,low_confidence
+55510,Perfume and Body Mist,0.3942,Lipstick,0.1084,Shoe Accessories,0.0939,Fragrance,0.4402,Perfume and Body Mist,low_confidence
+55511,Perfume and Body Mist,0.447,Lipstick,0.1041,Shoe Accessories,0.0824,Fragrance,0.4782,Perfume and Body Mist,low_confidence
+55512,Perfume and Body Mist,0.4258,Lipstick,0.0842,Shoe Accessories,0.0832,Fragrance,0.4759,Perfume and Body Mist,low_confidence
+55513,Nail Polish,0.3274,Lipstick,0.0758,Backpacks,0.052,Nails,0.3274,Backpacks,low_confidence|changed_by_prior
+55514,Nail Polish,0.2232,Backpacks,0.076,Perfume and Body Mist,0.0669,Nails,0.2232,Backpacks,low_confidence|changed_by_prior
+55519,Perfume and Body Mist,0.4014,Bra,0.0893,Flats,0.0758,Fragrance,0.4104,Perfume and Body Mist,low_confidence
+55520,Foundation and Primer,0.4286,Perfume and Body Mist,0.2031,Shoe Accessories,0.088,Makeup,0.4324,Foundation and Primer,low_confidence
+55522,Perfume and Body Mist,0.3537,Foundation and Primer,0.2265,Nail Polish,0.1426,Fragrance,0.3542,Foundation and Primer,low_confidence|changed_by_prior
+55523,Foundation and Primer,0.4534,Perfume and Body Mist,0.2446,Shoe Accessories,0.0786,Makeup,0.4563,Foundation and Primer,low_confidence
+55526,Perfume and Body Mist,0.2982,Foundation and Primer,0.1338,Mobile Pouch,0.1191,Bags,0.3064,Handbags,low_confidence|family_disagrees|changed_by_prior
+55527,Shoe Accessories,0.499,Perfume and Body Mist,0.2716,Foundation and Primer,0.0379,Shoe Accessories,0.499,Shoe Accessories,low_confidence
+55528,Shoe Accessories,0.4473,Perfume and Body Mist,0.3422,Jewellery Set,0.0288,Shoe Accessories,0.4473,Shoe Accessories,low_confidence
+55535,Foundation and Primer,0.153,Nail Polish,0.0863,Perfume and Body Mist,0.0857,Makeup,0.1705,Tshirts,low_confidence|changed_by_prior
+55536,Perfume and Body Mist,0.134,Foundation and Primer,0.1288,Nail Polish,0.0658,Fragrance,0.1511,Foundation and Primer,low_confidence|changed_by_prior
+55537,Perfume and Body Mist,0.1689,Foundation and Primer,0.156,Lipstick,0.1192,Fragrance,0.1782,Foundation and Primer,low_confidence|changed_by_prior
+55538,Nail Polish,0.3734,Foundation and Primer,0.1505,Lipstick,0.0458,Nails,0.3734,Nail Polish,low_confidence
+55539,Nail Polish,0.3397,Foundation and Primer,0.1465,Lipstick,0.0968,Nails,0.3397,Nail Polish,low_confidence
+55540,Perfume and Body Mist,0.4819,Flats,0.0729,Nightdress,0.0624,Fragrance,0.4915,Perfume and Body Mist,low_confidence
+55541,Lip Liner,0.4674,Kajal and Eyeliner,0.4586,Ties,0.018,Lips,0.4717,Lip Liner,low_confidence
+55544,Kajal and Eyeliner,0.476,Lip Liner,0.1907,Ties,0.0715,Makeup,0.4771,Kajal and Eyeliner,low_confidence
+55546,Kajal and Eyeliner,0.4838,Lip Liner,0.1943,Ties,0.0686,Makeup,0.4851,Kajal and Eyeliner,low_confidence
+55549,Lip Liner,0.4751,Kajal and Eyeliner,0.4586,Ties,0.0149,Lips,0.4803,Lip Liner,low_confidence
+55558,Kajal and Eyeliner,0.3683,Lipstick,0.2636,Perfume and Body Mist,0.0728,Makeup,0.3698,Kajal and Eyeliner,low_confidence
+55559,Lipstick,0.2263,Foundation and Primer,0.1153,Nail Polish,0.1132,Lips,0.2634,Lipstick,low_confidence
+55561,Dresses,0.2276,Foundation and Primer,0.1988,Tops,0.166,Topwear,0.2319,Tops,low_confidence|family_disagrees|changed_by_prior
+55569,Deodorant,0.47,Pendant,0.1058,Perfume and Body Mist,0.0429,Fragrance,0.5137,Deodorant,low_confidence
+55572,Lipstick,0.2789,Perfume and Body Mist,0.1722,Kajal and Eyeliner,0.1516,Lips,0.2953,Lipstick,low_confidence
+55573,Lipstick,0.275,Perfume and Body Mist,0.1916,Kajal and Eyeliner,0.1354,Lips,0.2925,Lipstick,low_confidence
+55574,Perfume and Body Mist,0.3538,Tops,0.1683,Handbags,0.1086,Fragrance,0.3542,Tops,low_confidence|changed_by_prior
+55575,Perfume and Body Mist,0.3993,Nail Polish,0.1996,Wallets,0.1228,Fragrance,0.4053,Wallets,low_confidence|changed_by_prior
+55576,Perfume and Body Mist,0.3184,Tops,0.1666,Handbags,0.1292,Fragrance,0.3189,Tops,low_confidence|changed_by_prior
+55577,Shoe Accessories,0.2836,Foundation and Primer,0.1105,Flats,0.08,Shoe Accessories,0.2836,Shoe Accessories,low_confidence
+55578,Foundation and Primer,0.3298,Flats,0.1441,Heels,0.0644,Makeup,0.3319,Foundation and Primer,low_confidence
+55579,Foundation and Primer,0.3338,Flats,0.1437,Heels,0.0685,Makeup,0.336,Foundation and Primer,low_confidence
+55581,Perfume and Body Mist,0.5471,Wallets,0.2209,Nail Polish,0.0425,Fragrance,0.5477,Wallets,changed_by_prior
+55582,Perfume and Body Mist,0.5343,Wallets,0.2293,Nail Polish,0.0434,Fragrance,0.5348,Wallets,changed_by_prior
+55590,Shirts,0.4336,Jackets,0.0972,Tops,0.0368,Topwear,0.647,Shirts,low_confidence
+55591,Shirts,0.1329,Jackets,0.1218,Tops,0.0723,Topwear,0.4896,Shirts,low_confidence
+55628,Casual Shoes,0.4403,Formal Shoes,0.3761,Flats,0.0071,Shoes,0.8264,Casual Shoes,low_confidence
+55629,Formal Shoes,0.4937,Casual Shoes,0.2846,Flats,0.0124,Shoes,0.7956,Casual Shoes,low_confidence|changed_by_prior
+55630,Flats,0.645,Heels,0.3304,Perfume and Body Mist,0.0015,Shoes,0.976,Heels,changed_by_prior
+55647,Flats,0.4753,Heels,0.3565,Earrings,0.0098,Shoes,0.8332,Heels,low_confidence|changed_by_prior
+55648,Flats,0.4821,Heels,0.4737,Perfume and Body Mist,0.0032,Shoes,0.9562,Heels,low_confidence|changed_by_prior
+55652,Flats,0.6243,Heels,0.2468,Perfume and Body Mist,0.016,Shoes,0.8727,Heels,changed_by_prior
+55785,Casual Shoes,0.3143,Perfume and Body Mist,0.1672,Lounge Shorts,0.025,Shoes,0.3453,Casual Shoes,low_confidence
+55801,Kurta Sets,0.4793,Dresses,0.0817,Night suits,0.0746,Apparel Set,0.4793,Kurta Sets,low_confidence
+55814,Kurta Sets,0.4199,Night suits,0.3405,Jumpsuit,0.1297,Apparel Set,0.4199,Kurta Sets,low_confidence
+55827,Kurta Sets,0.4349,Night suits,0.2194,Dresses,0.1696,Apparel Set,0.4349,Kurta Sets,low_confidence
+55828,Dresses,0.3998,Kurta Sets,0.3143,Night suits,0.2124,Dress,0.401,Kurta Sets,low_confidence|changed_by_prior
+55831,Kurta Sets,0.3968,Night suits,0.2782,Dresses,0.1745,Apparel Set,0.3968,Kurta Sets,low_confidence
+55832,Night suits,0.3745,Kurta Sets,0.3066,Dresses,0.2367,Loungewear and Nightwear,0.3976,Kurta Sets,low_confidence|changed_by_prior
+55834,Bra,0.2829,Perfume and Body Mist,0.2669,Foundation and Primer,0.0614,Fragrance,0.3414,Bra,low_confidence|family_disagrees
+55848,Foundation and Primer,0.2276,Perfume and Body Mist,0.1806,Lounge Shorts,0.0604,Makeup,0.2319,Foundation and Primer,low_confidence
+55861,Perfume and Body Mist,0.3593,Pendant,0.16,Foundation and Primer,0.1079,Fragrance,0.3596,Tshirts,low_confidence|changed_by_prior
+55863,Perfume and Body Mist,0.2635,Pendant,0.1885,Lipstick,0.086,Fragrance,0.2642,Tshirts,low_confidence|changed_by_prior
+55864,Perfume and Body Mist,0.358,Mobile Pouch,0.1101,Pendant,0.0885,Fragrance,0.3585,Tshirts,low_confidence|changed_by_prior
+55865,Foundation and Primer,0.2473,Perfume and Body Mist,0.2449,Lipstick,0.1325,Makeup,0.2556,Foundation and Primer,low_confidence
+55867,Foundation and Primer,0.2124,Lipstick,0.2051,Nail Polish,0.1069,Lips,0.2273,Tshirts,low_confidence|family_disagrees|changed_by_prior
+55869,Foundation and Primer,0.2362,Lipstick,0.142,Nail Polish,0.0796,Makeup,0.2427,Tshirts,low_confidence|changed_by_prior
+55870,Pendant,0.229,Perfume and Body Mist,0.2145,Lipstick,0.0824,Jewellery,0.2939,Tshirts,low_confidence|changed_by_prior
+55871,Perfume and Body Mist,0.5286,Lipstick,0.0573,Pendant,0.0531,Fragrance,0.5299,Tshirts,changed_by_prior
+55874,Perfume and Body Mist,0.429,Foundation and Primer,0.1616,Lipstick,0.0797,Fragrance,0.4295,Tshirts,low_confidence|changed_by_prior
+55876,Perfume and Body Mist,0.3763,Pendant,0.1457,Lipstick,0.0661,Fragrance,0.3768,Tshirts,low_confidence|changed_by_prior
+55879,Perfume and Body Mist,0.4758,Pendant,0.078,Foundation and Primer,0.076,Fragrance,0.4771,Tshirts,low_confidence|changed_by_prior
+55883,Perfume and Body Mist,0.2842,Foundation and Primer,0.1574,Tshirts,0.0998,Fragrance,0.2881,Tshirts,low_confidence|changed_by_prior
+55885,Perfume and Body Mist,0.534,Pendant,0.0716,Handbags,0.0326,Fragrance,0.535,Tshirts,changed_by_prior
+55887,Perfume and Body Mist,0.2688,Foundation and Primer,0.1525,Pendant,0.1294,Fragrance,0.2692,Tshirts,low_confidence|changed_by_prior
+55888,Perfume and Body Mist,0.6043,Lipstick,0.0631,Foundation and Primer,0.0489,Fragrance,0.6052,Tshirts,changed_by_prior
+55889,Perfume and Body Mist,0.3337,Pendant,0.1625,Lipstick,0.0542,Fragrance,0.3347,Tshirts,low_confidence|changed_by_prior
+55890,Perfume and Body Mist,0.5599,Pendant,0.1062,Earrings,0.0482,Fragrance,0.5607,Tshirts,changed_by_prior
+55897,Perfume and Body Mist,0.4579,Pendant,0.1625,Foundation and Primer,0.0517,Fragrance,0.4585,Perfume and Body Mist,low_confidence
+55898,Perfume and Body Mist,0.1767,Foundation and Primer,0.1541,Lipstick,0.0841,Fragrance,0.1952,Tshirts,low_confidence|changed_by_prior
+55899,Perfume and Body Mist,0.3814,Mobile Pouch,0.0974,Pendant,0.0885,Fragrance,0.3819,Perfume and Body Mist,low_confidence
+55901,Tshirts,0.2313,Tops,0.204,Foundation and Primer,0.1487,Topwear,0.4492,Tshirts,low_confidence
+55902,Perfume and Body Mist,0.405,Pendant,0.1294,Tshirts,0.053,Fragrance,0.4062,Tshirts,low_confidence|changed_by_prior
+55904,Perfume and Body Mist,0.4501,Pendant,0.112,Handbags,0.0496,Fragrance,0.4513,Tshirts,low_confidence|changed_by_prior
+55905,Foundation and Primer,0.3379,Lipstick,0.1594,Tshirts,0.0889,Makeup,0.3413,Tshirts,low_confidence|changed_by_prior
+55954,Perfume and Body Mist,0.3847,Pendant,0.1136,Mobile Pouch,0.0846,Fragrance,0.3851,Perfume and Body Mist,low_confidence
+55956,Handbags,0.1966,Earrings,0.1757,Lip Liner,0.0925,Bags,0.2488,Handbags,low_confidence
+55958,Lipstick,0.2059,Kajal and Eyeliner,0.1334,Pendant,0.0945,Lips,0.2599,Lipstick,low_confidence
+55962,Pendant,0.2653,Foundation and Primer,0.1674,Necklace and Chains,0.0543,Jewellery,0.3909,Foundation and Primer,low_confidence|changed_by_prior
+55963,Kajal and Eyeliner,0.2396,Lip Liner,0.1495,Perfume and Body Mist,0.0667,Makeup,0.2476,Kajal and Eyeliner,low_confidence
+55964,Pendant,0.1011,Foundation and Primer,0.0918,Lipstick,0.0714,Jewellery,0.1991,Foundation and Primer,low_confidence|changed_by_prior
+55965,Perfume and Body Mist,0.2904,Lipstick,0.1689,Foundation and Primer,0.0966,Fragrance,0.3014,Lipstick,low_confidence|changed_by_prior
+55966,Lipstick,0.2876,Perfume and Body Mist,0.1417,Foundation and Primer,0.0983,Lips,0.3581,Lipstick,low_confidence
+55967,Lipstick,0.2882,Perfume and Body Mist,0.1322,Foundation and Primer,0.1175,Lips,0.3514,Lipstick,low_confidence
+55968,Lipstick,0.2547,Foundation and Primer,0.1551,Perfume and Body Mist,0.1403,Lips,0.2907,Lipstick,low_confidence
+55969,Lipstick,0.2291,Foundation and Primer,0.1334,Perfume and Body Mist,0.1333,Lips,0.2953,Lipstick,low_confidence
+55970,Perfume and Body Mist,0.4324,Lipstick,0.1472,Lip Liner,0.0578,Fragrance,0.4459,Perfume and Body Mist,low_confidence
+55971,Perfume and Body Mist,0.3118,Lipstick,0.1637,Foundation and Primer,0.1287,Fragrance,0.319,Lipstick,low_confidence|changed_by_prior
+55972,Earrings,0.3145,Lipstick,0.1302,Foundation and Primer,0.0682,Jewellery,0.3548,Earrings,low_confidence
+55973,Lipstick,0.2592,Perfume and Body Mist,0.1973,Foundation and Primer,0.0828,Lips,0.3255,Lipstick,low_confidence
+55974,Lipstick,0.2533,Perfume and Body Mist,0.1933,Lip Liner,0.0759,Lips,0.3292,Lipstick,low_confidence
+55975,Perfume and Body Mist,0.3043,Lipstick,0.1738,Foundation and Primer,0.1014,Fragrance,0.3143,Lipstick,low_confidence|changed_by_prior
+55976,Lipstick,0.291,Perfume and Body Mist,0.1191,Foundation and Primer,0.1085,Lips,0.3348,Lipstick,low_confidence
+55977,Perfume and Body Mist,0.4793,Jewellery Set,0.0855,Handbags,0.0642,Fragrance,0.5166,Perfume and Body Mist,low_confidence
+55980,Lipstick,0.2308,Perfume and Body Mist,0.1664,Foundation and Primer,0.1434,Lips,0.2731,Lipstick,low_confidence
+55981,Lipstick,0.2519,Perfume and Body Mist,0.1441,Foundation and Primer,0.1235,Lips,0.3271,Lipstick,low_confidence
+55982,Lipstick,0.4905,Dresses,0.1023,Earrings,0.0806,Lips,0.5087,Lipstick,low_confidence
+55983,Perfume and Body Mist,0.2319,Lipstick,0.1947,Foundation and Primer,0.1041,Lips,0.2647,Lipstick,low_confidence|family_disagrees|changed_by_prior
+55984,Perfume and Body Mist,0.2914,Lipstick,0.139,Foundation and Primer,0.1202,Fragrance,0.303,Lipstick,low_confidence|changed_by_prior
+55985,Lipstick,0.2678,Perfume and Body Mist,0.1458,Foundation and Primer,0.1055,Lips,0.3388,Lipstick,low_confidence
+55986,Perfume and Body Mist,0.2505,Lipstick,0.1891,Foundation and Primer,0.0994,Fragrance,0.2634,Lipstick,low_confidence|changed_by_prior
+55987,Lipstick,0.2315,Perfume and Body Mist,0.2176,Foundation and Primer,0.0789,Lips,0.3073,Lipstick,low_confidence
+55988,Lipstick,0.2563,Foundation and Primer,0.1291,Perfume and Body Mist,0.1261,Lips,0.2993,Lipstick,low_confidence
+55989,Socks,0.2425,Earrings,0.1013,Pendant,0.0715,Socks,0.2493,Socks,low_confidence
+55990,Lipstick,0.2506,Perfume and Body Mist,0.1334,Foundation and Primer,0.1328,Lips,0.2922,Lipstick,low_confidence
+55992,Lipstick,0.2272,Perfume and Body Mist,0.2237,Foundation and Primer,0.0913,Lips,0.3023,Lipstick,low_confidence
+55993,Lipstick,0.2682,Perfume and Body Mist,0.1815,Foundation and Primer,0.089,Lips,0.3422,Lipstick,low_confidence
+55994,Lipstick,0.2342,Perfume and Body Mist,0.209,Foundation and Primer,0.081,Lips,0.3047,Lipstick,low_confidence
+55995,Lipstick,0.2125,Perfume and Body Mist,0.1947,Foundation and Primer,0.0921,Lips,0.2831,Lipstick,low_confidence
+55996,Perfume and Body Mist,0.1781,Lipstick,0.1781,Foundation and Primer,0.1018,Lips,0.2496,Lipstick,low_confidence|family_disagrees|changed_by_prior
+55997,Lipstick,0.2393,Perfume and Body Mist,0.2128,Lip Liner,0.0738,Lips,0.3131,Lipstick,low_confidence
+55998,Perfume and Body Mist,0.3165,Lipstick,0.1509,Foundation and Primer,0.105,Fragrance,0.3267,Lipstick,low_confidence|changed_by_prior
+55999,Lipstick,0.2325,Perfume and Body Mist,0.1697,Foundation and Primer,0.0985,Lips,0.3103,Lipstick,low_confidence
+56000,Perfume and Body Mist,0.2362,Lipstick,0.2005,Foundation and Primer,0.1017,Lips,0.2624,Lipstick,low_confidence|family_disagrees|changed_by_prior
+56001,Lipstick,0.2674,Perfume and Body Mist,0.1628,Foundation and Primer,0.1186,Lips,0.3328,Lipstick,low_confidence
+56002,Perfume and Body Mist,0.2931,Lipstick,0.1456,Foundation and Primer,0.0766,Fragrance,0.3009,Lipstick,low_confidence|changed_by_prior
+56003,Perfume and Body Mist,0.3114,Lipstick,0.1641,Foundation and Primer,0.0783,Fragrance,0.3219,Lipstick,low_confidence|changed_by_prior
+56004,Lipstick,0.2677,Perfume and Body Mist,0.1683,Foundation and Primer,0.1319,Lips,0.3171,Lipstick,low_confidence
+56005,Lipstick,0.2366,Perfume and Body Mist,0.136,Foundation and Primer,0.1343,Lips,0.2777,Lipstick,low_confidence
+56006,Lipstick,0.2435,Perfume and Body Mist,0.1711,Foundation and Primer,0.1411,Lips,0.2896,Lipstick,low_confidence
+56007,Lipstick,0.3387,Perfume and Body Mist,0.1047,Kajal and Eyeliner,0.0706,Lips,0.3949,Lipstick,low_confidence
+56008,Earrings,0.2812,Perfume and Body Mist,0.0901,Lipstick,0.0857,Jewellery,0.3103,Earrings,low_confidence
+56010,Lipstick,0.2473,Perfume and Body Mist,0.1574,Foundation and Primer,0.1356,Lips,0.2896,Lipstick,low_confidence
+56012,Lipstick,0.3654,Perfume and Body Mist,0.0854,Kajal and Eyeliner,0.0702,Lips,0.4178,Lipstick,low_confidence
+56013,Lipstick,0.3436,Perfume and Body Mist,0.0915,Kajal and Eyeliner,0.0741,Lips,0.3963,Lipstick,low_confidence
+56014,Lipstick,0.3031,Perfume and Body Mist,0.1209,Kajal and Eyeliner,0.0802,Lips,0.3534,Lipstick,low_confidence
+56016,Earrings,0.3978,Jewellery Set,0.0922,Lipstick,0.066,Jewellery,0.6265,Earrings,low_confidence
+56018,Lipstick,0.3592,Perfume and Body Mist,0.092,Kajal and Eyeliner,0.0688,Lips,0.4132,Lipstick,low_confidence
+56019,Lipstick,0.4025,Kajal and Eyeliner,0.0817,Perfume and Body Mist,0.0601,Lips,0.4524,Lipstick,low_confidence
+56020,Lipstick,0.3966,Perfume and Body Mist,0.0671,Kajal and Eyeliner,0.0628,Lips,0.4355,Lipstick,low_confidence
+56021,Lipstick,0.3381,Perfume and Body Mist,0.0954,Kajal and Eyeliner,0.0654,Lips,0.3945,Lipstick,low_confidence
+56022,Lipstick,0.3387,Perfume and Body Mist,0.1306,Kajal and Eyeliner,0.0688,Lips,0.3828,Lipstick,low_confidence
+56023,Lipstick,0.3842,Perfume and Body Mist,0.0765,Kajal and Eyeliner,0.0605,Lips,0.429,Lipstick,low_confidence
+56024,Lipstick,0.3962,Jewellery Set,0.0969,Earrings,0.0854,Lips,0.4742,Lipstick,low_confidence
+56025,Lipstick,0.3391,Perfume and Body Mist,0.1316,Kajal and Eyeliner,0.0653,Lips,0.3829,Lipstick,low_confidence
+56026,Lipstick,0.369,Perfume and Body Mist,0.0812,Kajal and Eyeliner,0.07,Lips,0.4222,Lipstick,low_confidence
+56027,Lipstick,0.3082,Perfume and Body Mist,0.1285,Kajal and Eyeliner,0.0592,Lips,0.3452,Lipstick,low_confidence
+56028,Lipstick,0.3536,Perfume and Body Mist,0.0908,Kajal and Eyeliner,0.0701,Lips,0.4064,Lipstick,low_confidence
+56029,Lipstick,0.3705,Perfume and Body Mist,0.0927,Kajal and Eyeliner,0.0709,Lips,0.4331,Lipstick,low_confidence
+56030,Lipstick,0.4348,Jewellery Set,0.0815,Lip Liner,0.0804,Lips,0.5152,Lipstick,low_confidence
+56031,Lipstick,0.3,Perfume and Body Mist,0.126,Kajal and Eyeliner,0.0768,Lips,0.3584,Lipstick,low_confidence
+56032,Lipstick,0.3972,Kajal and Eyeliner,0.0677,Perfume and Body Mist,0.0622,Lips,0.4236,Lipstick,low_confidence
+56033,Lipstick,0.381,Perfume and Body Mist,0.077,Kajal and Eyeliner,0.0676,Lips,0.4222,Lipstick,low_confidence
+56034,Lipstick,0.3705,Perfume and Body Mist,0.0783,Kajal and Eyeliner,0.0666,Lips,0.4228,Lipstick,low_confidence
+56035,Lipstick,0.372,Perfume and Body Mist,0.0965,Kajal and Eyeliner,0.0659,Lips,0.4109,Lipstick,low_confidence
+56037,Lipstick,0.3655,Perfume and Body Mist,0.1179,Kajal and Eyeliner,0.0583,Lips,0.4054,Lipstick,low_confidence
+56038,Lipstick,0.3345,Perfume and Body Mist,0.0931,Kajal and Eyeliner,0.0739,Lips,0.4005,Lipstick,low_confidence
+56040,Kajal and Eyeliner,0.3609,Perfume and Body Mist,0.2386,Lipstick,0.0899,Makeup,0.3642,Kajal and Eyeliner,low_confidence
+56041,Kajal and Eyeliner,0.3455,Perfume and Body Mist,0.1706,Lipstick,0.1073,Makeup,0.35,Kajal and Eyeliner,low_confidence
+56042,Kajal and Eyeliner,0.3806,Perfume and Body Mist,0.2015,Lipstick,0.0981,Makeup,0.3838,Kajal and Eyeliner,low_confidence
+56043,Kajal and Eyeliner,0.3239,Perfume and Body Mist,0.2779,Lipstick,0.0976,Makeup,0.3266,Kajal and Eyeliner,low_confidence
+56044,Kajal and Eyeliner,0.3358,Perfume and Body Mist,0.2627,Lipstick,0.0841,Makeup,0.3381,Kajal and Eyeliner,low_confidence
+56045,Kajal and Eyeliner,0.3429,Perfume and Body Mist,0.226,Lipstick,0.0906,Makeup,0.3459,Kajal and Eyeliner,low_confidence
+56046,Kajal and Eyeliner,0.3524,Perfume and Body Mist,0.2188,Lipstick,0.1058,Makeup,0.356,Kajal and Eyeliner,low_confidence
+56047,Kajal and Eyeliner,0.3365,Perfume and Body Mist,0.2233,Lipstick,0.1022,Makeup,0.339,Kajal and Eyeliner,low_confidence
+56048,Kajal and Eyeliner,0.3294,Perfume and Body Mist,0.2191,Lipstick,0.1093,Makeup,0.332,Kajal and Eyeliner,low_confidence
+56049,Kajal and Eyeliner,0.3522,Perfume and Body Mist,0.2806,Lipstick,0.0795,Makeup,0.3545,Kajal and Eyeliner,low_confidence
+56050,Perfume and Body Mist,0.363,Kajal and Eyeliner,0.2341,Lipstick,0.0972,Fragrance,0.377,Kajal and Eyeliner,low_confidence|changed_by_prior
+56051,Kajal and Eyeliner,0.2889,Perfume and Body Mist,0.2744,Lip Liner,0.0885,Makeup,0.2917,Kajal and Eyeliner,low_confidence
+56052,Earrings,0.2436,Perfume and Body Mist,0.2024,Kajal and Eyeliner,0.0798,Jewellery,0.3204,Earrings,low_confidence
+56053,Earrings,0.2791,Perfume and Body Mist,0.237,Kajal and Eyeliner,0.0707,Jewellery,0.3593,Earrings,low_confidence
+56054,Earrings,0.2027,Perfume and Body Mist,0.1473,Lip Liner,0.1074,Jewellery,0.3009,Lip Liner,low_confidence|changed_by_prior
+56055,Perfume and Body Mist,0.2713,Earrings,0.1577,Kajal and Eyeliner,0.0968,Fragrance,0.2884,Perfume and Body Mist,low_confidence
+56056,Perfume and Body Mist,0.2541,Earrings,0.209,Kajal and Eyeliner,0.0681,Jewellery,0.2945,Perfume and Body Mist,low_confidence|family_disagrees
+56057,Perfume and Body Mist,0.2354,Earrings,0.1732,Kajal and Eyeliner,0.1037,Fragrance,0.2501,Kajal and Eyeliner,low_confidence|changed_by_prior
+56058,Perfume and Body Mist,0.2339,Earrings,0.1652,Kajal and Eyeliner,0.1113,Fragrance,0.2491,Kajal and Eyeliner,low_confidence|changed_by_prior
+56059,Perfume and Body Mist,0.2881,Earrings,0.1577,Kajal and Eyeliner,0.117,Fragrance,0.2989,Kajal and Eyeliner,low_confidence|changed_by_prior
+56060,Perfume and Body Mist,0.2405,Earrings,0.1524,Kajal and Eyeliner,0.1145,Fragrance,0.2495,Kajal and Eyeliner,low_confidence|changed_by_prior
+56061,Earrings,0.1996,Perfume and Body Mist,0.164,Kajal and Eyeliner,0.1124,Jewellery,0.2744,Kajal and Eyeliner,low_confidence|changed_by_prior
+56062,Perfume and Body Mist,0.3395,Earrings,0.1862,Lip Liner,0.0631,Fragrance,0.3551,Perfume and Body Mist,low_confidence
+56063,Earrings,0.1936,Perfume and Body Mist,0.1767,Kajal and Eyeliner,0.1133,Jewellery,0.2839,Kajal and Eyeliner,low_confidence|changed_by_prior
+56064,Earrings,0.2191,Perfume and Body Mist,0.1899,Lip Liner,0.096,Jewellery,0.3032,Lip Liner,low_confidence|changed_by_prior
+56065,Perfume and Body Mist,0.253,Earrings,0.241,Kajal and Eyeliner,0.0662,Jewellery,0.325,Earrings,low_confidence|family_disagrees|changed_by_prior
+56066,Earrings,0.4028,Lipstick,0.2185,Perfume and Body Mist,0.1573,Jewellery,0.4451,Lipstick,low_confidence|changed_by_prior
+56067,Foundation and Primer,0.3592,Lipstick,0.1896,Flats,0.0718,Makeup,0.3693,Foundation and Primer,low_confidence
+56068,Socks,0.2177,Dupatta,0.072,Earrings,0.0594,Socks,0.2325,Socks,low_confidence
+56069,Kajal and Eyeliner,0.326,Lipstick,0.1572,Necklace and Chains,0.0904,Makeup,0.3328,Kajal and Eyeliner,low_confidence
+56070,Kajal and Eyeliner,0.4093,Lip Liner,0.1186,Perfume and Body Mist,0.0872,Makeup,0.413,Kajal and Eyeliner,low_confidence
+56071,Perfume and Body Mist,0.3158,Kajal and Eyeliner,0.2451,Lip Liner,0.0915,Fragrance,0.3227,Kajal and Eyeliner,low_confidence|changed_by_prior
+56073,Kajal and Eyeliner,0.1799,Perfume and Body Mist,0.129,Lip Liner,0.0968,Makeup,0.1925,Kajal and Eyeliner,low_confidence
+56074,Kajal and Eyeliner,0.4703,Perfume and Body Mist,0.0802,Lipstick,0.0796,Makeup,0.4752,Kajal and Eyeliner,low_confidence
+56076,Perfume and Body Mist,0.2469,Kajal and Eyeliner,0.1403,Lipstick,0.0852,Fragrance,0.2521,Kajal and Eyeliner,low_confidence|changed_by_prior
+56077,Kajal and Eyeliner,0.1672,Perfume and Body Mist,0.1342,Lip Liner,0.0834,Makeup,0.1819,Kajal and Eyeliner,low_confidence
+56078,Perfume and Body Mist,0.3752,Kajal and Eyeliner,0.3153,Lipstick,0.1387,Fragrance,0.3776,Kajal and Eyeliner,low_confidence|changed_by_prior
+56079,Lipstick,0.4941,Kajal and Eyeliner,0.1649,Lip Liner,0.1088,Lips,0.6029,Lipstick,low_confidence
+56080,Lipstick,0.2612,Perfume and Body Mist,0.2244,Kajal and Eyeliner,0.158,Lips,0.3616,Lipstick,low_confidence
+56081,Lipstick,0.3663,Kajal and Eyeliner,0.2932,Perfume and Body Mist,0.1441,Lips,0.4289,Lipstick,low_confidence
+56082,Lipstick,0.1727,Lip Liner,0.1089,Jewellery Set,0.1006,Lips,0.2816,Lipstick,low_confidence
+56083,Lipstick,0.4392,Perfume and Body Mist,0.0573,Jewellery Set,0.0475,Lips,0.4788,Lipstick,low_confidence
+56084,Perfume and Body Mist,0.3192,Lipstick,0.207,Kajal and Eyeliner,0.1163,Fragrance,0.3339,Lipstick,low_confidence|changed_by_prior
+56085,Earrings,0.2932,Briefs,0.1314,Jewellery Set,0.0664,Jewellery,0.4003,Briefs,low_confidence|changed_by_prior
+56086,Lipstick,0.3558,Briefs,0.1347,Lip Liner,0.0994,Lips,0.4552,Lipstick,low_confidence
+56087,Lipstick,0.3036,Lip Liner,0.1001,Briefs,0.0947,Lips,0.4037,Lipstick,low_confidence
+56088,Lipstick,0.3542,Lip Liner,0.084,Kajal and Eyeliner,0.0494,Lips,0.4383,Lipstick,low_confidence
+56089,Lipstick,0.2232,Lip Liner,0.1148,Kajal and Eyeliner,0.079,Lips,0.338,Lipstick,low_confidence
+56090,Lipstick,0.2433,Briefs,0.1111,Earrings,0.0835,Lips,0.3045,Lipstick,low_confidence
+56091,Earrings,0.2096,Lipstick,0.1221,Jewellery Set,0.0842,Jewellery,0.3163,Lipstick,low_confidence|changed_by_prior
+56092,Lipstick,0.2225,Earrings,0.1411,Bra,0.062,Lips,0.2777,Lipstick,low_confidence
+56093,Earrings,0.1377,Lipstick,0.1197,Perfume and Body Mist,0.0883,Jewellery,0.2258,Lipstick,low_confidence|changed_by_prior
+56094,Lipstick,0.2771,Kajal and Eyeliner,0.2452,Perfume and Body Mist,0.1473,Lips,0.3502,Lipstick,low_confidence
+56096,Lipstick,0.3659,Lip Liner,0.1033,Briefs,0.0676,Lips,0.4692,Lipstick,low_confidence
+56097,Lipstick,0.3754,Lip Liner,0.1033,Briefs,0.0669,Lips,0.4787,Lipstick,low_confidence
+56098,Lipstick,0.3928,Briefs,0.1152,Earrings,0.0856,Lips,0.4385,Lipstick,low_confidence
+56099,Lipstick,0.4059,Lip Liner,0.1049,Briefs,0.0674,Lips,0.5108,Lipstick,low_confidence
+56100,Perfume and Body Mist,0.2881,Lipstick,0.2508,Kajal and Eyeliner,0.114,Lips,0.3055,Lipstick,low_confidence|family_disagrees|changed_by_prior
+56101,Lipstick,0.3148,Perfume and Body Mist,0.1554,Kajal and Eyeliner,0.1335,Lips,0.4235,Lipstick,low_confidence
+56102,Lipstick,0.4312,Bra,0.059,Lip Liner,0.0584,Lips,0.4896,Lipstick,low_confidence
+56103,Earrings,0.2938,Briefs,0.107,Perfume and Body Mist,0.0618,Jewellery,0.3742,Earrings,low_confidence
+56104,Lipstick,0.3799,Lip Liner,0.0959,Jewellery Set,0.0644,Lips,0.4757,Lipstick,low_confidence
+56105,Lipstick,0.2491,Lip Liner,0.0878,Perfume and Body Mist,0.0743,Lips,0.3369,Lipstick,low_confidence
+56106,Lipstick,0.3913,Lip Liner,0.105,Kajal and Eyeliner,0.059,Lips,0.4963,Lipstick,low_confidence
+56107,Lipstick,0.4511,Briefs,0.0582,Lip Liner,0.0522,Lips,0.5033,Lipstick,low_confidence
+56108,Lipstick,0.3577,Perfume and Body Mist,0.1418,Kajal and Eyeliner,0.1268,Lips,0.4682,Lipstick,low_confidence
+56121,Kajal and Eyeliner,0.43,Perfume and Body Mist,0.1989,Necklace and Chains,0.0838,Makeup,0.4308,Kajal and Eyeliner,low_confidence
+56122,Foundation and Primer,0.3075,Perfume and Body Mist,0.1554,Shoe Accessories,0.155,Makeup,0.3102,Foundation and Primer,low_confidence
+56123,Foundation and Primer,0.3246,Shoe Accessories,0.1534,Perfume and Body Mist,0.125,Makeup,0.3272,Foundation and Primer,low_confidence
+56124,Foundation and Primer,0.2765,Socks,0.1736,Shoe Accessories,0.0905,Makeup,0.2798,Socks,low_confidence|changed_by_prior
+56125,Perfume and Body Mist,0.2938,Bra,0.1673,Gloves,0.0965,Fragrance,0.377,Socks,low_confidence|changed_by_prior
+56126,Bra,0.3092,Gloves,0.1524,Perfume and Body Mist,0.1289,Innerwear,0.3217,Socks,low_confidence|changed_by_prior
+56127,Kajal and Eyeliner,0.3298,Perfume and Body Mist,0.1957,Lipstick,0.0954,Makeup,0.3326,Kajal and Eyeliner,low_confidence
+56128,Kajal and Eyeliner,0.3578,Perfume and Body Mist,0.1703,Lipstick,0.0905,Makeup,0.3609,Kajal and Eyeliner,low_confidence
+56129,Perfume and Body Mist,0.355,Kajal and Eyeliner,0.1603,Lipstick,0.0806,Fragrance,0.3592,Kajal and Eyeliner,low_confidence|changed_by_prior
+56133,Perfume and Body Mist,0.3688,Foundation and Primer,0.2378,Shoe Accessories,0.1236,Fragrance,0.3854,Foundation and Primer,low_confidence|changed_by_prior
+56134,Lipstick,0.1726,Perfume and Body Mist,0.1351,Foundation and Primer,0.123,Lips,0.1806,Lipstick,low_confidence
+56135,Perfume and Body Mist,0.3623,Flats,0.1635,Foundation and Primer,0.0674,Fragrance,0.3733,Casual Shoes,low_confidence|changed_by_prior
+56136,Flats,0.2639,Perfume and Body Mist,0.2544,Foundation and Primer,0.109,Shoes,0.2821,Flats,low_confidence
+56138,Perfume and Body Mist,0.3373,Foundation and Primer,0.1931,Flats,0.1722,Fragrance,0.3436,Foundation and Primer,low_confidence|changed_by_prior
+56139,Perfume and Body Mist,0.2096,Flats,0.1017,Foundation and Primer,0.0935,Fragrance,0.2168,Casual Shoes,low_confidence|changed_by_prior
+56140,Perfume and Body Mist,0.3799,Flats,0.2259,Foundation and Primer,0.0528,Fragrance,0.3879,Perfume and Body Mist,low_confidence
+56142,Perfume and Body Mist,0.4707,Foundation and Primer,0.1318,Flats,0.1308,Fragrance,0.4749,Perfume and Body Mist,low_confidence
+56144,Basketballs,0.2648,Foundation and Primer,0.1881,Flats,0.0652,Sports Equipment,0.2648,Basketballs,low_confidence
+56145,Basketballs,0.3189,Flats,0.0745,Foundation and Primer,0.0476,Sports Equipment,0.3189,Basketballs,low_confidence
+56147,Basketballs,0.377,Foundation and Primer,0.2255,Watches,0.0682,Sports Equipment,0.377,Basketballs,low_confidence
+56149,Kajal and Eyeliner,0.3703,Perfume and Body Mist,0.202,Lip Liner,0.054,Makeup,0.3746,Kajal and Eyeliner,low_confidence
+56150,Kajal and Eyeliner,0.1942,Perfume and Body Mist,0.147,Lip Liner,0.0879,Makeup,0.2101,Kajal and Eyeliner,low_confidence
+56151,Perfume and Body Mist,0.1929,Kajal and Eyeliner,0.1592,Lip Liner,0.0978,Fragrance,0.2125,Kajal and Eyeliner,low_confidence|changed_by_prior
+56152,Kajal and Eyeliner,0.3951,Perfume and Body Mist,0.1339,Lipstick,0.1002,Makeup,0.3981,Kajal and Eyeliner,low_confidence
+56153,Kajal and Eyeliner,0.1992,Perfume and Body Mist,0.117,Lipstick,0.0676,Makeup,0.2137,Kajal and Eyeliner,low_confidence
+56156,Perfume and Body Mist,0.2621,Kajal and Eyeliner,0.1801,Lipstick,0.0897,Fragrance,0.2685,Kajal and Eyeliner,low_confidence|changed_by_prior
+56158,Kajal and Eyeliner,0.1844,Earrings,0.1297,Perfume and Body Mist,0.1006,Jewellery,0.2002,Kajal and Eyeliner,low_confidence|family_disagrees
+56159,Ties,0.3246,Perfume and Body Mist,0.0899,Jewellery Set,0.0595,Ties,0.3246,Ties,low_confidence
+56160,Ties,0.2215,Perfume and Body Mist,0.162,Jewellery Set,0.0784,Jewellery,0.2365,Ties,low_confidence|family_disagrees
+56162,Kajal and Eyeliner,0.4468,Lipstick,0.0876,Perfume and Body Mist,0.0676,Makeup,0.4504,Kajal and Eyeliner,low_confidence
+56164,Kajal and Eyeliner,0.166,Lip Liner,0.1208,Perfume and Body Mist,0.0911,Lips,0.1928,Kajal and Eyeliner,low_confidence|family_disagrees
+56165,Kajal and Eyeliner,0.1769,Lip Liner,0.1108,Earrings,0.0966,Jewellery,0.1948,Kajal and Eyeliner,low_confidence|family_disagrees
+56166,Kajal and Eyeliner,0.1413,Lip Liner,0.1112,Briefs,0.0864,Lips,0.1965,Kajal and Eyeliner,low_confidence|family_disagrees
+56168,Perfume and Body Mist,0.4163,Kajal and Eyeliner,0.1726,Lipstick,0.14,Fragrance,0.419,Kajal and Eyeliner,low_confidence|changed_by_prior
+56170,Perfume and Body Mist,0.4318,Kajal and Eyeliner,0.1199,Lipstick,0.0784,Fragrance,0.4585,Perfume and Body Mist,low_confidence
+56171,Earrings,0.3199,Lipstick,0.082,Shoe Accessories,0.0677,Jewellery,0.3751,Earrings,low_confidence
+56172,Kajal and Eyeliner,0.4117,Perfume and Body Mist,0.2496,Lipstick,0.0978,Makeup,0.4126,Kajal and Eyeliner,low_confidence
+56173,Earrings,0.3196,Lipstick,0.1364,Kajal and Eyeliner,0.0654,Jewellery,0.3623,Earrings,low_confidence
+56174,Earrings,0.3219,Lipstick,0.0921,Perfume and Body Mist,0.0827,Jewellery,0.3821,Earrings,low_confidence
+56175,Earrings,0.3247,Perfume and Body Mist,0.0871,Lipstick,0.0853,Jewellery,0.3802,Earrings,low_confidence
+56176,Earrings,0.3173,Perfume and Body Mist,0.092,Lipstick,0.0887,Jewellery,0.3675,Earrings,low_confidence
+56177,Earrings,0.298,Lipstick,0.1052,Perfume and Body Mist,0.0837,Jewellery,0.3433,Earrings,low_confidence
+56181,Flats,0.4103,Foundation and Primer,0.1223,Perfume and Body Mist,0.0542,Shoes,0.4179,Flats,low_confidence
+56182,Flats,0.4427,Foundation and Primer,0.1072,Perfume and Body Mist,0.0452,Shoes,0.4526,Flats,low_confidence
+56183,Flats,0.4334,Foundation and Primer,0.1473,Perfume and Body Mist,0.0582,Shoes,0.4435,Flats,low_confidence
+56184,Flats,0.4147,Foundation and Primer,0.1758,Perfume and Body Mist,0.1343,Shoes,0.4208,Flats,low_confidence
+56185,Perfume and Body Mist,0.136,Flats,0.0839,Basketballs,0.0764,Shoes,0.2056,Casual Shoes,low_confidence|family_disagrees|changed_by_prior
+56186,Perfume and Body Mist,0.1572,Flats,0.0945,Basketballs,0.0772,Shoes,0.2157,Casual Shoes,low_confidence|family_disagrees|changed_by_prior
+56187,Perfume and Body Mist,0.154,Basketballs,0.086,Flats,0.0787,Shoes,0.2115,Casual Shoes,low_confidence|family_disagrees|changed_by_prior
+56188,Perfume and Body Mist,0.1646,Flats,0.0896,Basketballs,0.0723,Shoes,0.2124,Casual Shoes,low_confidence|family_disagrees|changed_by_prior
+56189,Flats,0.1539,Foundation and Primer,0.1403,Perfume and Body Mist,0.1388,Shoes,0.1617,Tshirts,low_confidence|changed_by_prior
+56190,Perfume and Body Mist,0.1219,Flats,0.101,Foundation and Primer,0.0695,Jewellery,0.1448,Socks,low_confidence|family_disagrees|changed_by_prior
+56191,Bra,0.0957,Socks,0.0938,Swimwear,0.0868,Innerwear,0.1341,Socks,low_confidence|changed_by_prior
+56192,Bra,0.1089,Socks,0.0803,Swimwear,0.0736,Innerwear,0.1496,Tshirts,low_confidence|changed_by_prior
+56193,Foundation and Primer,0.2419,Perfume and Body Mist,0.0879,Socks,0.0783,Makeup,0.2446,Foundation and Primer,low_confidence
+56194,Foundation and Primer,0.164,Perfume and Body Mist,0.1051,Socks,0.0754,Makeup,0.167,Socks,low_confidence|changed_by_prior
+56195,Basketballs,0.1827,Foundation and Primer,0.1327,Watches,0.0705,Sports Equipment,0.1827,Watches,low_confidence|changed_by_prior
+56196,Foundation and Primer,0.1657,Briefs,0.0993,Perfume and Body Mist,0.0848,Jewellery,0.1901,Socks,low_confidence|family_disagrees|changed_by_prior
+56198,Bracelet,0.4942,Bangle,0.4892,Heels,0.0023,Jewellery,0.9874,Bangle,low_confidence|changed_by_prior
+56206,Earrings,0.386,Pendant,0.2141,Perfume and Body Mist,0.1037,Jewellery,0.6603,Earrings,low_confidence
+56223,Night suits,0.3391,Kurta Sets,0.1899,Jumpsuit,0.1329,Loungewear and Nightwear,0.3669,Night suits,low_confidence
+56224,Night suits,0.4978,Kurta Sets,0.0981,Jumpsuit,0.0772,Loungewear and Nightwear,0.5331,Night suits,low_confidence
+56226,Night suits,0.4947,Jumpsuit,0.0635,Kurta Sets,0.0634,Loungewear and Nightwear,0.5142,Night suits,low_confidence
+56233,Tracksuits,0.4551,Night suits,0.1952,Kurta Sets,0.0416,Bottomwear,0.539,Tracksuits,low_confidence
+56235,Night suits,0.1655,Jumpsuit,0.0874,Kurta Sets,0.0655,Bottomwear,0.1872,Night suits,low_confidence|family_disagrees
+56237,Kurta Sets,0.3874,Night suits,0.3032,Jumpsuit,0.0639,Apparel Set,0.3874,Kurta Sets,low_confidence
+56238,Tracksuits,0.3562,Night suits,0.2482,Jumpsuit,0.1124,Bottomwear,0.4628,Tracksuits,low_confidence
+56241,Night suits,0.4527,Kurta Sets,0.1636,Tracksuits,0.1022,Loungewear and Nightwear,0.4605,Night suits,low_confidence
+56245,Night suits,0.3126,Tracksuits,0.2799,Kurta Sets,0.1081,Loungewear and Nightwear,0.3192,Tracksuits,low_confidence|changed_by_prior
+56248,Tracksuits,0.1466,Leggings,0.0945,Jumpsuit,0.0888,Bottomwear,0.4275,Shorts,low_confidence|changed_by_prior
+56332,Watches,0.4653,Necklace and Chains,0.0571,Free Gifts,0.0486,Watches,0.4653,Watches,low_confidence
+56356,Perfume and Body Mist,0.7909,Fragrance Gift Set,0.1147,Deodorant,0.0722,Fragrance,0.9778,Fragrance Gift Set,changed_by_prior
+56412,Sandals,0.4527,Flats,0.3159,Heels,0.0695,Sandal,0.4539,Sandals,low_confidence
+56424,Foundation and Primer,0.5025,Casual Shoes,0.0989,Perfume and Body Mist,0.0618,Makeup,0.5068,Casual Shoes,changed_by_prior
+56428,Mobile Pouch,0.4294,Foundation and Primer,0.1564,Handbags,0.0693,Bags,0.5315,Mobile Pouch,low_confidence
+56429,Perfume and Body Mist,0.3598,Ring,0.0696,Flats,0.0513,Fragrance,0.4047,Perfume and Body Mist,low_confidence
+56443,Perfume and Body Mist,0.5118,Nail Polish,0.3186,Deodorant,0.0618,Fragrance,0.5742,Nail Polish,changed_by_prior
+56450,Perfume and Body Mist,0.5334,Nail Polish,0.4059,Foundation and Primer,0.0287,Fragrance,0.538,Nail Polish,changed_by_prior
+56456,Perfume and Body Mist,0.5973,Nail Polish,0.316,Foundation and Primer,0.0574,Fragrance,0.6001,Nail Polish,changed_by_prior
+56475,Perfume and Body Mist,0.4803,Nail Polish,0.432,Foundation and Primer,0.0345,Fragrance,0.4887,Nail Polish,low_confidence|changed_by_prior
+56476,Perfume and Body Mist,0.5786,Nail Polish,0.3433,Foundation and Primer,0.0281,Fragrance,0.5882,Nail Polish,changed_by_prior
+56507,Kajal and Eyeliner,0.4326,Lip Liner,0.4257,Perfume and Body Mist,0.0236,Lips,0.4493,Lip Liner,low_confidence|family_disagrees|changed_by_prior
+56515,Lipstick,0.4986,Earrings,0.2407,Perfume and Body Mist,0.0433,Lips,0.5058,Lipstick,low_confidence
+56522,Lipstick,0.4879,Earrings,0.1596,Jackets,0.0512,Lips,0.501,Lipstick,low_confidence
+56524,Lipstick,0.4969,Earrings,0.1462,Jackets,0.0446,Lips,0.5098,Lipstick,low_confidence
+56527,Lipstick,0.4753,Earrings,0.0965,Jackets,0.0679,Lips,0.4841,Lipstick,low_confidence
+56528,Lipstick,0.4841,Earrings,0.0987,Jackets,0.052,Lips,0.4947,Lipstick,low_confidence
+56530,Lipstick,0.4986,Earrings,0.144,Jackets,0.047,Lips,0.5118,Lipstick,low_confidence
+56534,Lipstick,0.4888,Earrings,0.1512,Jackets,0.051,Lips,0.5025,Lipstick,low_confidence
+56537,Lipstick,0.4577,Earrings,0.1892,Jackets,0.0475,Lips,0.4714,Lipstick,low_confidence
+56539,Lipstick,0.4995,Earrings,0.1415,Jackets,0.0482,Lips,0.5133,Lipstick,low_confidence
+56542,Lipstick,0.4162,Lip Liner,0.2333,Kajal and Eyeliner,0.1039,Lips,0.6495,Lipstick,low_confidence
+56544,Kajal and Eyeliner,0.4705,Perfume and Body Mist,0.2626,Lipstick,0.1438,Makeup,0.4714,Kajal and Eyeliner,low_confidence
+56546,Shoe Accessories,0.3194,Foundation and Primer,0.1095,Deodorant,0.0934,Shoe Accessories,0.3194,Shoe Accessories,low_confidence
+56548,Lip Liner,0.4846,Kajal and Eyeliner,0.4577,Ties,0.0178,Lips,0.4888,Lip Liner,low_confidence
+56549,Kajal and Eyeliner,0.4833,Lip Liner,0.4675,Ties,0.0138,Makeup,0.4837,Kajal and Eyeliner,low_confidence
+56551,Deodorant,0.3708,Lipstick,0.0993,Foundation and Primer,0.0824,Fragrance,0.4325,Deodorant,low_confidence
+56553,Deodorant,0.3892,Lipstick,0.0861,Perfume and Body Mist,0.0776,Fragrance,0.4679,Deodorant,low_confidence
+56554,Deodorant,0.355,Perfume and Body Mist,0.1385,Kajal and Eyeliner,0.0619,Fragrance,0.4949,Deodorant,low_confidence
+56555,Perfume and Body Mist,0.4151,Kajal and Eyeliner,0.3315,Lipstick,0.1317,Fragrance,0.4249,Kajal and Eyeliner,low_confidence|changed_by_prior
+56561,Kajal and Eyeliner,0.4517,Lip Liner,0.3819,Lipstick,0.0395,Makeup,0.4596,Kajal and Eyeliner,low_confidence
+56562,Lip Liner,0.4738,Kajal and Eyeliner,0.3597,Lipstick,0.0386,Lips,0.5123,Lip Liner,low_confidence
+56563,Kajal and Eyeliner,0.4741,Lip Liner,0.3586,Lipstick,0.0328,Makeup,0.4787,Kajal and Eyeliner,low_confidence
+56564,Kajal and Eyeliner,0.4723,Lip Liner,0.3529,Lipstick,0.031,Makeup,0.4762,Kajal and Eyeliner,low_confidence
+56568,Perfume and Body Mist,0.3742,Foundation and Primer,0.1354,Deodorant,0.0452,Fragrance,0.4215,Perfume and Body Mist,low_confidence
+56571,Foundation and Primer,0.4012,Perfume and Body Mist,0.2168,Nail Polish,0.0886,Makeup,0.4052,Foundation and Primer,low_confidence
+56573,Foundation and Primer,0.4344,Perfume and Body Mist,0.2003,Nail Polish,0.0776,Makeup,0.4383,Foundation and Primer,low_confidence
+56574,Bra,0.3742,Perfume and Body Mist,0.1823,Lipstick,0.0415,Innerwear,0.3842,Sports Shoes,low_confidence|changed_by_prior
+56580,Foundation and Primer,0.2135,Perfume and Body Mist,0.1579,Heels,0.0763,Makeup,0.2227,Foundation and Primer,low_confidence
+56581,Flats,0.3962,Heels,0.1017,Perfume and Body Mist,0.0793,Shoes,0.5093,Flats,low_confidence
+56582,Flats,0.2159,Gloves,0.1302,Perfume and Body Mist,0.1055,Shoes,0.3246,Heels,low_confidence|changed_by_prior
+56583,Pendant,0.2308,Perfume and Body Mist,0.1741,Deodorant,0.1737,Fragrance,0.3489,Deodorant,low_confidence|family_disagrees|changed_by_prior
+56584,Pendant,0.117,Flats,0.0872,Perfume and Body Mist,0.0671,Jewellery,0.1989,Socks,low_confidence|changed_by_prior
+56585,Pendant,0.1226,Flats,0.0747,Lip Liner,0.0632,Jewellery,0.2063,Pendant,low_confidence
+56590,Perfume and Body Mist,0.4098,Wallets,0.0784,Foundation and Primer,0.0678,Fragrance,0.4208,Wallets,low_confidence|changed_by_prior
+56593,Perfume and Body Mist,0.3685,Wallets,0.1893,Foundation and Primer,0.0585,Fragrance,0.3761,Wallets,low_confidence|changed_by_prior
+56594,Kajal and Eyeliner,0.4024,Lip Liner,0.2066,Lipstick,0.0898,Makeup,0.4165,Kajal and Eyeliner,low_confidence
+56606,Dresses,0.1296,Tops,0.0853,Foundation and Primer,0.0659,Topwear,0.1734,Tops,low_confidence|family_disagrees|changed_by_prior
+56607,Perfume and Body Mist,0.2033,Basketballs,0.0747,Flats,0.0525,Fragrance,0.2087,Casual Shoes,low_confidence|changed_by_prior
+56608,Perfume and Body Mist,0.2142,Basketballs,0.0686,Ring,0.0516,Fragrance,0.2198,Casual Shoes,low_confidence|changed_by_prior
+56609,Foundation and Primer,0.2617,Flats,0.1481,Bra,0.0509,Makeup,0.2658,Foundation and Primer,low_confidence
+56610,Foundation and Primer,0.2477,Flats,0.1418,Bra,0.0558,Makeup,0.252,Foundation and Primer,low_confidence
+56611,Flats,0.2253,Foundation and Primer,0.2199,Socks,0.0913,Shoes,0.2394,Socks,low_confidence|changed_by_prior
+56612,Perfume and Body Mist,0.4595,Wallets,0.3689,Handbags,0.0415,Fragrance,0.4605,Wallets,low_confidence|changed_by_prior
+56613,Perfume and Body Mist,0.5225,Wallets,0.3293,Handbags,0.0353,Fragrance,0.5233,Wallets,changed_by_prior
+56614,Perfume and Body Mist,0.4849,Wallets,0.3472,Handbags,0.0409,Fragrance,0.4859,Wallets,low_confidence|changed_by_prior
+56618,Foundation and Primer,0.3628,Socks,0.1127,Perfume and Body Mist,0.0637,Makeup,0.3702,Foundation and Primer,low_confidence
+56619,Foundation and Primer,0.5,Casual Shoes,0.0944,Perfume and Body Mist,0.0576,Makeup,0.5039,Casual Shoes,low_confidence|changed_by_prior
+56620,Perfume and Body Mist,0.5271,Handbags,0.3784,Booties,0.0118,Fragrance,0.528,Handbags,changed_by_prior
+56622,Shoe Accessories,0.4354,Perfume and Body Mist,0.4042,Foundation and Primer,0.0522,Shoe Accessories,0.4354,Shoe Accessories,low_confidence
+56626,Nail Polish,0.1336,Foundation and Primer,0.0997,Perfume and Body Mist,0.0895,Fragrance,0.1756,Wallets,low_confidence|family_disagrees|changed_by_prior
+56634,Deodorant,0.3883,Shoe Accessories,0.137,Perfume and Body Mist,0.0816,Fragrance,0.4714,Deodorant,low_confidence
+56638,Dresses,0.4002,Tunics,0.3226,Tops,0.1895,Topwear,0.5659,Tops,low_confidence|family_disagrees|changed_by_prior
+56640,Dresses,0.4611,Kurtas,0.2668,Tunics,0.1693,Topwear,0.4845,Kurtas,low_confidence|family_disagrees|changed_by_prior
+56642,Tops,0.4856,Kurtis,0.1251,Tunics,0.1172,Topwear,0.8568,Tops,low_confidence
+56647,Tops,0.3471,Shirts,0.246,Tshirts,0.1021,Topwear,0.7414,Shirts,low_confidence|changed_by_prior
+56650,Tops,0.3325,Shirts,0.1791,Tshirts,0.0473,Topwear,0.6084,Shirts,low_confidence|changed_by_prior
+56660,Casual Shoes,0.3895,Flats,0.1116,Sandals,0.076,Shoes,0.5133,Casual Shoes,low_confidence
+56661,Casual Shoes,0.1977,Flip Flops,0.1129,Sandals,0.0687,Shoes,0.2459,Casual Shoes,low_confidence
+56693,Kurtas,0.1574,Shirts,0.1381,Jackets,0.0732,Topwear,0.5124,Shirts,low_confidence|changed_by_prior
+56694,Shirts,0.2373,Tops,0.1153,Tshirts,0.092,Topwear,0.5775,Shirts,low_confidence
+56695,Shirts,0.4407,Tops,0.1229,Tunics,0.0307,Topwear,0.6592,Shirts,low_confidence
+56696,Tshirts,0.2823,Tops,0.0422,Jackets,0.0356,Topwear,0.4231,Tshirts,low_confidence
+56698,Tshirts,0.2066,Kurtas,0.0895,Tops,0.0519,Topwear,0.4323,Tshirts,low_confidence
+56699,Shirts,0.2325,Jackets,0.1148,Tshirts,0.0525,Topwear,0.5188,Shirts,low_confidence
+56700,Shirts,0.3352,Tops,0.1818,Tshirts,0.0646,Topwear,0.6686,Shirts,low_confidence
+56701,Shirts,0.3061,Tshirts,0.1752,Bra,0.024,Topwear,0.5202,Shirts,low_confidence
+56704,Tshirts,0.3326,Jackets,0.1778,Perfume and Body Mist,0.0431,Topwear,0.5966,Tshirts,low_confidence
+56765,Jackets,0.2447,Shirts,0.2137,Tops,0.0553,Topwear,0.5608,Shirts,low_confidence|changed_by_prior
+56808,Kurtas,0.3985,Dresses,0.294,Tunics,0.049,Topwear,0.5192,Kurtas,low_confidence
+56810,Kurtas,0.4532,Tunics,0.1707,Stoles,0.0257,Topwear,0.68,Kurtas,low_confidence
+56814,Dresses,0.354,Tunics,0.1528,Kurtas,0.1199,Topwear,0.4461,Kurtis,low_confidence|family_disagrees|changed_by_prior
+56817,Jackets,0.3089,Shirts,0.1705,Bra,0.0727,Topwear,0.549,Shirts,low_confidence|changed_by_prior
+56818,Jackets,0.0945,Shirts,0.084,Kurtas,0.0545,Topwear,0.3307,Shirts,low_confidence|changed_by_prior
+56819,Shirts,0.3756,Sarees,0.0277,Earrings,0.0253,Topwear,0.4646,Shirts,low_confidence
+56822,Shorts,0.388,Capris,0.2164,Lounge Pants,0.0523,Bottomwear,0.6936,Shorts,low_confidence
+56825,Tshirts,0.1939,Jackets,0.1279,Shirts,0.0584,Topwear,0.4301,Tshirts,low_confidence
+56843,Jeans,0.441,Patiala,0.1696,Leggings,0.0335,Bottomwear,0.7313,Jeans,low_confidence
+56845,Jeans,0.4689,Lounge Pants,0.0688,Lounge Shorts,0.0682,Bottomwear,0.6256,Jeans,low_confidence
+56846,Jeans,0.4167,Lounge Pants,0.097,Patiala,0.0806,Bottomwear,0.5921,Jeans,low_confidence
+56854,Shirts,0.4293,Jackets,0.2987,Tops,0.0239,Topwear,0.7938,Shirts,low_confidence
+56855,Shirts,0.2342,Tshirts,0.1206,Heels,0.028,Topwear,0.4517,Shirts,low_confidence
+56859,Flats,0.706,Heels,0.2547,Flip Flops,0.002,Shoes,0.9609,Heels,changed_by_prior
+56867,Flats,0.5555,Heels,0.0773,Casual Shoes,0.0479,Shoes,0.6822,Casual Shoes,changed_by_prior
+56872,Flats,0.5919,Heels,0.3299,Perfume and Body Mist,0.0044,Shoes,0.9234,Heels,changed_by_prior
+56874,Flats,0.6203,Heels,0.2777,Perfume and Body Mist,0.0078,Shoes,0.8988,Heels,changed_by_prior
+56876,Flats,0.64,Heels,0.3115,Dresses,0.0025,Shoes,0.9525,Heels,changed_by_prior
+56884,Flats,0.5638,Heels,0.3695,Perfume and Body Mist,0.0049,Shoes,0.9337,Heels,changed_by_prior
+56885,Flats,0.6709,Heels,0.3009,Perfume and Body Mist,0.0034,Shoes,0.9721,Heels,changed_by_prior
+56887,Flats,0.6889,Heels,0.2646,Perfume and Body Mist,0.0024,Shoes,0.9537,Heels,changed_by_prior
+56890,Flats,0.7298,Heels,0.2553,Perfume and Body Mist,0.0015,Shoes,0.9853,Heels,changed_by_prior
+56896,Flats,0.6941,Heels,0.2483,Perfume and Body Mist,0.0035,Shoes,0.943,Heels,changed_by_prior
+56899,Flats,0.6193,Heels,0.3204,Earrings,0.003,Shoes,0.9411,Heels,changed_by_prior
+56902,Flats,0.6816,Heels,0.2648,Perfume and Body Mist,0.0039,Shoes,0.9471,Heels,changed_by_prior
+56903,Flats,0.4902,Heels,0.4716,Perfume and Body Mist,0.0018,Shoes,0.9622,Heels,low_confidence|changed_by_prior
+56907,Flats,0.5507,Heels,0.4134,Perfume and Body Mist,0.0039,Shoes,0.9647,Heels,changed_by_prior
+56908,Flats,0.4802,Heels,0.434,Dresses,0.0061,Shoes,0.9147,Heels,low_confidence|changed_by_prior
+56919,Flats,0.6806,Heels,0.2926,Travel Accessory,0.0011,Shoes,0.9735,Heels,changed_by_prior
+56927,Flats,0.5419,Heels,0.4193,Perfume and Body Mist,0.0039,Shoes,0.9624,Heels,changed_by_prior
+56928,Flats,0.7237,Heels,0.2559,Perfume and Body Mist,0.0021,Shoes,0.98,Heels,changed_by_prior
+56930,Flats,0.7113,Heels,0.2618,Perfume and Body Mist,0.0021,Shoes,0.9734,Heels,changed_by_prior
+56931,Flats,0.6237,Heels,0.3282,Perfume and Body Mist,0.008,Shoes,0.9528,Heels,changed_by_prior
+56933,Flats,0.6376,Heels,0.3272,Perfume and Body Mist,0.0029,Shoes,0.9652,Heels,changed_by_prior
+56935,Flats,0.7037,Heels,0.2543,Bra,0.0028,Shoes,0.9581,Heels,changed_by_prior
+56936,Flats,0.7346,Heels,0.2529,Perfume and Body Mist,0.0017,Shoes,0.9876,Heels,changed_by_prior
+56937,Flats,0.5506,Heels,0.1984,Perfume and Body Mist,0.0132,Shoes,0.757,Heels,changed_by_prior
+56938,Flats,0.6521,Heels,0.2946,Free Gifts,0.0025,Shoes,0.95,Heels,changed_by_prior
+56939,Flats,0.7432,Heels,0.2373,Perfume and Body Mist,0.0012,Shoes,0.9805,Heels,changed_by_prior
+56940,Flats,0.7267,Heels,0.2514,Perfume and Body Mist,0.0013,Shoes,0.9783,Heels,changed_by_prior
+56941,Flats,0.5633,Heels,0.4184,Perfume and Body Mist,0.0017,Shoes,0.9819,Heels,changed_by_prior
+56943,Flats,0.5813,Heels,0.4033,Handbags,0.0008,Shoes,0.9847,Heels,changed_by_prior
+56944,Flats,0.6191,Heels,0.3626,Handbags,0.0008,Shoes,0.9818,Heels,changed_by_prior
+56947,Flats,0.4998,Heels,0.4602,Perfume and Body Mist,0.0027,Shoes,0.9605,Heels,low_confidence|changed_by_prior
+56948,Heels,0.4812,Flats,0.4595,Sarees,0.0026,Shoes,0.9423,Heels,low_confidence
+56950,Flats,0.664,Heels,0.3096,Perfume and Body Mist,0.0034,Shoes,0.9739,Heels,changed_by_prior
+56951,Flats,0.5629,Heels,0.3533,Perfume and Body Mist,0.0073,Shoes,0.9174,Heels,changed_by_prior
+56958,Flats,0.4474,Heels,0.2187,Perfume and Body Mist,0.0217,Shoes,0.6707,Heels,low_confidence|changed_by_prior
+56959,Flats,0.4705,Heels,0.1861,Perfume and Body Mist,0.0249,Shoes,0.6595,Heels,low_confidence|changed_by_prior
+56963,Flats,0.5077,Heels,0.479,Perfume and Body Mist,0.0009,Shoes,0.9869,Heels,changed_by_prior
+56964,Flats,0.6089,Heels,0.3388,Flip Flops,0.0112,Shoes,0.9485,Heels,changed_by_prior
+56966,Flats,0.4569,Heels,0.3412,Flip Flops,0.082,Shoes,0.7989,Flip Flops,low_confidence|changed_by_prior
+56967,Flats,0.6637,Heels,0.2444,Flip Flops,0.0097,Shoes,0.9087,Heels,changed_by_prior
+56968,Flats,0.6281,Heels,0.3338,Perfume and Body Mist,0.0026,Shoes,0.963,Heels,changed_by_prior
+56969,Flats,0.7454,Heels,0.2315,Bra,0.0012,Shoes,0.9775,Heels,changed_by_prior
+56972,Flats,0.5847,Heels,0.3681,Perfume and Body Mist,0.0026,Shoes,0.9533,Heels,changed_by_prior
+56974,Flats,0.6339,Heels,0.3287,Bra,0.0019,Shoes,0.963,Heels,changed_by_prior
+56979,Flats,0.7418,Heels,0.2279,Flip Flops,0.003,Shoes,0.9701,Heels,changed_by_prior
+56981,Flats,0.4648,Heels,0.4466,Perfume and Body Mist,0.0088,Shoes,0.9124,Heels,low_confidence|changed_by_prior
+56984,Flats,0.5757,Heels,0.384,Perfume and Body Mist,0.0021,Shoes,0.9602,Heels,changed_by_prior
+56985,Flats,0.5765,Heels,0.3693,Dresses,0.0022,Shoes,0.9463,Heels,changed_by_prior
+56988,Flats,0.6779,Heels,0.3047,Perfume and Body Mist,0.0008,Shoes,0.9828,Heels,changed_by_prior
+56989,Flats,0.6127,Heels,0.3092,Perfume and Body Mist,0.0068,Shoes,0.9244,Heels,changed_by_prior
+56991,Flats,0.6119,Heels,0.3526,Perfume and Body Mist,0.0021,Shoes,0.9648,Heels,changed_by_prior
+56995,Flats,0.496,Heels,0.4513,Perfume and Body Mist,0.0032,Shoes,0.9488,Heels,low_confidence|changed_by_prior
+56999,Flats,0.6885,Heels,0.2971,Perfume and Body Mist,0.0009,Shoes,0.9857,Heels,changed_by_prior
+57000,Flats,0.7318,Heels,0.2518,Perfume and Body Mist,0.002,Shoes,0.9837,Heels,changed_by_prior
+57003,Flats,0.5773,Heels,0.3934,Travel Accessory,0.002,Shoes,0.9708,Heels,changed_by_prior
+57004,Flats,0.6013,Heels,0.3532,Sports Sandals,0.0024,Shoes,0.9552,Heels,changed_by_prior
+57005,Flats,0.6792,Heels,0.2827,Dresses,0.0018,Shoes,0.9622,Heels,changed_by_prior
+57013,Flats,0.6047,Heels,0.3367,Dresses,0.0024,Shoes,0.9417,Heels,changed_by_prior
+57014,Flats,0.6447,Heels,0.3309,Perfume and Body Mist,0.0017,Shoes,0.9757,Heels,changed_by_prior
+57028,Tshirts,0.4791,Tops,0.1262,Jackets,0.0766,Topwear,0.743,Tshirts,low_confidence
+57033,Jackets,0.325,Tops,0.1493,Waistcoat,0.0627,Topwear,0.6477,Shirts,low_confidence|changed_by_prior
+57034,Jumpsuit,0.4598,Tops,0.2984,Dresses,0.1382,Dress,0.598,Tops,low_confidence|changed_by_prior
+57052,Dresses,0.282,Sarees,0.2708,Night suits,0.1939,Dress,0.329,Sarees,low_confidence|changed_by_prior
+57062,Tops,0.2129,Shirts,0.1755,Jackets,0.0953,Topwear,0.5907,Shirts,low_confidence|changed_by_prior
+57063,Waistcoat,0.0598,Dupatta,0.0515,Night suits,0.0504,Topwear,0.2561,Shirts,low_confidence|changed_by_prior
+57064,Dresses,0.082,Waistcoat,0.0649,Jackets,0.0614,Topwear,0.2951,Sweaters,low_confidence|family_disagrees|changed_by_prior
+57066,Tops,0.1274,Kurtas,0.1148,Dresses,0.0852,Topwear,0.3878,Shirts,low_confidence|changed_by_prior
+57068,Tops,0.1962,Dresses,0.1073,Tunics,0.1038,Topwear,0.4714,Sweaters,low_confidence|changed_by_prior
+57069,Tops,0.3118,Jackets,0.1667,Tshirts,0.0884,Topwear,0.6429,Tshirts,low_confidence|changed_by_prior
+57070,Leggings,0.3804,Jeggings,0.1806,Jeans,0.1458,Bottomwear,0.8208,Leggings,low_confidence
+57071,Jeggings,0.3856,Jeans,0.2291,Trousers,0.203,Bottomwear,0.8634,Trousers,low_confidence|changed_by_prior
+57072,Leggings,0.3344,Jeans,0.317,Jeggings,0.0785,Bottomwear,0.8306,Jeans,low_confidence|changed_by_prior
+57073,Jeans,0.3046,Jeggings,0.1404,Trousers,0.1026,Bottomwear,0.614,Jeans,low_confidence
+57076,Jeggings,0.4524,Jeans,0.4256,Leggings,0.0314,Bottomwear,0.9229,Jeans,low_confidence|changed_by_prior
+57078,Dresses,0.4254,Sarees,0.1805,Nightdress,0.1009,Dress,0.4332,Dresses,low_confidence
+57080,Shirts,0.3213,Dresses,0.198,Perfume and Body Mist,0.0599,Topwear,0.46,Shirts,low_confidence
+57082,Shorts,0.2362,Boxers,0.2226,Lounge Shorts,0.0973,Bottomwear,0.3595,Shorts,low_confidence
+57085,Briefs,0.1072,Patiala,0.0928,Boxers,0.0645,Bottomwear,0.2323,Trousers,low_confidence|family_disagrees|changed_by_prior
+57086,Skirts,0.4901,Boxers,0.2384,Lounge Shorts,0.0941,Bottomwear,0.55,Skirts,low_confidence
+57089,Skirts,0.3331,Lounge Shorts,0.2066,Boxers,0.0574,Bottomwear,0.4288,Skirts,low_confidence
+57091,Dresses,0.5402,Skirts,0.0986,Lounge Shorts,0.0615,Dress,0.541,Skirts,changed_by_prior
+57093,Leggings,0.2863,Capris,0.2168,Trousers,0.1319,Bottomwear,0.7812,Trousers,low_confidence|changed_by_prior
+57094,Lounge Shorts,0.4438,Boxers,0.3212,Skirts,0.0479,Loungewear and Nightwear,0.4591,Lounge Shorts,low_confidence
+57096,Lounge Pants,0.3077,Jeans,0.1082,Patiala,0.0565,Loungewear and Nightwear,0.3305,Lounge Pants,low_confidence
+57102,Bra,0.3698,Nightdress,0.1201,Tunics,0.0876,Innerwear,0.3855,Tshirts,low_confidence|changed_by_prior
+57103,Tops,0.2473,Dresses,0.203,Tunics,0.1043,Topwear,0.4137,Tops,low_confidence
+57104,Tops,0.416,Tshirts,0.0935,Jumpsuit,0.0421,Topwear,0.6249,Tops,low_confidence
+57105,Tops,0.3121,Perfume and Body Mist,0.0883,Tunics,0.0579,Topwear,0.4414,Tops,low_confidence
+57107,Tops,0.2385,Jumpsuit,0.1408,Shirts,0.0727,Topwear,0.3946,Shirts,low_confidence|changed_by_prior
+57108,Tops,0.3797,Tshirts,0.0723,Shirts,0.0423,Topwear,0.576,Tops,low_confidence
+57109,Tops,0.1859,Dresses,0.091,Boxers,0.0819,Topwear,0.351,Tops,low_confidence
+57110,Shirts,0.4452,Tunics,0.0388,Kurtas,0.0227,Topwear,0.5386,Shirts,low_confidence
+57116,Tops,0.4709,Tshirts,0.335,Tunics,0.0345,Topwear,0.8542,Tshirts,low_confidence|changed_by_prior
+57120,Tops,0.2899,Jackets,0.1021,Tshirts,0.0792,Topwear,0.5859,Tshirts,low_confidence|changed_by_prior
+57121,Tops,0.4785,Jackets,0.0979,Tshirts,0.0692,Topwear,0.7304,Tops,low_confidence
+57124,Kurtas,0.2284,Dresses,0.1916,Tunics,0.1266,Topwear,0.4782,Kurtas,low_confidence
+57130,Tops,0.7052,Shirts,0.2243,Tshirts,0.005,Topwear,0.9395,Shirts,changed_by_prior
+57131,Tops,0.1719,Dresses,0.0989,Tunics,0.0818,Topwear,0.4547,Tshirts,low_confidence|changed_by_prior
+57133,Dresses,0.3255,Kurtas,0.2448,Tops,0.0869,Topwear,0.3823,Kurtas,low_confidence|family_disagrees|changed_by_prior
+57135,Tops,0.3183,Kurtas,0.1673,Tunics,0.0862,Topwear,0.665,Tops,low_confidence
+57137,Leggings,0.3564,Trousers,0.345,Jeggings,0.0816,Bottomwear,0.8169,Trousers,low_confidence|changed_by_prior
+57138,Briefs,0.0642,Foundation and Primer,0.0582,Trousers,0.054,Bottomwear,0.2038,Trousers,low_confidence|family_disagrees|changed_by_prior
+57139,Trousers,0.3385,Jeans,0.1676,Lounge Pants,0.0603,Bottomwear,0.5941,Trousers,low_confidence
+57140,Leggings,0.3045,Briefs,0.1356,Patiala,0.0529,Bottomwear,0.4765,Leggings,low_confidence
+57141,Leggings,0.4004,Jeans,0.194,Trousers,0.0829,Bottomwear,0.8008,Trousers,low_confidence|changed_by_prior
+57147,Tops,0.3807,Dresses,0.0973,Tshirts,0.0715,Topwear,0.499,Tops,low_confidence
+57150,Tops,0.2101,Tshirts,0.0801,Tunics,0.0643,Topwear,0.4369,Tshirts,low_confidence|changed_by_prior
+57151,Dresses,0.5068,Tops,0.2582,Tunics,0.082,Dress,0.5122,Tops,changed_by_prior
+57159,Tops,0.4123,Tshirts,0.3047,Jackets,0.0155,Topwear,0.7461,Tshirts,low_confidence|changed_by_prior
+57160,Tops,0.5059,Tshirts,0.2033,Perfume and Body Mist,0.0157,Topwear,0.7313,Tshirts,changed_by_prior
+57162,Tops,0.4327,Tshirts,0.2491,Bra,0.0331,Topwear,0.7227,Tshirts,low_confidence|changed_by_prior
+57164,Tops,0.4156,Dresses,0.2848,Swimwear,0.0906,Topwear,0.454,Tops,low_confidence
+57167,Innerwear Vests,0.2851,Dresses,0.1556,Tops,0.0927,Innerwear,0.3214,Innerwear Vests,low_confidence
+57170,Tops,0.2323,Tshirts,0.0782,Perfume and Body Mist,0.0329,Topwear,0.3849,Tshirts,low_confidence|changed_by_prior
+57177,Kurtas,0.231,Dresses,0.0706,Perfume and Body Mist,0.0658,Topwear,0.3553,Kurtas,low_confidence
+57178,Tops,0.3654,Shirts,0.1571,Dresses,0.1411,Topwear,0.7073,Shirts,low_confidence|changed_by_prior
+57180,Tops,0.4369,Stoles,0.0549,Tunics,0.0408,Topwear,0.6075,Tops,low_confidence
+57188,Tunics,0.4189,Dresses,0.2516,Kurtas,0.1586,Topwear,0.6615,Tunics,low_confidence
+57190,Tops,0.4631,Shirts,0.1249,Jackets,0.0544,Topwear,0.7092,Shirts,low_confidence|changed_by_prior
+57192,Innerwear Vests,0.1336,Dresses,0.1073,Nightdress,0.099,Topwear,0.2082,Innerwear Vests,low_confidence|family_disagrees
+57197,Tops,0.4367,Dresses,0.4198,Tunics,0.0983,Topwear,0.5366,Tops,low_confidence
+57202,Dresses,0.5647,Kurtas,0.2368,Tunics,0.0676,Dress,0.5665,Kurtas,changed_by_prior
+57207,Capris,0.4403,Lounge Shorts,0.179,Jeans,0.0762,Bottomwear,0.6201,Capris,low_confidence
+57208,Jeggings,0.5632,Leggings,0.3424,Jeans,0.0353,Bottomwear,0.951,Leggings,changed_by_prior
+57211,Jeggings,0.5222,Jeans,0.306,Leggings,0.0441,Bottomwear,0.8976,Jeans,changed_by_prior
+57216,Leggings,0.3698,Trousers,0.3615,Heels,0.0226,Bottomwear,0.7929,Trousers,low_confidence|changed_by_prior
+57274,Shirts,0.4359,Jackets,0.1109,Perfume and Body Mist,0.0316,Topwear,0.5983,Shirts,low_confidence
+57275,Shirts,0.3193,Dresses,0.073,Kurtas,0.0324,Topwear,0.4235,Shirts,low_confidence
+57277,Shirts,0.469,Kurtas,0.0483,Jackets,0.0354,Topwear,0.6079,Shirts,low_confidence
+57280,Shirts,0.418,Bra,0.0353,Jackets,0.0253,Topwear,0.4917,Shirts,low_confidence
+57281,Shirts,0.2484,Kurtas,0.0536,Earrings,0.0402,Topwear,0.3965,Shirts,low_confidence
+57283,Shirts,0.4881,Jackets,0.0976,Bra,0.0351,Topwear,0.6498,Shirts,low_confidence
+57284,Shirts,0.4523,Tunics,0.1443,Kurtis,0.0464,Topwear,0.7344,Shirts,low_confidence
+57285,Shirts,0.4396,Tshirts,0.1434,Sarees,0.0237,Topwear,0.6245,Shirts,low_confidence
+57288,Tshirts,0.3249,Jackets,0.1095,Shirts,0.0797,Topwear,0.5526,Tshirts,low_confidence
+57289,Tops,0.1663,Kurtas,0.0745,Shirts,0.0718,Topwear,0.4834,Shirts,low_confidence|changed_by_prior
+57290,Shirts,0.2816,Tunics,0.0916,Kurtas,0.0633,Topwear,0.4718,Shirts,low_confidence
+57292,Shirts,0.2716,Jackets,0.1406,Tshirts,0.0943,Topwear,0.5915,Shirts,low_confidence
+57294,Shirts,0.4583,Flats,0.0319,Sarees,0.0315,Topwear,0.5512,Shirts,low_confidence
+57295,Shirts,0.4427,Sarees,0.0228,Bra,0.0211,Topwear,0.4901,Shirts,low_confidence
+57298,Flats,0.6586,Heels,0.2827,Perfume and Body Mist,0.0051,Shoes,0.9424,Heels,changed_by_prior
+57300,Flats,0.5949,Heels,0.3822,Perfume and Body Mist,0.0023,Shoes,0.9777,Heels,changed_by_prior
+57302,Flats,0.5519,Heels,0.4025,Night suits,0.0023,Shoes,0.955,Heels,changed_by_prior
+57303,Flats,0.503,Heels,0.4694,Sarees,0.0012,Shoes,0.973,Heels,changed_by_prior
+57309,Flats,0.7067,Heels,0.2703,Perfume and Body Mist,0.003,Shoes,0.9774,Heels,changed_by_prior
+57393,Briefs,0.4579,Earrings,0.0793,Jewellery Set,0.029,Innerwear,0.4835,Briefs,low_confidence
+57416,Night suits,0.3611,Jumpsuit,0.2315,Sarees,0.0706,Loungewear and Nightwear,0.4158,Jumpsuit,low_confidence|changed_by_prior
+57419,Dresses,0.3086,Nightdress,0.2543,Tops,0.1444,Dress,0.3438,Tops,low_confidence|changed_by_prior
+57420,Tshirts,0.3395,Dresses,0.1496,Tops,0.0606,Topwear,0.4536,Tshirts,low_confidence
+57422,Tshirts,0.3864,Tops,0.1569,Perfume and Body Mist,0.0405,Topwear,0.5838,Tshirts,low_confidence
+57423,Tops,0.2066,Free Gifts,0.1108,Bra,0.0659,Topwear,0.3019,Tops,low_confidence
+57429,Tops,0.563,Tshirts,0.3591,Dresses,0.0078,Topwear,0.9347,Tshirts,changed_by_prior
+57430,Tshirts,0.4896,Tops,0.1753,Bra,0.025,Topwear,0.7016,Tshirts,low_confidence
+57432,Tops,0.4491,Tshirts,0.3138,Bra,0.0096,Topwear,0.7773,Tshirts,low_confidence|changed_by_prior
+57433,Tops,0.5914,Tshirts,0.2056,Bra,0.0139,Topwear,0.8153,Tshirts,changed_by_prior
+57434,Tshirts,0.3227,Tops,0.2608,Bra,0.035,Topwear,0.6236,Tshirts,low_confidence
+57435,Tops,0.4113,Tshirts,0.3697,Dresses,0.0154,Topwear,0.8019,Tshirts,low_confidence|changed_by_prior
+57436,Tops,0.4473,Tshirts,0.3342,Bra,0.0193,Topwear,0.8064,Tshirts,low_confidence|changed_by_prior
+57437,Tops,0.3748,Tshirts,0.3212,Waistcoat,0.0178,Topwear,0.7373,Tshirts,low_confidence|changed_by_prior
+57439,Tops,0.6024,Tshirts,0.1671,Jackets,0.0185,Topwear,0.8086,Tshirts,changed_by_prior
+57443,Tops,0.7147,Tshirts,0.2179,Waistcoat,0.0037,Topwear,0.9401,Tshirts,changed_by_prior
+57446,Tshirts,0.2892,Tops,0.1488,Dresses,0.0727,Topwear,0.5186,Tshirts,low_confidence
+57447,Tshirts,0.3604,Tops,0.2773,Waistcoat,0.0292,Topwear,0.6948,Tshirts,low_confidence
+57448,Tshirts,0.4767,Tops,0.1602,Bra,0.0638,Topwear,0.6725,Tshirts,low_confidence
+57449,Tshirts,0.2705,Tops,0.2337,Bra,0.043,Topwear,0.5689,Tshirts,low_confidence
+57466,Flip Flops,0.409,Flats,0.1717,Sandals,0.0698,Flip Flops,0.409,Flip Flops,low_confidence
+57475,Flats,0.386,Sandals,0.3159,Heels,0.0566,Shoes,0.4576,Sandals,low_confidence|changed_by_prior
+57477,Casual Shoes,0.3147,Sports Shoes,0.134,Bra,0.0246,Shoes,0.466,Casual Shoes,low_confidence
+57481,Sports Shoes,0.211,Casual Shoes,0.1019,Mobile Pouch,0.0366,Shoes,0.3195,Sports Shoes,low_confidence
+57484,Sandals,0.4187,Flats,0.2977,Flip Flops,0.0513,Sandal,0.4196,Sandals,low_confidence
+57502,Sandals,0.415,Flats,0.2931,Heels,0.1076,Shoes,0.4608,Sandals,low_confidence|family_disagrees
+57522,Casual Shoes,0.4594,Formal Shoes,0.2491,Sports Shoes,0.0189,Shoes,0.7424,Casual Shoes,low_confidence
+57523,Formal Shoes,0.5509,Casual Shoes,0.198,Flats,0.0634,Shoes,0.8166,Casual Shoes,changed_by_prior
+57533,Formal Shoes,0.5869,Casual Shoes,0.2307,Perfume and Body Mist,0.0135,Shoes,0.8299,Casual Shoes,changed_by_prior
+57547,Perfume and Body Mist,0.4159,Lipstick,0.1082,Kajal and Eyeliner,0.0902,Fragrance,0.467,Perfume and Body Mist,low_confidence
+57549,Kajal and Eyeliner,0.3941,Perfume and Body Mist,0.1922,Lip Liner,0.1622,Makeup,0.3998,Kajal and Eyeliner,low_confidence
+57550,Earrings,0.3545,Lipstick,0.1491,Perfume and Body Mist,0.146,Jewellery,0.3981,Earrings,low_confidence
+57552,Lipstick,0.4193,Lip Liner,0.3059,Kajal and Eyeliner,0.0509,Lips,0.7251,Lipstick,low_confidence
+57553,Lipstick,0.4206,Lip Liner,0.2794,Kajal and Eyeliner,0.0578,Lips,0.7,Lipstick,low_confidence
+57554,Lipstick,0.4147,Lip Liner,0.2955,Kajal and Eyeliner,0.0552,Lips,0.7102,Lipstick,low_confidence
+57555,Lipstick,0.4038,Lip Liner,0.3137,Kajal and Eyeliner,0.0528,Lips,0.7175,Lipstick,low_confidence
+57556,Lipstick,0.4119,Lip Liner,0.3082,Kajal and Eyeliner,0.052,Lips,0.7201,Lipstick,low_confidence
+57557,Lipstick,0.4231,Lip Liner,0.3032,Kajal and Eyeliner,0.0514,Lips,0.7263,Lipstick,low_confidence
+57558,Lipstick,0.4131,Lip Liner,0.3011,Kajal and Eyeliner,0.0551,Lips,0.7142,Lipstick,low_confidence
+57559,Lipstick,0.4037,Lip Liner,0.3128,Kajal and Eyeliner,0.052,Lips,0.7166,Lipstick,low_confidence
+57560,Lipstick,0.4844,Earrings,0.166,Perfume and Body Mist,0.1253,Lips,0.5037,Lipstick,low_confidence
+57563,Earrings,0.3997,Foundation and Primer,0.1314,Perfume and Body Mist,0.094,Jewellery,0.4484,Earrings,low_confidence
+57567,Earrings,0.1997,Lipstick,0.1519,Foundation and Primer,0.1113,Jewellery,0.3028,Lipstick,low_confidence|changed_by_prior
+57571,Lipstick,0.4674,Perfume and Body Mist,0.1035,Foundation and Primer,0.0916,Lips,0.4811,Lipstick,low_confidence
+57572,Perfume and Body Mist,0.0826,Flats,0.0675,Lipstick,0.0655,Fragrance,0.1542,Fragrance Gift Set,low_confidence|changed_by_prior
+57574,Lipstick,0.4779,Dresses,0.0663,Foundation and Primer,0.0653,Lips,0.4952,Lipstick,low_confidence
+57576,Lipstick,0.2577,Foundation and Primer,0.1505,Flats,0.1075,Lips,0.274,Casual Shoes,low_confidence|changed_by_prior
+57577,Lipstick,0.478,Foundation and Primer,0.0714,Perfume and Body Mist,0.0606,Lips,0.4943,Lipstick,low_confidence
+57578,Lipstick,0.4898,Foundation and Primer,0.1189,Nail Polish,0.0672,Lips,0.5055,Lipstick,low_confidence
+57581,Earrings,0.3565,Foundation and Primer,0.1525,Perfume and Body Mist,0.0921,Jewellery,0.3978,Earrings,low_confidence
+57609,Perfume and Body Mist,0.3777,Shoe Accessories,0.2458,Deodorant,0.0484,Fragrance,0.4266,Shoe Accessories,low_confidence|changed_by_prior
+57610,Perfume and Body Mist,0.3753,Shoe Accessories,0.2361,Lipstick,0.0512,Fragrance,0.3874,Shoe Accessories,low_confidence|changed_by_prior
+57611,Deodorant,0.2932,Shoe Accessories,0.2202,Perfume and Body Mist,0.131,Fragrance,0.4255,Deodorant,low_confidence
+57613,Perfume and Body Mist,0.472,Handbags,0.3351,Wallets,0.0181,Fragrance,0.484,Handbags,low_confidence|changed_by_prior
+57614,Shoe Accessories,0.4963,Perfume and Body Mist,0.1813,Mobile Pouch,0.035,Shoe Accessories,0.4963,Shoe Accessories,low_confidence
+57615,Shoe Accessories,0.1699,Deodorant,0.1671,Perfume and Body Mist,0.0604,Fragrance,0.229,Tshirts,low_confidence|family_disagrees|changed_by_prior
+57616,Shoe Accessories,0.3757,Perfume and Body Mist,0.1504,Foundation and Primer,0.0389,Shoe Accessories,0.3757,Shoe Accessories,low_confidence
+57617,Shoe Accessories,0.395,Perfume and Body Mist,0.3549,Lipstick,0.0193,Shoe Accessories,0.395,Shoe Accessories,low_confidence
+57619,Deodorant,0.3374,Perfume and Body Mist,0.1968,Foundation and Primer,0.0574,Fragrance,0.5353,Deodorant,low_confidence
+57621,Perfume and Body Mist,0.4317,Shoe Accessories,0.1441,Mobile Pouch,0.1188,Fragrance,0.4464,Perfume and Body Mist,low_confidence
+57622,Foundation and Primer,0.3929,Perfume and Body Mist,0.2789,Deodorant,0.0845,Makeup,0.3964,Foundation and Primer,low_confidence
+57623,Perfume and Body Mist,0.3921,Shoe Accessories,0.1192,Deodorant,0.0601,Fragrance,0.4531,Perfume and Body Mist,low_confidence
+57628,Perfume and Body Mist,0.3976,Shoe Accessories,0.1407,Mobile Pouch,0.0359,Fragrance,0.4337,Perfume and Body Mist,low_confidence
+57629,Perfume and Body Mist,0.4856,Shoe Accessories,0.2922,Foundation and Primer,0.0175,Fragrance,0.497,Shoe Accessories,low_confidence|changed_by_prior
+57631,Perfume and Body Mist,0.195,Lip Liner,0.1831,Deodorant,0.1802,Fragrance,0.3776,Lip Liner,low_confidence|changed_by_prior
+57632,Lip Liner,0.3224,Kajal and Eyeliner,0.1502,Ties,0.0814,Lips,0.3655,Lip Liner,low_confidence
+57633,Lip Liner,0.3271,Kajal and Eyeliner,0.1385,Perfume and Body Mist,0.0814,Lips,0.3692,Lip Liner,low_confidence
+57634,Lip Liner,0.2971,Kajal and Eyeliner,0.1586,Ties,0.0885,Lips,0.3388,Lip Liner,low_confidence
+57635,Lip Liner,0.2542,Perfume and Body Mist,0.1321,Kajal and Eyeliner,0.0861,Lips,0.2879,Lip Liner,low_confidence
+57636,Lip Liner,0.3005,Kajal and Eyeliner,0.1112,Perfume and Body Mist,0.1065,Lips,0.3468,Lip Liner,low_confidence
+57637,Lip Liner,0.2841,Kajal and Eyeliner,0.1435,Ties,0.092,Lips,0.3201,Lip Liner,low_confidence
+57638,Kajal and Eyeliner,0.2776,Perfume and Body Mist,0.2244,Lipstick,0.0834,Makeup,0.2789,Kajal and Eyeliner,low_confidence
+57639,Deodorant,0.4971,Perfume and Body Mist,0.2449,Kajal and Eyeliner,0.1013,Fragrance,0.7426,Deodorant,low_confidence
+57640,Lip Liner,0.3844,Kajal and Eyeliner,0.1062,Pendant,0.0958,Lips,0.4757,Lip Liner,low_confidence
+57642,Lip Liner,0.378,Kajal and Eyeliner,0.1042,Pendant,0.0798,Lips,0.4351,Lip Liner,low_confidence
+57643,Lip Liner,0.1695,Perfume and Body Mist,0.1155,Pendant,0.1132,Lips,0.1917,Lip Liner,low_confidence
+57644,Lip Liner,0.2813,Lipstick,0.1757,Pendant,0.0826,Lips,0.457,Lip Liner,low_confidence
+57645,Lip Liner,0.3172,Kajal and Eyeliner,0.1117,Pendant,0.107,Lips,0.3965,Lip Liner,low_confidence
+57646,Lip Liner,0.2587,Pendant,0.1185,Kajal and Eyeliner,0.1026,Lips,0.2944,Lip Liner,low_confidence
+57647,Lip Liner,0.326,Kajal and Eyeliner,0.118,Pendant,0.1007,Lips,0.3965,Lip Liner,low_confidence
+57649,Kajal and Eyeliner,0.2925,Lip Liner,0.2128,Deodorant,0.144,Makeup,0.303,Kajal and Eyeliner,low_confidence
+57651,Lip Liner,0.3619,Pendant,0.0874,Kajal and Eyeliner,0.076,Lips,0.4159,Lip Liner,low_confidence
+57652,Lip Liner,0.2394,Pendant,0.1239,Ties,0.1204,Lips,0.2657,Lip Liner,low_confidence
+57653,Lip Liner,0.2502,Ties,0.123,Kajal and Eyeliner,0.1154,Lips,0.2842,Lip Liner,low_confidence
+57654,Lip Liner,0.3673,Kajal and Eyeliner,0.1034,Pendant,0.0803,Lips,0.4266,Lip Liner,low_confidence
+57655,Lip Liner,0.2369,Perfume and Body Mist,0.2178,Pendant,0.0993,Lips,0.3261,Lip Liner,low_confidence
+57656,Deodorant,0.4651,Perfume and Body Mist,0.2525,Kajal and Eyeliner,0.1042,Fragrance,0.7182,Deodorant,low_confidence
+57657,Perfume and Body Mist,0.3493,Deodorant,0.2543,Kajal and Eyeliner,0.1751,Fragrance,0.6046,Deodorant,low_confidence|changed_by_prior
+57658,Lip Liner,0.2705,Pendant,0.1183,Ties,0.0828,Lips,0.3172,Lip Liner,low_confidence
+57660,Lip Liner,0.3255,Lipstick,0.1687,Kajal and Eyeliner,0.0942,Lips,0.4943,Lip Liner,low_confidence
+57661,Lip Liner,0.3209,Pendant,0.1128,Lipstick,0.0929,Lips,0.4138,Lip Liner,low_confidence
+57662,Lip Liner,0.2639,Lipstick,0.1484,Kajal and Eyeliner,0.1409,Lips,0.4123,Lip Liner,low_confidence
+57664,Perfume and Body Mist,0.506,Deodorant,0.2479,Kajal and Eyeliner,0.1399,Fragrance,0.7546,Deodorant,changed_by_prior
+57668,Lip Liner,0.2942,Kajal and Eyeliner,0.1452,Ties,0.081,Lips,0.3461,Lip Liner,low_confidence
+57669,Lip Liner,0.2795,Kajal and Eyeliner,0.1164,Pendant,0.0983,Lips,0.3443,Lip Liner,low_confidence
+57670,Lip Liner,0.3556,Pendant,0.0936,Kajal and Eyeliner,0.0826,Lips,0.4276,Lip Liner,low_confidence
+57671,Perfume and Body Mist,0.3454,Deodorant,0.1987,Kajal and Eyeliner,0.1433,Fragrance,0.5454,Deodorant,low_confidence|changed_by_prior
+57672,Lip Liner,0.3096,Pendant,0.0984,Nail Polish,0.0848,Lips,0.3892,Lip Liner,low_confidence
+57673,Perfume and Body Mist,0.3054,Kajal and Eyeliner,0.1673,Lipstick,0.1304,Fragrance,0.3063,Kajal and Eyeliner,low_confidence|changed_by_prior
+57676,Earrings,0.4808,Lipstick,0.0829,Perfume and Body Mist,0.0444,Jewellery,0.4998,Earrings,low_confidence
+57677,Perfume and Body Mist,0.4392,Handbags,0.3124,Wallets,0.0619,Fragrance,0.4422,Handbags,low_confidence|changed_by_prior
+57678,Perfume and Body Mist,0.3026,Waistcoat,0.1156,Foundation and Primer,0.1145,Fragrance,0.3109,Perfume and Body Mist,low_confidence
+57699,Handbags,0.4929,Perfume and Body Mist,0.4105,Waist Pouch,0.0216,Bags,0.5305,Handbags,low_confidence
+57700,Perfume and Body Mist,0.3796,Wallets,0.1538,Handbags,0.0865,Fragrance,0.4795,Wallets,low_confidence|changed_by_prior
+57702,Foundation and Primer,0.3967,Mobile Pouch,0.1139,Handbags,0.098,Makeup,0.4006,Foundation and Primer,low_confidence
+57703,Watches,0.1826,Foundation and Primer,0.1251,Perfume and Body Mist,0.121,Fragrance,0.2347,Watches,low_confidence|family_disagrees
+57706,Kajal and Eyeliner,0.3079,Lip Liner,0.2189,Lipstick,0.0772,Makeup,0.3263,Kajal and Eyeliner,low_confidence
+57713,Perfume and Body Mist,0.4976,Kajal and Eyeliner,0.3624,Lipstick,0.0343,Fragrance,0.5025,Kajal and Eyeliner,low_confidence|changed_by_prior
+57718,Perfume and Body Mist,0.4209,Kajal and Eyeliner,0.0723,Lipstick,0.0659,Fragrance,0.4252,Perfume and Body Mist,low_confidence
+57724,Perfume and Body Mist,0.438,Kajal and Eyeliner,0.2121,Lip Liner,0.1176,Fragrance,0.4491,Kajal and Eyeliner,low_confidence|changed_by_prior
+57727,Perfume and Body Mist,0.4221,Kajal and Eyeliner,0.3015,Lip Liner,0.0711,Fragrance,0.4227,Kajal and Eyeliner,low_confidence|changed_by_prior
+57728,Perfume and Body Mist,0.4849,Nail Polish,0.0979,Wallets,0.0964,Fragrance,0.4923,Wallets,low_confidence|changed_by_prior
+57730,Perfume and Body Mist,0.5097,Wallets,0.1357,Nail Polish,0.0795,Fragrance,0.5146,Wallets,changed_by_prior
+57738,Perfume and Body Mist,0.6449,Wallets,0.148,Handbags,0.0497,Fragrance,0.6552,Wallets,changed_by_prior
+57739,Shoe Accessories,0.3885,Perfume and Body Mist,0.1196,Mobile Pouch,0.07,Shoe Accessories,0.3885,Shoe Accessories,low_confidence
+57740,Shoe Accessories,0.4558,Mobile Pouch,0.0873,Perfume and Body Mist,0.0748,Shoe Accessories,0.4558,Shoe Accessories,low_confidence
+57741,Shoe Accessories,0.3156,Perfume and Body Mist,0.1171,Dresses,0.1099,Shoe Accessories,0.3156,Shoe Accessories,low_confidence
+57742,Shoe Accessories,0.3683,Perfume and Body Mist,0.1031,Dresses,0.0867,Shoe Accessories,0.3683,Shoe Accessories,low_confidence
+57743,Shoe Accessories,0.4842,Perfume and Body Mist,0.0942,Mobile Pouch,0.0653,Shoe Accessories,0.4842,Shoe Accessories,low_confidence
+57744,Shoe Accessories,0.4464,Perfume and Body Mist,0.0979,Mobile Pouch,0.0688,Shoe Accessories,0.4464,Shoe Accessories,low_confidence
+57749,Perfume and Body Mist,0.4443,Foundation and Primer,0.138,Socks,0.0617,Fragrance,0.4498,Perfume and Body Mist,low_confidence
+57750,Perfume and Body Mist,0.4433,Foundation and Primer,0.1373,Socks,0.0614,Fragrance,0.4488,Perfume and Body Mist,low_confidence
+57754,Perfume and Body Mist,0.4822,Deodorant,0.2264,Foundation and Primer,0.0471,Fragrance,0.7094,Deodorant,low_confidence|changed_by_prior
+57755,Perfume and Body Mist,0.4222,Deodorant,0.1477,Shoe Accessories,0.0834,Fragrance,0.5705,Perfume and Body Mist,low_confidence
+57759,Perfume and Body Mist,0.4757,Shoe Accessories,0.2475,Deodorant,0.0165,Fragrance,0.4928,Shoe Accessories,low_confidence|changed_by_prior
+57760,Perfume and Body Mist,0.4726,Shoe Accessories,0.2076,Deodorant,0.067,Fragrance,0.5405,Perfume and Body Mist,low_confidence
+57762,Perfume and Body Mist,0.4305,Shoe Accessories,0.2179,Deodorant,0.046,Fragrance,0.4772,Shoe Accessories,low_confidence|changed_by_prior
+57764,Perfume and Body Mist,0.3472,Deodorant,0.2724,Shoe Accessories,0.0958,Fragrance,0.6218,Deodorant,low_confidence|changed_by_prior
+57765,Perfume and Body Mist,0.4884,Shoe Accessories,0.1775,Leggings,0.0361,Fragrance,0.4996,Perfume and Body Mist,low_confidence
+57766,Perfume and Body Mist,0.1225,Shoe Accessories,0.1106,Rompers,0.1082,Topwear,0.194,Tops,low_confidence|family_disagrees|changed_by_prior
+57767,Perfume and Body Mist,0.4236,Deodorant,0.1983,Foundation and Primer,0.048,Fragrance,0.6249,Deodorant,low_confidence|changed_by_prior
+57772,Deodorant,0.4803,Perfume and Body Mist,0.3984,Shoe Accessories,0.0154,Fragrance,0.8793,Deodorant,low_confidence
+57774,Perfume and Body Mist,0.4795,Shoe Accessories,0.2986,Deodorant,0.0247,Fragrance,0.5045,Shoe Accessories,low_confidence|changed_by_prior
+57776,Perfume and Body Mist,0.2997,Handbags,0.1611,Mobile Pouch,0.1533,Bags,0.3311,Handbags,low_confidence|family_disagrees|changed_by_prior
+57777,Foundation and Primer,0.285,Perfume and Body Mist,0.1365,Handbags,0.1173,Makeup,0.2905,Foundation and Primer,low_confidence
+57780,Kajal and Eyeliner,0.4669,Lip Liner,0.4548,Lipstick,0.0203,Lips,0.4751,Lip Liner,low_confidence|family_disagrees|changed_by_prior
+57782,Perfume and Body Mist,0.4224,Wallets,0.0898,Flats,0.0339,Fragrance,0.4428,Wallets,low_confidence|changed_by_prior
+57787,Shoe Accessories,0.2557,Foundation and Primer,0.2516,Perfume and Body Mist,0.1102,Shoe Accessories,0.2557,Foundation and Primer,low_confidence|changed_by_prior
+57788,Foundation and Primer,0.2652,Shoe Accessories,0.1944,Rompers,0.1174,Makeup,0.2672,Foundation and Primer,low_confidence
+57789,Shoe Accessories,0.2847,Foundation and Primer,0.2429,Perfume and Body Mist,0.1035,Shoe Accessories,0.2847,Foundation and Primer,low_confidence|changed_by_prior
+57790,Foundation and Primer,0.274,Shoe Accessories,0.2034,Rompers,0.0958,Makeup,0.276,Foundation and Primer,low_confidence
+57791,Foundation and Primer,0.3762,Nail Polish,0.1329,Deodorant,0.0717,Makeup,0.4047,Foundation and Primer,low_confidence
+57792,Foundation and Primer,0.3191,Nail Polish,0.1484,Deodorant,0.1253,Makeup,0.345,Foundation and Primer,low_confidence
+57793,Foundation and Primer,0.3403,Nail Polish,0.1361,Deodorant,0.0834,Makeup,0.3708,Foundation and Primer,low_confidence
+57794,Perfume and Body Mist,0.6658,Handbags,0.2085,Wallets,0.0336,Fragrance,0.6674,Handbags,changed_by_prior
+57795,Wallets,0.4144,Flats,0.1212,Perfume and Body Mist,0.1175,Wallets,0.4144,Wallets,low_confidence
+57798,Perfume and Body Mist,0.3246,Shoe Accessories,0.2858,Leggings,0.0578,Fragrance,0.3307,Shoe Accessories,low_confidence|changed_by_prior
+57801,Watches,0.1637,Foundation and Primer,0.1621,Perfume and Body Mist,0.1157,Fragrance,0.1812,Watches,low_confidence|family_disagrees
+57802,Foundation and Primer,0.1365,Pendant,0.1245,Waistcoat,0.1194,Jewellery,0.1737,Accessory Gift Set,low_confidence|family_disagrees|changed_by_prior
+57803,Flats,0.2577,Foundation and Primer,0.2192,Basketballs,0.0516,Shoes,0.2661,Foundation and Primer,low_confidence|changed_by_prior
+57804,Perfume and Body Mist,0.2055,Shoe Accessories,0.1484,Handbags,0.135,Bags,0.2262,Wallets,low_confidence|family_disagrees|changed_by_prior
+57805,Perfume and Body Mist,0.4498,Handbags,0.11,Foundation and Primer,0.0942,Fragrance,0.4501,Perfume and Body Mist,low_confidence
+57815,Tops,0.4284,Night suits,0.1249,Dresses,0.0706,Topwear,0.4736,Tops,low_confidence
+57819,Dresses,0.4556,Tunics,0.3227,Kurtas,0.049,Dress,0.4638,Tunics,low_confidence|changed_by_prior
+57824,Jeggings,0.56,Leggings,0.3579,Jeans,0.0239,Bottomwear,0.9669,Leggings,changed_by_prior
+57834,Shirts,0.3369,Tshirts,0.2295,Bra,0.0259,Topwear,0.6282,Shirts,low_confidence
+57835,Handbags,0.434,Clutches,0.2553,Mobile Pouch,0.1621,Bags,0.9145,Handbags,low_confidence
+57836,Mobile Pouch,0.3985,Wallets,0.2242,Handbags,0.0743,Bags,0.4881,Wallets,low_confidence|changed_by_prior
+57837,Mobile Pouch,0.5332,Wallets,0.2252,Handbags,0.0712,Bags,0.6125,Wallets,changed_by_prior
+57838,Handbags,0.4724,Mobile Pouch,0.2854,Clutches,0.1392,Bags,0.9478,Handbags,low_confidence
+57845,Handbags,0.3588,Wallets,0.1357,Clutches,0.1233,Bags,0.7073,Handbags,low_confidence
+57846,Handbags,0.2913,Waist Pouch,0.2059,Mobile Pouch,0.1589,Bags,0.759,Handbags,low_confidence
+57847,Waist Pouch,0.4042,Handbags,0.3473,Mobile Pouch,0.0808,Bags,0.8881,Handbags,low_confidence|changed_by_prior
+57853,Flats,0.5145,Heels,0.4658,Perfume and Body Mist,0.0009,Shoes,0.9805,Heels,changed_by_prior
+57861,Deodorant,0.4899,Perfume and Body Mist,0.4867,Shoe Accessories,0.0059,Fragrance,0.9767,Deodorant,low_confidence
+57866,Perfume and Body Mist,0.463,Briefs,0.1597,Deodorant,0.0634,Fragrance,0.5862,Perfume and Body Mist,low_confidence
+57869,Perfume and Body Mist,0.2726,Lipstick,0.1026,Foundation and Primer,0.0561,Fragrance,0.3194,Perfume and Body Mist,low_confidence
+57871,Deodorant,0.4805,Perfume and Body Mist,0.4746,Shoe Accessories,0.0032,Fragrance,0.9554,Deodorant,low_confidence
+57879,Perfume and Body Mist,0.3974,Briefs,0.1491,Bra,0.0648,Fragrance,0.4676,Trunk,low_confidence|changed_by_prior
+57886,Perfume and Body Mist,0.3811,Mobile Pouch,0.1615,Shoe Accessories,0.0841,Fragrance,0.3926,Perfume and Body Mist,low_confidence
+57887,Perfume and Body Mist,0.5391,Wallets,0.207,Foundation and Primer,0.0537,Fragrance,0.5404,Wallets,changed_by_prior
+57888,Perfume and Body Mist,0.5166,Briefs,0.1177,Fragrance Gift Set,0.08,Fragrance,0.6278,Fragrance Gift Set,changed_by_prior
+57890,Perfume and Body Mist,0.3361,Briefs,0.1877,Wallets,0.0572,Fragrance,0.3582,Briefs,low_confidence|changed_by_prior
+57891,Perfume and Body Mist,0.3066,Kajal and Eyeliner,0.1482,Lipstick,0.128,Fragrance,0.3297,Kajal and Eyeliner,low_confidence|changed_by_prior
+57892,Briefs,0.3234,Perfume and Body Mist,0.0902,Wallets,0.0662,Innerwear,0.4176,Briefs,low_confidence
+57896,Shorts,0.2995,Leggings,0.2435,Lounge Shorts,0.1415,Bottomwear,0.6407,Shorts,low_confidence
+57897,Tops,0.0655,Waistcoat,0.0576,Tshirts,0.0527,Topwear,0.2788,Tshirts,low_confidence|changed_by_prior
+57914,Socks,0.3464,Booties,0.2754,Gloves,0.0858,Socks,0.6218,Socks,low_confidence
+57933,Tshirts,0.2753,Tops,0.0529,Lounge Pants,0.0378,Topwear,0.3721,Tshirts,low_confidence
+57935,Sandals,0.477,Sports Sandals,0.2194,Casual Shoes,0.088,Sandal,0.6965,Sandals,low_confidence
+57937,Sports Shoes,0.4447,Casual Shoes,0.2428,Shoe Accessories,0.0124,Shoes,0.6967,Sports Shoes,low_confidence
+57940,Sandals,0.3383,Flats,0.0894,Casual Shoes,0.0429,Sandal,0.3548,Sandals,low_confidence
+57941,Casual Shoes,0.416,Formal Shoes,0.3966,Lounge Shorts,0.0074,Shoes,0.8187,Casual Shoes,low_confidence
+57942,Formal Shoes,0.4851,Casual Shoes,0.4051,Night suits,0.0049,Shoes,0.8941,Casual Shoes,low_confidence|changed_by_prior
+57944,Sandals,0.4742,Flats,0.0489,Flip Flops,0.041,Sandal,0.4795,Sandals,low_confidence
+57948,Casual Shoes,0.4369,Formal Shoes,0.3719,Flats,0.0091,Shoes,0.8198,Casual Shoes,low_confidence
+57980,Tops,0.3564,Dresses,0.2104,Capris,0.0388,Topwear,0.4266,Tops,low_confidence
+57981,Tops,0.4686,Jackets,0.1947,Shirts,0.0516,Topwear,0.7468,Tops,low_confidence
+57982,Tops,0.383,Bra,0.151,Dresses,0.0438,Topwear,0.4184,Tops,low_confidence
+57983,Tops,0.5111,Shirts,0.2497,Bra,0.0306,Topwear,0.7839,Shirts,changed_by_prior
+57987,Dresses,0.4761,Tunics,0.0454,Tops,0.0368,Dress,0.4919,Dresses,low_confidence
+57992,Shirts,0.2762,Tops,0.1238,Tunics,0.089,Topwear,0.5579,Shirts,low_confidence
+58004,Tops,0.4093,Jackets,0.2313,Waistcoat,0.0707,Topwear,0.8062,Tops,low_confidence
+58013,Tops,0.4805,Tshirts,0.0641,Shirts,0.0443,Topwear,0.6233,Tops,low_confidence
+58035,Sports Shoes,0.3304,Earrings,0.1144,Pendant,0.0555,Shoes,0.4155,Sports Shoes,low_confidence
+58058,Tshirts,0.4041,Tops,0.2133,Earrings,0.2051,Topwear,0.6231,Tshirts,low_confidence
+58096,Perfume and Body Mist,0.4121,Pendant,0.263,Earrings,0.0787,Fragrance,0.4135,Perfume and Body Mist,low_confidence
+58097,Earrings,0.1245,Wallets,0.0847,Perfume and Body Mist,0.0516,Jewellery,0.2095,Wallets,low_confidence|changed_by_prior
+58098,Cufflinks,0.3491,Pendant,0.2657,Earrings,0.1407,Jewellery,0.4249,Cufflinks,low_confidence|family_disagrees
+58099,Ring,0.2493,Mobile Pouch,0.0616,Waistcoat,0.0509,Jewellery,0.4079,Ring,low_confidence
+58100,Bra,0.1063,Briefs,0.106,Necklace and Chains,0.0892,Innerwear,0.2444,Socks,low_confidence|changed_by_prior
+58115,Perfume and Body Mist,0.4733,Pendant,0.1236,Earrings,0.0988,Fragrance,0.4816,Perfume and Body Mist,low_confidence
+58116,Perfume and Body Mist,0.1913,Pendant,0.1896,Earrings,0.0956,Jewellery,0.3714,Pendant,low_confidence|family_disagrees|changed_by_prior
+58118,Pendant,0.3673,Perfume and Body Mist,0.3282,Earrings,0.0674,Jewellery,0.4916,Pendant,low_confidence
+58138,Ring,0.3431,Earrings,0.2517,Perfume and Body Mist,0.0936,Jewellery,0.6415,Ring,low_confidence
+58139,Ring,0.2769,Bangle,0.1618,Mobile Pouch,0.1523,Jewellery,0.5551,Ring,low_confidence
+58153,Caps,0.295,Handbags,0.0876,Wallets,0.0415,Headwear,0.295,Caps,low_confidence
+58158,Kurta Sets,0.0912,Jumpsuit,0.084,Dupatta,0.0702,Topwear,0.213,Dupatta,low_confidence|family_disagrees|changed_by_prior
+58161,Wallets,0.4675,Clutches,0.3232,Mobile Pouch,0.059,Wallets,0.4675,Wallets,low_confidence
+58170,Wallets,0.4377,Clutches,0.4278,Waist Pouch,0.0336,Bags,0.4889,Wallets,low_confidence|family_disagrees
+58200,Casual Shoes,0.3994,Formal Shoes,0.2271,Sports Shoes,0.0659,Shoes,0.7044,Casual Shoes,low_confidence
+58220,Patiala,0.4926,Salwar,0.0842,Jeggings,0.0367,Bottomwear,0.6945,Patiala,low_confidence
+58229,Sandals,0.4109,Flats,0.1256,Sports Sandals,0.0519,Sandal,0.4628,Sandals,low_confidence
+58231,Flats,0.6757,Heels,0.0969,Flip Flops,0.0869,Shoes,0.7747,Flip Flops,changed_by_prior
+58234,Wallets,0.4255,Clutches,0.231,Mobile Pouch,0.0593,Wallets,0.4255,Wallets,low_confidence
+58235,Wallets,0.4482,Handbags,0.0799,Clutches,0.0629,Wallets,0.4482,Wallets,low_confidence
+58236,Perfume and Body Mist,0.5354,Handbags,0.2304,Waist Pouch,0.0299,Fragrance,0.5562,Handbags,changed_by_prior
+58240,Clutches,0.5045,Wallets,0.2819,Free Gifts,0.0395,Bags,0.5374,Wallets,changed_by_prior
+58241,Clutches,0.4571,Wallets,0.4246,Mobile Pouch,0.0237,Bags,0.4994,Wallets,low_confidence|changed_by_prior
+58253,Clutches,0.3931,Wallets,0.3325,Free Gifts,0.0558,Bags,0.4564,Wallets,low_confidence|changed_by_prior
+58254,Wallets,0.4382,Clutches,0.3086,Handbags,0.0768,Wallets,0.4382,Wallets,low_confidence
+58259,Messenger Bag,0.2484,Handbags,0.2481,Clutches,0.1687,Bags,0.8328,Laptop Bag,low_confidence|changed_by_prior
+58260,Mobile Pouch,0.301,Wallets,0.2759,Handbags,0.1907,Bags,0.6009,Wallets,low_confidence|changed_by_prior
+58261,Wallets,0.4256,Handbags,0.2158,Clutches,0.1799,Bags,0.4529,Wallets,low_confidence|family_disagrees
+58281,Clutches,0.1693,Innerwear Vests,0.1563,Perfume and Body Mist,0.0999,Bags,0.3409,Innerwear Vests,low_confidence|changed_by_prior
+58282,Perfume and Body Mist,0.2231,Handbags,0.191,Clutches,0.1225,Bags,0.4123,Innerwear Vests,low_confidence|family_disagrees|changed_by_prior
+58324,Flats,0.242,Flip Flops,0.1738,Sandals,0.1732,Shoes,0.2685,Flip Flops,low_confidence|changed_by_prior
+58325,Flats,0.4108,Flip Flops,0.1756,Heels,0.0592,Shoes,0.4968,Flip Flops,low_confidence|changed_by_prior
+58326,Heels,0.3856,Flats,0.2606,Flip Flops,0.1049,Shoes,0.6487,Flip Flops,low_confidence|changed_by_prior
+58327,Flats,0.6595,Flip Flops,0.1168,Heels,0.0844,Shoes,0.7469,Flip Flops,changed_by_prior
+58328,Flip Flops,0.4668,Flats,0.205,Shoe Accessories,0.029,Flip Flops,0.4668,Flip Flops,low_confidence
+58330,Flip Flops,0.4764,Flats,0.0863,Sandals,0.0693,Flip Flops,0.4764,Flip Flops,low_confidence
+58331,Flats,0.1981,Flip Flops,0.1975,Sandals,0.1843,Shoes,0.233,Flip Flops,low_confidence|changed_by_prior
+58332,Sandals,0.3216,Flats,0.1639,Flip Flops,0.0846,Sandal,0.3245,Sandals,low_confidence
+58333,Flip Flops,0.2847,Sandals,0.1964,Flats,0.181,Flip Flops,0.2847,Flip Flops,low_confidence
+58334,Flats,0.3879,Flip Flops,0.1729,Sandals,0.052,Shoes,0.413,Flip Flops,low_confidence|changed_by_prior
+58335,Flats,0.234,Flip Flops,0.2107,Sandals,0.0767,Shoes,0.2591,Flip Flops,low_confidence|changed_by_prior
+58337,Flats,0.5314,Heels,0.3465,Flip Flops,0.0443,Shoes,0.8788,Heels,changed_by_prior
+58338,Flats,0.4585,Heels,0.3454,Flip Flops,0.1085,Shoes,0.8046,Flip Flops,low_confidence|changed_by_prior
+58340,Flats,0.4132,Flip Flops,0.3727,Heels,0.0723,Shoes,0.4872,Flip Flops,low_confidence|changed_by_prior
+58372,Tops,0.2526,Bra,0.1233,Jackets,0.0785,Topwear,0.4539,Tops,low_confidence
+58394,Jackets,0.2847,Shirts,0.198,Pendant,0.0277,Topwear,0.5704,Shirts,low_confidence|changed_by_prior
+58446,Tops,0.2359,Tunics,0.1308,Kurtas,0.123,Topwear,0.7225,Kurtis,low_confidence|changed_by_prior
+58491,Lounge Shorts,0.4596,Capris,0.1538,Shorts,0.1006,Loungewear and Nightwear,0.4909,Shorts,low_confidence|changed_by_prior
+58492,Dresses,0.6372,Tops,0.1521,Tunics,0.1021,Dress,0.6376,Tops,changed_by_prior
+58496,Tshirts,0.431,Tops,0.3635,Earrings,0.0077,Topwear,0.8142,Tshirts,low_confidence
+58498,Tops,0.4337,Dresses,0.2155,Tunics,0.1591,Topwear,0.6499,Tops,low_confidence
+58499,Tops,0.4143,Dresses,0.3424,Night suits,0.063,Topwear,0.4731,Tops,low_confidence
+58500,Dresses,0.5208,Tops,0.3623,Nightdress,0.0356,Dress,0.5333,Tops,changed_by_prior
+58501,Tops,0.3968,Dresses,0.3613,Swimwear,0.1529,Topwear,0.4034,Tops,low_confidence
+58507,Tops,0.4298,Waistcoat,0.074,Tshirts,0.0657,Topwear,0.6,Tops,low_confidence
+58511,Jackets,0.3705,Tops,0.2058,Shirts,0.029,Topwear,0.6835,Tops,low_confidence|changed_by_prior
+58513,Tops,0.4957,Dresses,0.192,Shirts,0.0337,Topwear,0.5825,Tops,low_confidence
+58522,Travel Accessory,0.3259,Dresses,0.0794,Handbags,0.0758,Accessories,0.3271,Tshirts,low_confidence|changed_by_prior
+58561,Jeggings,0.3618,Jeans,0.1927,Leggings,0.1926,Bottomwear,0.8473,Jeans,low_confidence|changed_by_prior
+58565,Tshirts,0.3952,Dresses,0.0559,Bra,0.0316,Topwear,0.4808,Tshirts,low_confidence
+58567,Kurta Sets,0.3049,Jumpsuit,0.2103,Sarees,0.1308,Apparel Set,0.3049,Kurta Sets,low_confidence
+58573,Tops,0.5824,Tshirts,0.145,Waistcoat,0.0382,Topwear,0.7846,Tshirts,changed_by_prior
+58576,Tops,0.379,Tshirts,0.2313,Jackets,0.0189,Topwear,0.6681,Tshirts,low_confidence|changed_by_prior
+58581,Ring,0.4332,Bracelet,0.0583,Free Gifts,0.0503,Jewellery,0.5719,Ring,low_confidence
+58622,Bracelet,0.3993,Handbags,0.1396,Boxers,0.0377,Jewellery,0.4951,Bracelet,low_confidence
+58624,Basketballs,0.3212,Bracelet,0.0706,Shoe Accessories,0.0471,Sports Equipment,0.3212,Basketballs,low_confidence
+58626,Belts,0.1555,Ring,0.0678,Shoe Accessories,0.0483,Jewellery,0.1826,Belts,low_confidence|family_disagrees
+58627,Handbags,0.1408,Bracelet,0.1401,Belts,0.0604,Bags,0.2117,Belts,low_confidence|changed_by_prior
+58628,Belts,0.2238,Bracelet,0.0843,Trunk,0.0684,Belts,0.2238,Belts,low_confidence
+58629,Handbags,0.1127,Bracelet,0.1089,Mobile Pouch,0.0956,Bags,0.2811,Sports Shoes,low_confidence|changed_by_prior
+58644,Kurtas,0.3541,Dresses,0.2673,Nightdress,0.0796,Topwear,0.4735,Kurtas,low_confidence
+58646,Kurtas,0.4626,Dresses,0.1813,Tunics,0.1261,Topwear,0.6023,Kurtas,low_confidence
+58657,Tunics,0.4684,Dresses,0.2893,Kurtas,0.1078,Topwear,0.6651,Tunics,low_confidence
+58658,Kurtas,0.3817,Tunics,0.3292,Dresses,0.201,Topwear,0.7369,Kurtas,low_confidence
+58660,Tunics,0.458,Kurtas,0.4416,Dresses,0.0393,Topwear,0.9252,Kurtas,low_confidence|changed_by_prior
+58672,Tunics,0.4388,Kurtas,0.3683,Dresses,0.1168,Topwear,0.8273,Kurtas,low_confidence|changed_by_prior
+58677,Tunics,0.3208,Dresses,0.2584,Kurtas,0.1696,Topwear,0.6245,Tunics,low_confidence
+58678,Tunics,0.3381,Dresses,0.2245,Kurtas,0.1595,Topwear,0.5923,Tunics,low_confidence
+58680,Tunics,0.4487,Kurtas,0.371,Dresses,0.0719,Topwear,0.8372,Kurtas,low_confidence|changed_by_prior
+58683,Kurtas,0.3704,Tunics,0.2989,Dresses,0.1944,Topwear,0.7116,Kurtas,low_confidence
+58684,Tunics,0.3715,Dresses,0.3002,Kurtas,0.1834,Topwear,0.6163,Tunics,low_confidence
+58686,Dresses,0.3409,Kurtas,0.198,Tunics,0.1786,Topwear,0.4338,Kurtas,low_confidence|family_disagrees|changed_by_prior
+58687,Kurtas,0.1867,Dresses,0.1739,Jumpsuit,0.06,Topwear,0.3515,Kurtas,low_confidence
+58690,Tunics,0.3732,Dresses,0.2385,Kurtas,0.2159,Topwear,0.6783,Kurtas,low_confidence|changed_by_prior
+58691,Dresses,0.3958,Tunics,0.3752,Kurtas,0.0738,Topwear,0.5266,Tunics,low_confidence|family_disagrees|changed_by_prior
+58693,Kurtas,0.4108,Tunics,0.3983,Dresses,0.0698,Topwear,0.842,Kurtas,low_confidence
+58703,Dresses,0.7012,Kurtas,0.193,Tunics,0.051,Dress,0.7038,Kurtas,changed_by_prior
+58718,Kurtas,0.4705,Tunics,0.2754,Dresses,0.1613,Topwear,0.7741,Kurtas,low_confidence
+58729,Tops,0.3735,Tshirts,0.3096,Dresses,0.0534,Topwear,0.7258,Tshirts,low_confidence|changed_by_prior
+58730,Tops,0.6602,Tshirts,0.1941,Dresses,0.006,Topwear,0.8714,Tshirts,changed_by_prior
+58731,Tshirts,0.3218,Tops,0.25,Bra,0.0232,Topwear,0.6031,Tshirts,low_confidence
+58735,Tshirts,0.2756,Tops,0.1841,Dresses,0.0456,Topwear,0.5062,Tshirts,low_confidence
+58736,Capris,0.2821,Lounge Shorts,0.2469,Patiala,0.1664,Bottomwear,0.57,Capris,low_confidence
+58740,Tshirts,0.3158,Jackets,0.1038,Shirts,0.0713,Topwear,0.6018,Tshirts,low_confidence
+58765,Jackets,0.2826,Kurtas,0.0529,Flats,0.0408,Topwear,0.4867,Jackets,low_confidence
+58801,Shirts,0.2463,Kurtas,0.0629,Perfume and Body Mist,0.0513,Topwear,0.4172,Shirts,low_confidence
+58807,Shirts,0.2515,Jackets,0.0976,Bra,0.0856,Topwear,0.424,Shirts,low_confidence
+58810,Shirts,0.4477,Jackets,0.1545,Waistcoat,0.0313,Topwear,0.6628,Shirts,low_confidence
+58815,Flats,0.6454,Casual Shoes,0.2122,Heels,0.0341,Shoes,0.8992,Casual Shoes,changed_by_prior
+58816,Flats,0.6059,Casual Shoes,0.239,Heels,0.0143,Shoes,0.878,Casual Shoes,changed_by_prior
+58817,Flats,0.4905,Casual Shoes,0.3303,Heels,0.0558,Shoes,0.8865,Casual Shoes,low_confidence|changed_by_prior
+58818,Flats,0.5481,Casual Shoes,0.3029,Heels,0.0224,Shoes,0.8897,Casual Shoes,changed_by_prior
+58819,Flats,0.3857,Casual Shoes,0.3598,Heels,0.0499,Shoes,0.8061,Casual Shoes,low_confidence|changed_by_prior
+58833,Perfume and Body Mist,0.3249,Earrings,0.2792,Flats,0.0475,Fragrance,0.3396,Perfume and Body Mist,low_confidence
+58838,Earrings,0.5423,Cufflinks,0.3789,Pendant,0.007,Jewellery,0.563,Cufflinks,changed_by_prior
+58920,Accessory Gift Set,0.2383,Watches,0.1711,Socks,0.0656,Accessories,0.2433,Accessory Gift Set,low_confidence
+58921,Accessory Gift Set,0.1751,Bra,0.1083,Watches,0.1023,Accessories,0.1814,Accessory Gift Set,low_confidence
+58922,Accessory Gift Set,0.1716,Socks,0.149,Watches,0.0711,Accessories,0.1774,Accessory Gift Set,low_confidence
+58923,Accessory Gift Set,0.2628,Socks,0.1664,Watches,0.0653,Accessories,0.2654,Accessory Gift Set,low_confidence
+58924,Accessory Gift Set,0.3157,Watches,0.1404,Bra,0.0637,Accessories,0.3203,Accessory Gift Set,low_confidence
+58943,Perfume and Body Mist,0.4811,Deodorant,0.4643,Shoe Accessories,0.0087,Fragrance,0.9459,Deodorant,low_confidence|changed_by_prior
+58964,Deodorant,0.4883,Perfume and Body Mist,0.429,Shoe Accessories,0.0075,Fragrance,0.9178,Deodorant,low_confidence
+58965,Perfume and Body Mist,0.5864,Deodorant,0.3493,Jeggings,0.004,Fragrance,0.9361,Deodorant,changed_by_prior
+58970,Perfume and Body Mist,0.6197,Deodorant,0.357,Shoe Accessories,0.0038,Fragrance,0.9771,Deodorant,changed_by_prior
+58972,Perfume and Body Mist,0.4993,Deodorant,0.4171,Sarees,0.0144,Fragrance,0.918,Deodorant,low_confidence|changed_by_prior
+59010,Casual Shoes,0.3783,Sports Shoes,0.3454,Formal Shoes,0.012,Shoes,0.7437,Sports Shoes,low_confidence|changed_by_prior
+59011,Sports Shoes,0.4915,Casual Shoes,0.0751,Earrings,0.0201,Shoes,0.5754,Sports Shoes,low_confidence
+59012,Sports Shoes,0.3301,Casual Shoes,0.272,Earrings,0.0161,Shoes,0.606,Sports Shoes,low_confidence
+59013,Casual Shoes,0.4133,Sports Shoes,0.382,Earrings,0.0076,Shoes,0.8027,Sports Shoes,low_confidence|changed_by_prior
+59014,Sports Shoes,0.3865,Casual Shoes,0.3374,Earrings,0.0107,Shoes,0.7285,Sports Shoes,low_confidence
+59017,Flip Flops,0.4484,Sandals,0.407,Flats,0.0171,Flip Flops,0.4484,Flip Flops,low_confidence
+59023,Flats,0.6503,Heels,0.1563,Flip Flops,0.0605,Shoes,0.808,Flip Flops,changed_by_prior
+59024,Flats,0.3944,Heels,0.3894,Flip Flops,0.0578,Shoes,0.7863,Heels,low_confidence|changed_by_prior
+59037,Flats,0.6133,Heels,0.3115,Flip Flops,0.021,Shoes,0.9259,Heels,changed_by_prior
+59038,Flats,0.738,Heels,0.2374,Flip Flops,0.0032,Shoes,0.9757,Heels,changed_by_prior
+59039,Flats,0.5487,Heels,0.2594,Flip Flops,0.0973,Shoes,0.8091,Flip Flops,changed_by_prior
+59040,Flats,0.5371,Heels,0.2733,Flip Flops,0.0308,Shoes,0.8126,Heels,changed_by_prior
+59051,Flats,0.5783,Heels,0.4067,Shoe Accessories,0.0006,Shoes,0.9851,Heels,changed_by_prior
+59055,Flats,0.7592,Casual Shoes,0.0745,Heels,0.0686,Shoes,0.9173,Casual Shoes,changed_by_prior
+59056,Flats,0.6346,Casual Shoes,0.2409,Heels,0.0379,Shoes,0.9174,Casual Shoes,changed_by_prior
+59061,Dresses,0.455,Kurtas,0.3309,Nightdress,0.0773,Dress,0.4559,Kurtas,low_confidence|changed_by_prior
+59102,Jackets,0.5093,Sweatshirts,0.4045,Stoles,0.0051,Topwear,0.9301,Sweatshirts,changed_by_prior
+59117,Jackets,0.6412,Tshirts,0.2078,Bra,0.0189,Topwear,0.8641,Tshirts,changed_by_prior
+59128,Jackets,0.412,Bra,0.1012,Flats,0.0517,Topwear,0.5045,Jackets,low_confidence
+59129,Jackets,0.5136,Shirts,0.0753,Bra,0.0361,Topwear,0.6236,Shirts,changed_by_prior
+59142,Flats,0.701,Heels,0.2388,Perfume and Body Mist,0.0035,Shoes,0.9406,Heels,changed_by_prior
+59144,Flats,0.4136,Heels,0.3527,Sports Sandals,0.1468,Shoes,0.7672,Heels,low_confidence|changed_by_prior
+59145,Flats,0.4602,Heels,0.3342,Sports Sandals,0.0958,Shoes,0.7955,Heels,low_confidence|changed_by_prior
+59147,Flats,0.6905,Heels,0.2715,Sandals,0.004,Shoes,0.9636,Heels,changed_by_prior
+59165,Flats,0.6573,Heels,0.315,Perfume and Body Mist,0.0019,Shoes,0.9726,Heels,changed_by_prior
+59185,Casual Shoes,0.3128,Sandals,0.0443,Flats,0.032,Shoes,0.3979,Casual Shoes,low_confidence
+59218,Bra,0.1384,Watches,0.1066,Travel Accessory,0.0546,Innerwear,0.173,Watches,low_confidence|changed_by_prior
+59219,Watches,0.477,Bra,0.0723,Fragrance Gift Set,0.0442,Watches,0.477,Watches,low_confidence
+59261,Watches,0.4867,Night suits,0.068,Pendant,0.0475,Watches,0.4867,Watches,low_confidence
+59282,Bra,0.1393,Deodorant,0.0749,Perfume and Body Mist,0.052,Fragrance,0.1587,Sandals,low_confidence|family_disagrees|changed_by_prior
+59296,Shirts,0.4741,Perfume and Body Mist,0.0256,Flats,0.0227,Topwear,0.5226,Shirts,low_confidence
+59300,Tshirts,0.2429,Shirts,0.1897,Tops,0.0436,Topwear,0.5447,Tshirts,low_confidence
+59301,Shirts,0.4001,Tshirts,0.1905,Jackets,0.032,Topwear,0.6481,Shirts,low_confidence
+59302,Tshirts,0.1876,Shirts,0.1466,Jackets,0.1224,Topwear,0.4963,Tshirts,low_confidence
+59306,Tshirts,0.421,Perfume and Body Mist,0.1027,Shirts,0.0887,Topwear,0.5617,Tshirts,low_confidence
+59311,Sports Sandals,0.5918,Sandals,0.3234,Flats,0.0524,Sandal,0.9151,Sandals,changed_by_prior
+59312,Sports Sandals,0.5033,Sandals,0.2781,Flats,0.0945,Sandal,0.7813,Sandals,changed_by_prior
+59324,Sandals,0.4057,Sports Sandals,0.1919,Flats,0.1172,Sandal,0.5977,Sandals,low_confidence
+59326,Flats,0.6694,Heels,0.0692,Casual Shoes,0.0488,Shoes,0.8366,Casual Shoes,changed_by_prior
+59342,Casual Shoes,0.3666,Formal Shoes,0.2119,Sports Shoes,0.0403,Shoes,0.6207,Casual Shoes,low_confidence
+59358,Dresses,0.7863,Kurtas,0.169,Tunics,0.0191,Dress,0.7869,Kurtas,changed_by_prior
+59365,Dresses,0.4273,Kurtas,0.286,Dupatta,0.069,Dress,0.4348,Kurtas,low_confidence|changed_by_prior
+59367,Kurtas,0.4503,Dresses,0.312,Tunics,0.0381,Topwear,0.5104,Kurtas,low_confidence
+59373,Dresses,0.5186,Kurtas,0.3077,Sarees,0.0521,Dress,0.5219,Kurtas,changed_by_prior
+59376,Kurtas,0.2101,Dresses,0.203,Tunics,0.1704,Topwear,0.4529,Kurtas,low_confidence
+59387,Flats,0.6271,Heels,0.3348,Sports Sandals,0.0019,Shoes,0.9624,Heels,changed_by_prior
+59388,Flats,0.5863,Heels,0.3566,Sports Sandals,0.0073,Shoes,0.9433,Heels,changed_by_prior
+59399,Kurtas,0.4771,Nightdress,0.149,Dresses,0.1054,Topwear,0.5918,Kurtas,low_confidence
+59400,Dresses,0.5958,Kurtas,0.1294,Nightdress,0.1188,Dress,0.5965,Kurtas,changed_by_prior
+59403,Tunics,0.3441,Kurtas,0.185,Dresses,0.1584,Topwear,0.6993,Tunics,low_confidence
+59407,Dresses,0.24,Tops,0.2372,Tunics,0.1375,Topwear,0.4134,Tops,low_confidence|family_disagrees|changed_by_prior
+59422,Tops,0.51,Tshirts,0.2388,Bra,0.0257,Topwear,0.7749,Tshirts,changed_by_prior
+59437,Flats,0.5497,Heels,0.3957,Perfume and Body Mist,0.0039,Shoes,0.9461,Heels,changed_by_prior
+59442,Shirts,0.4788,Sarees,0.0229,Perfume and Body Mist,0.0202,Topwear,0.5367,Shirts,low_confidence
+59445,Shirts,0.2499,Flats,0.1109,Bra,0.0614,Topwear,0.3329,Shirts,low_confidence
+59454,Shirts,0.2751,Waistcoat,0.0401,Pendant,0.0337,Topwear,0.3784,Shirts,low_confidence
+59455,Bangle,0.2478,Ring,0.2333,Bracelet,0.1886,Jewellery,0.6989,Bangle,low_confidence
+59457,Ring,0.4489,Bangle,0.0874,Bracelet,0.0847,Jewellery,0.6597,Ring,low_confidence
+59458,Ring,0.2931,Bangle,0.1762,Bracelet,0.1647,Jewellery,0.7061,Ring,low_confidence
+59459,Bracelet,0.3382,Bangle,0.1104,Handbags,0.1045,Jewellery,0.5704,Bracelet,low_confidence
+59463,Bangle,0.3839,Ring,0.3368,Bracelet,0.0525,Jewellery,0.8375,Bangle,low_confidence
+59470,Ring,0.2165,Bracelet,0.0771,Handbags,0.068,Jewellery,0.3827,Ring,low_confidence
+59471,Ring,0.4045,Mobile Pouch,0.0808,Lounge Pants,0.0311,Jewellery,0.4921,Ring,low_confidence
+59484,Ring,0.363,Earrings,0.1968,Bangle,0.1115,Jewellery,0.7906,Ring,low_confidence
+59498,Pendant,0.4789,Necklace and Chains,0.2738,Jewellery Set,0.1705,Jewellery,0.9317,Pendant,low_confidence
+59552,Bracelet,0.3998,Handbags,0.1279,Bangle,0.085,Jewellery,0.6145,Bracelet,low_confidence
+59563,Cufflinks,0.2391,Pendant,0.2264,Shoe Accessories,0.1735,Jewellery,0.3217,Cufflinks,low_confidence|family_disagrees
+59583,Cufflinks,0.5746,Flip Flops,0.138,Earrings,0.087,Cufflinks,0.5746,Flip Flops,changed_by_prior
+59676,Flats,0.5509,Heels,0.4247,Perfume and Body Mist,0.0028,Shoes,0.976,Heels,changed_by_prior
+59697,Swimwear,0.4501,Dresses,0.3318,Tops,0.1223,Bottomwear,0.4573,Swimwear,low_confidence
+59712,Swimwear,0.5614,Tops,0.3537,Night suits,0.0175,Bottomwear,0.5676,Tops,changed_by_prior
+59713,Dresses,0.2503,Nightdress,0.1676,Bra,0.1547,Dress,0.3765,Jumpsuit,low_confidence|changed_by_prior
+59715,Tops,0.3413,Dresses,0.2056,Nightdress,0.1646,Topwear,0.3816,Tops,low_confidence
+59716,Bra,0.4713,Nightdress,0.1922,Dresses,0.0972,Innerwear,0.4838,Dupatta,low_confidence|changed_by_prior
+59731,Bra,0.3299,Handbags,0.186,Tshirts,0.0368,Innerwear,0.3506,Tshirts,low_confidence|changed_by_prior
+59747,Nightdress,0.4018,Jeans,0.1417,Dresses,0.0448,Loungewear and Nightwear,0.4348,Jeans,low_confidence|changed_by_prior
+59748,Night suits,0.3945,Sarees,0.1562,Dresses,0.1494,Loungewear and Nightwear,0.414,Night suits,low_confidence
+59749,Dresses,0.198,Sarees,0.1086,Kurta Sets,0.104,Dress,0.269,Kurta Sets,low_confidence|changed_by_prior
+59756,Tops,0.4196,Swimwear,0.325,Camisoles,0.135,Topwear,0.4226,Tops,low_confidence
+59757,Flats,0.6999,Heels,0.2572,Flip Flops,0.0023,Shoes,0.9574,Heels,changed_by_prior
+59759,Flats,0.5244,Heels,0.4375,Perfume and Body Mist,0.0047,Shoes,0.9624,Heels,changed_by_prior
+59760,Flats,0.533,Heels,0.4477,Perfume and Body Mist,0.0026,Shoes,0.9811,Heels,changed_by_prior
+59762,Flats,0.7386,Heels,0.2411,Bra,0.0008,Shoes,0.9798,Heels,changed_by_prior
+59768,Bra,0.5012,Necklace and Chains,0.0381,Fragrance Gift Set,0.0346,Innerwear,0.5465,Sports Shoes,changed_by_prior
+59771,Jewellery Set,0.4938,Pendant,0.4589,Necklace and Chains,0.0181,Jewellery,0.9867,Jewellery Set,low_confidence
+59773,Necklace and Chains,0.3724,Jewellery Set,0.329,Socks,0.0837,Jewellery,0.7465,Necklace and Chains,low_confidence
+59776,Bangle,0.4867,Bracelet,0.4864,Pendant,0.003,Jewellery,0.982,Bangle,low_confidence
+59783,Bracelet,0.3454,Belts,0.1104,Bangle,0.11,Jewellery,0.6008,Belts,low_confidence|changed_by_prior
+59794,Tunics,0.5538,Tops,0.2976,Dresses,0.0941,Topwear,0.8604,Tops,changed_by_prior
+59795,Tunics,0.4109,Dresses,0.2014,Tops,0.1657,Topwear,0.7386,Tunics,low_confidence
+59811,Kurtas,0.4289,Dresses,0.22,Tunics,0.1307,Topwear,0.6075,Kurtas,low_confidence
+59824,Shirts,0.3043,Tunics,0.0478,Sarees,0.0235,Topwear,0.4086,Shirts,low_confidence
+59834,Shirts,0.153,Jackets,0.0887,Tunics,0.0863,Topwear,0.5008,Shirts,low_confidence
+59838,Tshirts,0.2208,Shirts,0.156,Tops,0.1545,Topwear,0.6644,Tshirts,low_confidence
+59859,Perfume and Body Mist,0.3635,Pendant,0.0996,Flats,0.0546,Fragrance,0.4017,Perfume and Body Mist,low_confidence
+59873,Lounge Shorts,0.1317,Dresses,0.1006,Skirts,0.0891,Bottomwear,0.2881,Shorts,low_confidence|family_disagrees|changed_by_prior
+59874,Shirts,0.331,Tops,0.0732,Sarees,0.042,Topwear,0.4869,Shirts,low_confidence
+59878,Lounge Shorts,0.219,Leggings,0.1288,Shorts,0.1174,Bottomwear,0.3658,Shorts,low_confidence|family_disagrees|changed_by_prior
+59880,Leggings,0.4682,Lounge Shorts,0.0997,Patiala,0.054,Bottomwear,0.6066,Leggings,low_confidence
+59881,Lounge Shorts,0.1973,Jeans,0.0754,Jewellery Set,0.0736,Bottomwear,0.306,Shorts,low_confidence|family_disagrees|changed_by_prior
+59886,Tops,0.4556,Swimwear,0.1215,Bra,0.0607,Topwear,0.488,Tops,low_confidence
+59891,Shirts,0.3651,Tops,0.2349,Perfume and Body Mist,0.033,Topwear,0.6616,Shirts,low_confidence
+59892,Tops,0.394,Shirts,0.2285,Tshirts,0.024,Topwear,0.7081,Shirts,low_confidence|changed_by_prior
+59900,Jackets,0.3736,Tops,0.0508,Shirts,0.0344,Topwear,0.5096,Jackets,low_confidence
+59901,Tops,0.3296,Jackets,0.1183,Bra,0.106,Topwear,0.4944,Tops,low_confidence
+59903,Shirts,0.1438,Tops,0.1406,Dupatta,0.1123,Topwear,0.5166,Shirts,low_confidence
+59904,Tops,0.2541,Shirts,0.1209,Jackets,0.0542,Topwear,0.5055,Shirts,low_confidence|changed_by_prior
+59905,Nightdress,0.307,Tops,0.1277,Sarees,0.0878,Loungewear and Nightwear,0.3247,Tops,low_confidence|changed_by_prior
+59906,Nightdress,0.1846,Dresses,0.1691,Kurtas,0.1402,Topwear,0.2069,Kurtas,low_confidence|family_disagrees|changed_by_prior
+59907,Bra,0.1672,Tops,0.08,Shirts,0.0787,Topwear,0.2841,Shirts,low_confidence|family_disagrees|changed_by_prior
+59911,Dresses,0.6721,Kurtas,0.1738,Handbags,0.0353,Dress,0.6732,Kurtas,changed_by_prior
+59924,Tunics,0.4046,Kurtis,0.1817,Tops,0.1297,Topwear,0.8146,Kurtis,low_confidence|changed_by_prior
+59929,Dresses,0.5861,Kurtas,0.2869,Tunics,0.0739,Dress,0.5876,Kurtas,changed_by_prior
+59930,Kurtas,0.3883,Tunics,0.3451,Tops,0.1002,Topwear,0.9251,Kurtas,low_confidence
+59946,Perfume and Body Mist,0.5534,Deodorant,0.3151,Shoe Accessories,0.0468,Fragrance,0.8691,Deodorant,changed_by_prior
+59949,Deodorant,0.4908,Perfume and Body Mist,0.4371,Shoe Accessories,0.0054,Fragrance,0.9284,Deodorant,low_confidence
+59998,Flats,0.6308,Heels,0.2717,Sports Sandals,0.0139,Shoes,0.9042,Heels,changed_by_prior
+60000,Dresses,0.494,Tunics,0.1504,Tops,0.099,Dress,0.4947,Tops,low_confidence|changed_by_prior

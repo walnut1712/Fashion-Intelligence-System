@@ -1,0 +1,5 @@
+Model,accuracy,macro_f1,weighted_f1,balanced_acc,top3_acc,top5_acc,tau_selected_on
+plain argmax,87.64,73.09,87.13,71.52,97.55,98.78,
+horizontal-flip TTA,87.77,71.63,87.21,70.33,97.73,98.85,
+plain argmax + logit adjustment (tau=0.20),87.51,73.62,87.17,73.67,97.49,98.71,validation weighted-F1
+horizontal-flip TTA + logit adjustment (tau=0.20) (deployed),87.8,72.51,87.44,72.15,97.58,98.8,validation weighted-F1

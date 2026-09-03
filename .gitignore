@@ -25,3 +25,15 @@ artifacts/task1/_superseded_*/
 # Claude Code: personal overrides and runtime state (shared settings.json is not ignored)
 .claude/settings.local.json
 .claude/*.lock
+
+# Derived posterior caches. Regenerated in ~2 minutes by
+# src/evaluation/prior_shift.graded_probabilities(); 3.8 MB each and keyed to a
+# checkpoint, so committing them would rot the moment a candidate is promoted.
+artifacts/task1/graded_probabilities_*.npz
+
+# Candidate checkpoints from the recipe search. Each is ~1.7 MB and fully
+# reproducible from its recipe name and the fixed seed, e.g.
+#   python -m src.training.train_item_type --recipe tail_sqrt --epochs 40 #       --select-on macro_f1 --tag dep
+# Only the adopted model (artifacts/task1/task1_cnn.pt) is committed; the
+# comparison itself lives in outputs/evaluation/task1_recipe_comparison.csv.
+artifacts/task1/candidate_*.pt

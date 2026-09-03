@@ -1,0 +1,17 @@
+checkpoint,severity,ingest,rows,accuracy,weighted_f1,macro_f1,balanced_acc,top3_acc,mean_conf
+task1_cnn.pt,clean,squash,394,88.32,88.17,79.72,81.89,98.48,0.84
+task1_cnn.pt,clean,nobg,394,76.9,75.93,57.43,62.24,90.86,0.69
+task1_cnn.pt,mild,squash,394,10.66,9.12,2.42,6.83,18.53,0.3
+task1_cnn.pt,mild,nobg,394,29.19,29.41,14.82,18.81,40.1,0.39
+task1_cnn.pt,moderate,squash,394,6.09,5.11,1.48,5.14,13.45,0.29
+task1_cnn.pt,moderate,nobg,394,19.8,21.16,7.72,10.87,29.7,0.33
+task1_cnn.pt,severe,squash,394,4.82,3.92,0.88,1.64,10.66,0.28
+task1_cnn.pt,severe,nobg,394,7.11,6.79,5.34,6.51,13.96,0.3
+task1_cnn_bnadapt.pt,clean,squash,394,65.99,65.96,56.18,58.26,82.49,0.34
+task1_cnn_bnadapt.pt,clean,nobg,394,51.78,49.85,39.75,42.04,72.34,0.26
+task1_cnn_bnadapt.pt,mild,squash,394,15.99,11.37,4.54,5.66,26.14,0.16
+task1_cnn_bnadapt.pt,mild,nobg,394,29.44,25.64,14.81,16.33,43.4,0.19
+task1_cnn_bnadapt.pt,moderate,squash,394,15.99,12.63,4.57,6.6,25.38,0.12
+task1_cnn_bnadapt.pt,moderate,nobg,394,21.57,19.55,7.7,7.81,34.52,0.15
+task1_cnn_bnadapt.pt,severe,squash,394,12.69,9.08,4.78,5.29,20.05,0.14
+task1_cnn_bnadapt.pt,severe,nobg,394,11.93,8.72,6.88,10.05,23.6,0.18

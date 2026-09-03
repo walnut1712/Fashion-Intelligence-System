@@ -97,3 +97,115 @@ def test_spatial_checkpoints_use_the_batchnorm_head():
     keys = set(model.state_dict())
     assert {"head.0.weight", "head.2.weight", "head.5.weight"} <= keys
     assert model.state_dict()["head.2.weight"].shape == (384, 512)
+
+
+def test_shipped_checkpoint_matches_what_the_docs_claim():
+    """The deployed model pools 1x1, not 2x1.
+
+    The test above exercises the *builder* with a 2x1 grid, which is a supported
+    configuration - but for a long time the class docstring, the notebook CONFIG
+    and this file together implied 2x1 was what ships. It is not, and the
+    checkpoint is the only authority on that question.
+    """
+    import torch
+
+    path = PROJECT_ROOT / "artifacts" / "task1" / "task1_cnn.pt"
+    if not path.exists():
+        pytest.skip("deployed checkpoint not present")
+    checkpoint = torch.load(path, map_location="cpu", weights_only=False)
+
+    architecture = checkpoint["architecture"]
+    assert architecture["pool_grid"] == [1, 1]
+    assert architecture["head_hidden"] == 384
+    model = build_from_checkpoint(checkpoint)
+    assert model.state_dict()["head.2.weight"].shape == (384, 256)
+
+
+def test_recorded_config_does_not_contradict_the_architecture():
+    """``config`` used to be the notebook's template rather than the run's settings.
+
+    It claimed ``head_hidden: 256``, ``dropout: 0.3``, ``pool_grid: [2, 1]`` and
+    ``use_class_weights: True`` for a model named ``CNN_weights_none_full`` with
+    384 hidden units and a 1x1 pool. ``Task1Service.model_card`` reads this dict,
+    so the drift was user-visible. ``--sync-summary`` repairs it.
+    """
+    import torch
+
+    path = PROJECT_ROOT / "artifacts" / "task1" / "task1_cnn.pt"
+    if not path.exists():
+        pytest.skip("deployed checkpoint not present")
+    checkpoint = torch.load(path, map_location="cpu", weights_only=False)
+
+    config = checkpoint.get("config") or {}
+    architecture = checkpoint["architecture"]
+    for key in ("widths", "head_hidden", "dropout", "pool_grid", "pool_mode"):
+        if key in config:
+            assert config[key] == architecture[key], (
+                "config[{0!r}]={1!r} contradicts architecture[{0!r}]={2!r}; run "
+                "`python -m src.training.train_item_type --sync-summary`".format(
+                    key, config[key], architecture[key]))
+    assert not config.get("use_class_weights"), (
+        "config claims class weights for a run named {!r}".format(
+            checkpoint.get("model_name")))
+
+
+def test_temperature_is_applied_by_predict_proba():
+    """Batch inference and the API must sit on the same operating point.
+
+    ``Task1Service.predict`` divided logits by ``checkpoint["temperature"]`` and
+    ``predict_proba`` did not, so the two paths disagreed on confidence for any
+    checkpoint carrying one - while the module docstring claimed they agree by
+    construction. Temperature cannot move the argmax, only the confidence.
+    """
+    import numpy as np
+    import torch
+    from PIL import Image
+
+    from src.models.item_type_classifier import predict_proba
+
+    checkpoint = {
+        "num_classes": 4, "class_names": ["a", "b", "c", "d"],
+        "channel_mean": [0.5, 0.5, 0.5], "channel_std": [0.25, 0.25, 0.25],
+        "image_size_pil": [60, 80],
+        "architecture": {"widths": [8, 16], "dropout": 0.0, "head_hidden": 16,
+                         "pool_grid": [1, 1], "pool_mode": "avg"},
+    }
+    model = build_from_checkpoint(checkpoint).eval()
+    sources = [Image.new("RGB", (60, 80), (120, 90, 60)),
+               Image.new("RGB", (60, 80), (30, 200, 10))]
+
+    with torch.no_grad():
+        cold = predict_proba(model, checkpoint, sources)
+        warm = predict_proba(model, {**checkpoint, "temperature": 3.0}, sources)
+
+    assert (cold.argmax(1) == warm.argmax(1)).all(), "temperature moved the argmax"
+    assert warm.max(1).mean() < cold.max(1).mean(), "temperature did not soften confidence"
+
+
+def test_adjust_false_returns_raw_posteriors():
+    """Label-shift estimators need posteriors the tau adjustment has not touched."""
+    import numpy as np
+    from PIL import Image
+
+    from src.models.item_type_classifier import apply_logit_adjustment, predict_proba
+    import torch
+
+    checkpoint = {
+        "num_classes": 4, "class_names": ["a", "b", "c", "d"],
+        "channel_mean": [0.5, 0.5, 0.5], "channel_std": [0.25, 0.25, 0.25],
+        "image_size_pil": [60, 80],
+        "architecture": {"widths": [8, 16], "dropout": 0.0, "head_hidden": 16,
+                         "pool_grid": [1, 1], "pool_mode": "avg"},
+        "class_log_prior": np.log([0.7, 0.2, 0.07, 0.03]).tolist(),
+        "logit_adjustment_tau": 0.5,
+    }
+    model = build_from_checkpoint(checkpoint).eval()
+    sources = [Image.new("RGB", (60, 80), (120, 90, 60))]
+
+    raw = predict_proba(model, checkpoint, sources, adjust=False)
+    adjusted = predict_proba(model, checkpoint, sources, adjust=True)
+    replayed = apply_logit_adjustment(torch.from_numpy(raw), checkpoint).numpy()
+
+    assert not np.allclose(raw, adjusted), "adjust=False returned the adjusted matrix"
+    assert np.allclose(replayed, adjusted, atol=1e-6), (
+        "adjust=True is not reproducible from the raw posteriors")

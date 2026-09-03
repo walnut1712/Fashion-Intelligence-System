@@ -1,0 +1,161 @@
+scenario,repeat,alpha,n,true_shift_tv,estimate_error_tv,em_iters,em_converged,accuracy,weighted_f1,macro_f1,caveat
+null,0,0.0,4000,5.2,4.08,53,True,88.12,87.67,74.43,no shift; correction must not hurt
+null,0,0.25,4000,5.2,4.08,53,True,88.08,87.62,75.31,no shift; correction must not hurt
+null,0,0.5,4000,5.2,4.08,53,True,88.15,87.72,74.93,no shift; correction must not hurt
+null,0,0.75,4000,5.2,4.08,53,True,88.2,87.76,75.03,no shift; correction must not hurt
+null,0,1.0,4000,5.2,4.08,53,True,88.08,87.55,74.55,no shift; correction must not hurt
+null,1,0.0,4000,4.44,3.66,45,True,87.58,86.98,72.81,no shift; correction must not hurt
+null,1,0.25,4000,4.44,3.66,45,True,87.6,86.99,72.63,no shift; correction must not hurt
+null,1,0.5,4000,4.44,3.66,45,True,87.6,86.97,72.46,no shift; correction must not hurt
+null,1,0.75,4000,4.44,3.66,45,True,87.58,86.96,72.16,no shift; correction must not hurt
+null,1,1.0,4000,4.44,3.66,45,True,87.67,87.03,71.97,no shift; correction must not hurt
+null,2,0.0,4000,3.77,3.74,56,True,88.15,87.39,70.03,no shift; correction must not hurt
+null,2,0.25,4000,3.77,3.74,56,True,88.15,87.36,70.44,no shift; correction must not hurt
+null,2,0.5,4000,3.77,3.74,56,True,88.17,87.39,70.54,no shift; correction must not hurt
+null,2,0.75,4000,3.77,3.74,56,True,88.15,87.33,70.03,no shift; correction must not hurt
+null,2,1.0,4000,3.77,3.74,56,True,88.08,87.25,70.4,no shift; correction must not hurt
+null,3,0.0,4000,4.4,3.97,61,True,88.67,88.09,75.22,no shift; correction must not hurt
+null,3,0.25,4000,4.4,3.97,61,True,88.67,88.09,75.22,no shift; correction must not hurt
+null,3,0.5,4000,4.4,3.97,61,True,88.7,88.15,75.61,no shift; correction must not hurt
+null,3,0.75,4000,4.4,3.97,61,True,88.55,88.02,75.7,no shift; correction must not hurt
+null,3,1.0,4000,4.4,3.97,61,True,88.42,87.87,75.02,no shift; correction must not hurt
+null,4,0.0,4000,5.46,3.72,68,True,88.72,88.2,73.37,no shift; correction must not hurt
+null,4,0.25,4000,5.46,3.72,68,True,88.8,88.28,73.51,no shift; correction must not hurt
+null,4,0.5,4000,5.46,3.72,68,True,88.75,88.21,73.36,no shift; correction must not hurt
+null,4,0.75,4000,5.46,3.72,68,True,88.62,88.09,73.2,no shift; correction must not hurt
+null,4,1.0,4000,5.46,3.72,68,True,88.55,87.99,72.87,no shift; correction must not hurt
+null,5,0.0,4000,4.53,3.77,44,True,87.95,87.39,69.98,no shift; correction must not hurt
+null,5,0.25,4000,4.53,3.77,44,True,87.95,87.4,69.81,no shift; correction must not hurt
+null,5,0.5,4000,4.53,3.77,44,True,87.95,87.42,70.2,no shift; correction must not hurt
+null,5,0.75,4000,4.53,3.77,44,True,88.02,87.51,71.47,no shift; correction must not hurt
+null,5,1.0,4000,4.53,3.77,44,True,88.02,87.54,71.33,no shift; correction must not hurt
+null,6,0.0,4000,4.2,4.21,55,True,86.9,86.23,72.39,no shift; correction must not hurt
+null,6,0.25,4000,4.2,4.21,55,True,86.85,86.18,72.42,no shift; correction must not hurt
+null,6,0.5,4000,4.2,4.21,55,True,86.9,86.23,71.7,no shift; correction must not hurt
+null,6,0.75,4000,4.2,4.21,55,True,86.92,86.27,71.36,no shift; correction must not hurt
+null,6,1.0,4000,4.2,4.21,55,True,86.72,86.09,71.56,no shift; correction must not hurt
+null,7,0.0,4000,4.33,3.53,58,True,88.35,87.97,71.14,no shift; correction must not hurt
+null,7,0.25,4000,4.33,3.53,58,True,88.35,87.94,70.78,no shift; correction must not hurt
+null,7,0.5,4000,4.33,3.53,58,True,88.35,87.92,71.05,no shift; correction must not hurt
+null,7,0.75,4000,4.33,3.53,58,True,88.33,87.87,71.05,no shift; correction must not hurt
+null,7,1.0,4000,4.33,3.53,58,True,88.45,88.03,71.55,no shift; correction must not hurt
+synthetic_common,0,0.0,4000,71.41,33.15,42,True,78.8,81.45,75.31,classes with >=25 eval rows only; duplication-free
+synthetic_common,0,0.25,4000,71.41,33.15,42,True,81.03,83.03,77.24,classes with >=25 eval rows only; duplication-free
+synthetic_common,0,0.5,4000,71.41,33.15,42,True,82.85,84.31,78.97,classes with >=25 eval rows only; duplication-free
+synthetic_common,0,0.75,4000,71.41,33.15,42,True,84.2,85.13,80.24,classes with >=25 eval rows only; duplication-free
+synthetic_common,0,1.0,4000,71.41,33.15,42,True,84.78,85.35,81.13,classes with >=25 eval rows only; duplication-free
+synthetic_common,1,0.0,4000,72.03,34.36,42,True,78.97,82.06,76.28,classes with >=25 eval rows only; duplication-free
+synthetic_common,1,0.25,4000,72.03,34.36,42,True,81.12,83.69,77.76,classes with >=25 eval rows only; duplication-free
+synthetic_common,1,0.5,4000,72.03,34.36,42,True,82.67,84.5,79.02,classes with >=25 eval rows only; duplication-free
+synthetic_common,1,0.75,4000,72.03,34.36,42,True,84.2,85.52,80.17,classes with >=25 eval rows only; duplication-free
+synthetic_common,1,1.0,4000,72.03,34.36,42,True,84.67,85.69,80.69,classes with >=25 eval rows only; duplication-free
+synthetic_common,2,0.0,4000,72.95,33.97,43,True,78.57,81.51,75.68,classes with >=25 eval rows only; duplication-free
+synthetic_common,2,0.25,4000,72.95,33.97,43,True,80.88,83.22,77.84,classes with >=25 eval rows only; duplication-free
+synthetic_common,2,0.5,4000,72.95,33.97,43,True,82.58,84.25,79.09,classes with >=25 eval rows only; duplication-free
+synthetic_common,2,0.75,4000,72.95,33.97,43,True,83.95,85.04,80.77,classes with >=25 eval rows only; duplication-free
+synthetic_common,2,1.0,4000,72.95,33.97,43,True,84.4,85.31,81.86,classes with >=25 eval rows only; duplication-free
+synthetic_common,3,0.0,4000,72.27,32.98,44,True,77.53,80.88,74.61,classes with >=25 eval rows only; duplication-free
+synthetic_common,3,0.25,4000,72.27,32.98,44,True,80.42,83.12,77.01,classes with >=25 eval rows only; duplication-free
+synthetic_common,3,0.5,4000,72.27,32.98,44,True,82.3,84.28,78.68,classes with >=25 eval rows only; duplication-free
+synthetic_common,3,0.75,4000,72.27,32.98,44,True,83.65,85.13,80.23,classes with >=25 eval rows only; duplication-free
+synthetic_common,3,1.0,4000,72.27,32.98,44,True,84.72,85.86,81.02,classes with >=25 eval rows only; duplication-free
+synthetic_common,4,0.0,4000,71.21,32.46,42,True,79.05,81.81,76.04,classes with >=25 eval rows only; duplication-free
+synthetic_common,4,0.25,4000,71.21,32.46,42,True,81.05,83.21,77.66,classes with >=25 eval rows only; duplication-free
+synthetic_common,4,0.5,4000,71.21,32.46,42,True,82.4,83.96,78.65,classes with >=25 eval rows only; duplication-free
+synthetic_common,4,0.75,4000,71.21,32.46,42,True,83.35,84.46,79.67,classes with >=25 eval rows only; duplication-free
+synthetic_common,4,1.0,4000,71.21,32.46,42,True,84.38,85.16,80.57,classes with >=25 eval rows only; duplication-free
+synthetic_common,5,0.0,4000,72.11,33.42,41,True,78.88,82.0,75.84,classes with >=25 eval rows only; duplication-free
+synthetic_common,5,0.25,4000,72.11,33.42,41,True,81.23,83.65,77.5,classes with >=25 eval rows only; duplication-free
+synthetic_common,5,0.5,4000,72.11,33.42,41,True,83.15,84.9,78.93,classes with >=25 eval rows only; duplication-free
+synthetic_common,5,0.75,4000,72.11,33.42,41,True,84.95,86.07,80.55,classes with >=25 eval rows only; duplication-free
+synthetic_common,5,1.0,4000,72.11,33.42,41,True,85.38,86.16,81.93,classes with >=25 eval rows only; duplication-free
+synthetic_common,6,0.0,4000,71.53,33.23,43,True,78.95,81.84,74.96,classes with >=25 eval rows only; duplication-free
+synthetic_common,6,0.25,4000,71.53,33.23,43,True,81.12,83.44,76.8,classes with >=25 eval rows only; duplication-free
+synthetic_common,6,0.5,4000,71.53,33.23,43,True,82.55,84.25,78.07,classes with >=25 eval rows only; duplication-free
+synthetic_common,6,0.75,4000,71.53,33.23,43,True,83.75,84.95,79.26,classes with >=25 eval rows only; duplication-free
+synthetic_common,6,1.0,4000,71.53,33.23,43,True,84.4,85.32,80.45,classes with >=25 eval rows only; duplication-free
+synthetic_common,7,0.0,4000,71.92,34.3,42,True,79.15,81.67,75.43,classes with >=25 eval rows only; duplication-free
+synthetic_common,7,0.25,4000,71.92,34.3,42,True,81.03,82.97,76.75,classes with >=25 eval rows only; duplication-free
+synthetic_common,7,0.5,4000,71.92,34.3,42,True,82.47,83.94,78.09,classes with >=25 eval rows only; duplication-free
+synthetic_common,7,0.75,4000,71.92,34.3,42,True,83.75,84.75,79.67,classes with >=25 eval rows only; duplication-free
+synthetic_common,7,1.0,4000,71.92,34.3,42,True,84.85,85.51,81.15,classes with >=25 eval rows only; duplication-free
+reversed,0,0.0,4000,89.1,74.88,38,True,58.27,61.89,54.96,extreme shift; stress test
+reversed,0,0.25,4000,89.1,74.88,38,True,61.8,65.95,59.85,extreme shift; stress test
+reversed,0,0.5,4000,89.1,74.88,38,True,64.9,68.3,62.86,extreme shift; stress test
+reversed,0,0.75,4000,89.1,74.88,38,True,65.72,68.79,63.2,extreme shift; stress test
+reversed,0,1.0,4000,89.1,74.88,38,True,65.72,68.78,64.08,extreme shift; stress test
+reversed,1,0.0,4000,88.96,74.36,38,True,60.95,63.87,54.94,extreme shift; stress test
+reversed,1,0.25,4000,88.96,74.36,38,True,63.45,66.74,59.41,extreme shift; stress test
+reversed,1,0.5,4000,88.96,74.36,38,True,66.57,69.34,63.58,extreme shift; stress test
+reversed,1,0.75,4000,88.96,74.36,38,True,67.53,70.11,64.91,extreme shift; stress test
+reversed,1,1.0,4000,88.96,74.36,38,True,67.58,70.07,65.25,extreme shift; stress test
+reversed,2,0.0,4000,89.2,73.86,38,True,59.9,63.41,55.19,extreme shift; stress test
+reversed,2,0.25,4000,89.2,73.86,38,True,61.8,66.01,59.15,extreme shift; stress test
+reversed,2,0.5,4000,89.2,73.86,38,True,65.75,69.06,63.83,extreme shift; stress test
+reversed,2,0.75,4000,89.2,73.86,38,True,66.7,69.72,64.43,extreme shift; stress test
+reversed,2,1.0,4000,89.2,73.86,38,True,68.25,70.98,65.87,extreme shift; stress test
+reversed,3,0.0,4000,89.09,74.2,48,True,59.8,63.5,56.04,extreme shift; stress test
+reversed,3,0.25,4000,89.09,74.2,48,True,61.32,65.45,58.46,extreme shift; stress test
+reversed,3,0.5,4000,89.09,74.2,48,True,64.5,67.44,60.85,extreme shift; stress test
+reversed,3,0.75,4000,89.09,74.2,48,True,66.77,69.88,62.97,extreme shift; stress test
+reversed,3,1.0,4000,89.09,74.2,48,True,66.85,69.93,64.24,extreme shift; stress test
+reversed,4,0.0,4000,88.35,72.45,39,True,60.25,63.51,54.91,extreme shift; stress test
+reversed,4,0.25,4000,88.35,72.45,39,True,62.88,66.71,61.02,extreme shift; stress test
+reversed,4,0.5,4000,88.35,72.45,39,True,65.77,68.96,64.86,extreme shift; stress test
+reversed,4,0.75,4000,88.35,72.45,39,True,67.67,70.68,66.32,extreme shift; stress test
+reversed,4,1.0,4000,88.35,72.45,39,True,67.85,70.78,66.68,extreme shift; stress test
+reversed,5,0.0,4000,89.26,74.0,39,True,60.35,63.79,54.4,extreme shift; stress test
+reversed,5,0.25,4000,89.26,74.0,39,True,62.68,66.36,57.12,extreme shift; stress test
+reversed,5,0.5,4000,89.26,74.0,39,True,66.22,69.36,62.16,extreme shift; stress test
+reversed,5,0.75,4000,89.26,74.0,39,True,67.05,70.12,62.45,extreme shift; stress test
+reversed,5,1.0,4000,89.26,74.0,39,True,66.65,69.51,62.79,extreme shift; stress test
+reversed,6,0.0,4000,88.53,73.66,59,True,59.1,62.43,54.98,extreme shift; stress test
+reversed,6,0.25,4000,88.53,73.66,59,True,60.3,63.96,57.66,extreme shift; stress test
+reversed,6,0.5,4000,88.53,73.66,59,True,64.92,67.74,63.38,extreme shift; stress test
+reversed,6,0.75,4000,88.53,73.66,59,True,66.0,68.75,64.68,extreme shift; stress test
+reversed,6,1.0,4000,88.53,73.66,59,True,67.15,69.54,66.38,extreme shift; stress test
+reversed,7,0.0,4000,88.7,72.82,33,True,59.5,62.44,54.95,extreme shift; stress test
+reversed,7,0.25,4000,88.7,72.82,33,True,61.95,65.3,59.91,extreme shift; stress test
+reversed,7,0.5,4000,88.7,72.82,33,True,65.38,68.08,63.96,extreme shift; stress test
+reversed,7,0.75,4000,88.7,72.82,33,True,66.77,69.38,65.58,extreme shift; stress test
+reversed,7,1.0,4000,88.7,72.82,33,True,66.72,69.21,65.58,extreme shift; stress test
+graded,0,0.0,4000,45.4,7.59,71,True,83.2,82.46,67.12,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,0,0.25,4000,45.4,7.59,71,True,84.38,83.71,69.88,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,0,0.5,4000,45.4,7.59,71,True,84.58,83.95,70.07,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,0,0.75,4000,45.4,7.59,71,True,85.32,84.72,71.98,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,0,1.0,4000,45.4,7.59,71,True,85.15,84.54,70.89,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,1,0.0,4000,43.42,6.84,49,True,84.5,83.72,69.8,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,1,0.25,4000,43.42,6.84,49,True,85.28,84.58,72.63,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,1,0.5,4000,43.42,6.84,49,True,85.85,85.04,72.44,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,1,0.75,4000,43.42,6.84,49,True,86.58,85.78,73.63,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,1,1.0,4000,43.42,6.84,49,True,86.62,85.86,73.57,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,2,0.0,4000,44.34,7.15,54,True,83.5,82.51,66.0,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,2,0.25,4000,44.34,7.15,54,True,84.45,83.66,68.01,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,2,0.5,4000,44.34,7.15,54,True,84.82,84.08,68.19,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,2,0.75,4000,44.34,7.15,54,True,85.38,84.63,68.42,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,2,1.0,4000,44.34,7.15,54,True,85.8,85.06,69.22,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,3,0.0,4000,44.69,6.56,50,True,85.12,84.25,68.74,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,3,0.25,4000,44.69,6.56,50,True,85.7,84.91,70.43,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,3,0.5,4000,44.69,6.56,50,True,86.3,85.5,70.85,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,3,0.75,4000,44.69,6.56,50,True,86.45,85.73,71.22,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,3,1.0,4000,44.69,6.56,50,True,86.83,86.08,70.97,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,4,0.0,4000,43.9,6.68,48,True,84.5,83.98,69.8,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,4,0.25,4000,43.9,6.68,48,True,84.8,84.33,70.52,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,4,0.5,4000,43.9,6.68,48,True,85.38,84.94,70.64,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,4,0.75,4000,43.9,6.68,48,True,85.88,85.36,71.15,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,4,1.0,4000,43.9,6.68,48,True,86.02,85.55,71.47,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,5,0.0,4000,43.09,7.54,61,True,83.33,82.52,66.09,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,5,0.25,4000,43.09,7.54,61,True,84.35,83.56,67.5,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,5,0.5,4000,43.09,7.54,61,True,84.82,83.88,68.04,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,5,0.75,4000,43.09,7.54,61,True,85.62,84.77,69.7,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,5,1.0,4000,43.09,7.54,61,True,85.88,84.86,69.97,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,6,0.0,4000,43.4,7.34,62,True,84.2,83.31,68.73,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,6,0.25,4000,43.4,7.34,62,True,85.05,84.25,71.62,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,6,0.5,4000,43.4,7.34,62,True,85.55,84.79,72.2,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,6,0.75,4000,43.4,7.34,62,True,86.12,85.37,72.29,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,6,1.0,4000,43.4,7.34,62,True,86.12,85.24,71.15,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,7,0.0,4000,43.35,7.33,55,True,84.03,83.16,66.34,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,7,0.25,4000,43.35,7.33,55,True,84.7,83.91,67.47,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,7,0.5,4000,43.35,7.33,55,True,85.5,84.8,68.05,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,7,0.75,4000,43.35,7.33,55,True,85.97,85.26,68.41,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
+graded,7,1.0,4000,43.35,7.33,55,True,86.48,85.81,69.74,duplicates rare rows - the split holds 2 Lipstick rows against a ~5% demand
