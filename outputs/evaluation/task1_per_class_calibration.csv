@@ -1,0 +1,83 @@
+articleType,graded_rows,graded_share_pct,graded_mean_confidence,measured_recall_pct,calibration_gap_pts,recall_source,recall_eval_rows
+Perfume and Body Mist,337,5.781,0.543,88.6,34.3,adopted test split,79
+Handbags,322,5.524,0.821,91.2,9.1,adopted test split,205
+Watches,306,5.25,0.879,99.1,11.2,adopted test split,322
+Lipstick,294,5.044,0.456,100.0,54.4,out-of-fold CV,10
+Tshirts,277,4.752,0.75,95.0,20.0,adopted test split,968
+Sarees,276,4.735,0.821,95.5,13.3,adopted test split,22
+Kurtas,272,4.666,0.75,96.0,21.0,adopted test split,223
+Dresses,257,4.409,0.687,73.5,4.7,adopted test split,49
+Heels,237,4.066,0.725,78.5,6.1,adopted test split,149
+Tops,226,3.877,0.661,76.5,10.5,adopted test split,230
+Bra,190,3.26,0.918,92.9,1.0,adopted test split,42
+Briefs,187,3.208,0.894,92.6,3.2,adopted test split,95
+Earrings,179,3.071,0.864,100.0,13.6,adopted test split,82
+Kajal and Eyeliner,174,2.985,0.511,100.0,48.9,out-of-fold CV,8
+Casual Shoes,144,2.47,0.766,83.3,6.7,adopted test split,383
+Wallets,141,2.419,0.766,98.3,21.7,adopted test split,118
+Shirts,139,2.385,0.725,95.5,23.0,adopted test split,441
+Nail Polish,126,2.162,0.669,92.3,25.4,out-of-fold CV,13
+Flats,122,2.093,0.577,40.0,-17.7,adopted test split,60
+Foundation and Primer,108,1.853,0.302,87.5,57.3,out-of-fold CV,8
+Deodorant,99,1.698,0.735,95.2,21.8,adopted test split,42
+Necklace and Chains,81,1.39,0.743,100.0,25.7,adopted test split,9
+Lip Liner,80,1.372,0.444,50.0,5.6,out-of-fold CV,8
+Socks,79,1.355,0.801,97.7,17.7,adopted test split,88
+Formal Shoes,69,1.184,0.875,90.8,3.3,adopted test split,87
+Night suits,69,1.184,0.648,70.0,5.2,adopted test split,10
+Pendant,64,1.098,0.543,66.7,12.4,adopted test split,6
+Jeans,63,1.081,0.73,88.8,15.8,adopted test split,80
+Cufflinks,57,0.978,0.89,100.0,11.0,out-of-fold CV,32
+Clutches,55,0.944,0.7,58.1,-11.9,adopted test split,31
+Ties,50,0.858,0.944,100.0,5.6,adopted test split,30
+Flip Flops,49,0.841,0.744,89.4,15.1,adopted test split,123
+Sports Shoes,47,0.806,0.63,84.2,21.1,adopted test split,284
+Jackets,44,0.755,0.679,51.5,-16.4,adopted test split,33
+Sandals,41,0.703,0.799,86.2,6.3,adopted test split,123
+Tunics,37,0.635,0.411,40.0,-1.1,adopted test split,25
+Belts,35,0.6,0.677,100.0,32.3,adopted test split,113
+Shoe Accessories,35,0.6,0.37,33.3,-3.7,out-of-fold CV,15
+Nightdress,33,0.566,0.428,16.7,-26.1,adopted test split,6
+Kurta Sets,27,0.463,0.648,100.0,35.2,adopted test split,10
+Sunglasses,27,0.463,0.926,100.0,7.4,adopted test split,149
+Leggings,26,0.446,0.626,73.9,11.3,adopted test split,23
+Backpacks,25,0.429,0.729,92.1,19.2,adopted test split,101
+Ring,24,0.412,0.616,84.5,22.9,out-of-fold CV,58
+Trousers,20,0.343,0.596,89.0,29.5,adopted test split,73
+Shorts,20,0.343,0.638,93.3,29.5,adopted test split,75
+Bracelet,19,0.326,0.647,28.6,-36.2,out-of-fold CV,42
+Jewellery Set,19,0.326,0.621,87.5,25.4,out-of-fold CV,16
+Kurtis,17,0.292,0.363,27.6,-8.7,adopted test split,29
+Capris,17,0.292,0.537,39.1,-14.5,adopted test split,23
+Basketballs,15,0.257,0.525,77.8,25.3,out-of-fold CV,9
+Boxers,13,0.223,0.824,68.0,-14.4,out-of-fold CV,25
+Mobile Pouch,12,0.206,0.383,71.4,33.1,adopted test split,7
+Caps,11,0.189,0.736,89.7,16.2,adopted test split,39
+Skirts,10,0.172,0.626,76.5,13.9,adopted test split,17
+Patiala,10,0.172,0.599,90.0,30.1,out-of-fold CV,20
+Accessory Gift Set,9,0.154,0.476,100.0,52.4,adopted test split,15
+Dupatta,8,0.137,0.33,70.6,37.6,adopted test split,17
+Fragrance Gift Set,8,0.137,0.262,37.5,11.3,adopted test split,8
+Jumpsuit,8,0.137,0.289,12.5,-16.4,out-of-fold CV,8
+Duffel Bag,7,0.12,0.473,66.7,19.4,adopted test split,12
+Bangle,7,0.12,0.543,69.7,15.4,out-of-fold CV,33
+Innerwear Vests,6,0.103,0.642,85.3,21.0,adopted test split,34
+Free Gifts,6,0.103,0.486,0.0,-48.6,adopted test split,10
+Jeggings,6,0.103,0.473,5.6,-41.7,out-of-fold CV,18
+Lounge Shorts,6,0.103,0.403,13.6,-26.6,out-of-fold CV,22
+Trunk,5,0.086,0.579,100.0,42.1,adopted test split,20
+Tracksuits,4,0.069,0.424,95.0,52.6,out-of-fold CV,20
+Waist Pouch,4,0.069,0.419,8.3,-33.6,out-of-fold CV,12
+Laptop Bag,4,0.069,0.538,36.4,-17.4,adopted test split,11
+Stoles,4,0.069,0.196,84.6,65.1,adopted test split,13
+Track Pants,3,0.051,0.301,90.5,60.4,adopted test split,42
+Gloves,3,0.051,0.177,93.8,76.0,out-of-fold CV,16
+Sweaters,3,0.051,0.192,61.5,42.4,adopted test split,39
+Sweatshirts,3,0.051,0.624,60.0,-2.4,adopted test split,40
+Swimwear,3,0.051,0.46,27.3,-18.8,out-of-fold CV,11
+Scarves,2,0.034,0.201,73.3,53.3,adopted test split,15
+Lounge Pants,2,0.034,0.387,12.5,-26.2,adopted test split,8
+Sports Sandals,2,0.034,0.905,22.2,-68.3,adopted test split,9
+Messenger Bag,1,0.017,0.68,16.7,-51.4,adopted test split,6
+Rompers,1,0.017,0.135,88.9,75.4,out-of-fold CV,9
+Travel Accessory,1,0.017,0.296,0.0,-29.6,out-of-fold CV,9
