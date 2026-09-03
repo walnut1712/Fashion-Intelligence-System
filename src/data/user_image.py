@@ -43,6 +43,8 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageOps, UnidentifiedImageError
 
+from src.data.config import IMAGE_SIZE_PIL
+
 __all__ = [
     "PREPROCESS_MODES",
     "SUPPORTED_SUFFIXES",
@@ -416,14 +418,14 @@ def _fit_to_size(img, size, background=(255, 255, 255), mode="letterbox"):
     return np.asarray(img.resize(size, Image.BILINEAR), dtype=np.uint8)
 
 
-def load_user_image(source, size=(60, 80), mode="letterbox", margin=0.06,
+def load_user_image(source, size=IMAGE_SIZE_PIL, mode="letterbox", margin=0.06,
                     background=(255, 255, 255), return_info=False):
     """Read an arbitrary image into the catalogue's format.
 
     ``source`` may be a path, raw bytes, a file-like object or a ``PIL.Image`` -
     the API services hold request bodies as bytes, the benchmark holds arrays.
 
-    The catalogue is 60x80 product shots on white, one item, filling roughly half
+    The catalogue is 120x160 product shots on white, one item, filling roughly half
     the frame. A user upload is none of those, so it must be coerced first.
 
     mode
@@ -498,7 +500,7 @@ def load_user_image(source, size=(60, 80), mode="letterbox", margin=0.06,
     return (result, info) if return_info else result
 
 
-def looks_like_catalogue(source, size=(60, 80), aspect_tolerance=0.08,
+def looks_like_catalogue(source, size=IMAGE_SIZE_PIL, aspect_tolerance=0.08,
                          white_fraction=0.35, white_level=235,
                          small_ratio=2.0, photo_ratio=2.75):
     """Is this image already in catalogue form, or is it a photograph?

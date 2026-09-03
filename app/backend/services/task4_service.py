@@ -7,9 +7,10 @@ from src.visual_search.search_engine import PREPROCESS_MODES, SearchEngine
 
 
 class Task4Service:
-    def __init__(self):
+    def __init__(self, artifact_dir=None):
         self.project_root = Path(__file__).resolve().parents[3]
-        self.artifact_dir = self.project_root / "artifacts" / "task4"
+        self.artifact_dir = Path(artifact_dir) if artifact_dir else (
+            self.project_root / "artifacts" / "task4")
         self.manifest_path = self.artifact_dir / "search_manifest.json"
         if not self.manifest_path.exists():
             raise FileNotFoundError(

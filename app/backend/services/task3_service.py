@@ -16,14 +16,15 @@ is a plain argmax; the multiply is kept so that a checkpoint which does use them
 serves correctly without a code change.
 """
 
-from io import BytesIO
 from pathlib import Path
 
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from PIL import Image, ImageOps, UnidentifiedImageError
+from PIL import UnidentifiedImageError
+
+from src.data.user_image import load_user_image
 
 
 def choose_device():
@@ -108,10 +109,11 @@ class EarlyBranchCNN(nn.Module):
 class Task3Service:
     TARGETS = ("gender", "usage")
 
-    def __init__(self):
+    def __init__(self, model_path=None):
         self.device = choose_device()
         self.project_root = Path(__file__).resolve().parents[3]
-        self.model_path = self.project_root / "artifacts" / "task3" / "task3_cnn_model.pt"
+        self.model_path = Path(model_path) if model_path else (
+            self.project_root / "artifacts" / "task3" / "task3_cnn_model.pt")
         if not self.model_path.exists():
             raise FileNotFoundError(
                 "Task 3 model not found: {}. Run notebooks/04_task3_cnn_architectures.ipynb"
@@ -174,17 +176,7 @@ class Task3Service:
     def preprocess(self, image_bytes):
         """Match the training pipeline: RGB on white, resized, normalised."""
         try:
-            image = Image.open(BytesIO(image_bytes))
-            image = ImageOps.exif_transpose(image)
-            if image.mode == "P":
-                image = image.convert("RGBA" if "transparency" in image.info else "RGB")
-            if image.mode in ("RGBA", "LA"):
-                canvas = Image.new("RGB", image.size, (255, 255, 255))
-                canvas.paste(image, mask=image.split()[-1])
-                image = canvas
-            else:
-                image = image.convert("RGB")
-            image = image.resize(self.image_size, Image.BILINEAR)
+            image = load_user_image(image_bytes, size=self.image_size, mode="letterbox")
         except (UnidentifiedImageError, OSError):
             raise ValueError("Cannot decode uploaded image")
 

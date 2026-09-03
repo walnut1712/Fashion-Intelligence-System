@@ -1,4 +1,3 @@
-from io import BytesIO
 from pathlib import Path
 import json
 
@@ -6,7 +5,9 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from PIL import Image, UnidentifiedImageError
+from PIL import UnidentifiedImageError
+
+from src.data.user_image import load_user_image
 
 
 def choose_device():
@@ -41,12 +42,14 @@ class SeasonCNN(nn.Module):
 
 
 class Task2Service:
-    def __init__(self):
+    def __init__(self, model_path=None, mapping_path=None):
         self.device = choose_device()
         self.project_root = Path(__file__).resolve().parents[3]
         self.artifact_dir = self.project_root / "artifacts" / "task2"
-        self.model_path = self.artifact_dir / "task2_season_best_pytorch.pth"
-        self.mapping_path = self.artifact_dir / "task2_season_class_mapping.json"
+        self.model_path = Path(model_path) if model_path else (
+            self.artifact_dir / "task2_season_best_pytorch.pth")
+        self.mapping_path = Path(mapping_path) if mapping_path else (
+            self.artifact_dir / "task2_season_class_mapping.json")
         if not self.model_path.exists():
             raise FileNotFoundError("Task 2 model not found: {}".format(self.model_path))
         if not self.mapping_path.exists():
@@ -56,17 +59,21 @@ class Task2Service:
         self.index_to_class = {int(index): name for name, index in self.class_to_index.items()}
         self.num_classes = len(self.class_to_index)
         self.model = SeasonCNN(self.num_classes)
-        self.model.load_state_dict(torch.load(self.model_path, map_location=self.device))
+        checkpoint = torch.load(self.model_path, map_location=self.device)
+        state_dict = (checkpoint.get("state_dict", checkpoint)
+                  if isinstance(checkpoint, dict) else checkpoint)
+        self.image_size = (tuple(checkpoint.get("image_size_pil", (60, 80)))
+                   if isinstance(checkpoint, dict) else (60, 80))
+        self.model.load_state_dict(state_dict)
         self.model.to(self.device)
         self.model.eval()
 
     def preprocess(self, image_bytes):
         try:
-            image = Image.open(BytesIO(image_bytes)).convert("RGB")
-            image = image.resize((60, 80), Image.BILINEAR)
+            array = load_user_image(image_bytes, size=self.image_size, mode="letterbox")
         except (UnidentifiedImageError, OSError):
             raise ValueError("Cannot decode uploaded image")
-        array = np.asarray(image, dtype=np.float32) / 255.0
+        array = np.asarray(array, dtype=np.float32) / 255.0
         tensor = torch.from_numpy(array.transpose(2, 0, 1)).float().unsqueeze(0)
         return tensor.to(self.device)
 
