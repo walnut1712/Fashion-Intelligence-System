@@ -1199,16 +1199,47 @@ def sync_summary(path=ARTIFACT_DIR / "task1_cnn.pt", summary_path=None, verbose=
     if summary_path.exists():
         summary = json.loads(summary_path.read_text(encoding="utf-8"))
     test_metrics = checkpoint.get("test_metrics") or {}
+    train_metrics = checkpoint.get("train_metrics") or {}
+
+    # If the checkpoint on disk is a different run from the one this file was
+    # written for - i.e. a candidate has been promoted - the plain-argmax
+    # ``test_*`` headline no longer describes the shipped model. Move it aside
+    # under the run it belonged to and let the ``_deployed`` block, which this
+    # function always rewrites from the live checkpoint, be the headline.
+    disk_run = checkpoint.get("run_id")
+    if summary.get("run_id") and disk_run and summary["run_id"] != disk_run:
+        superseded = {k: summary.pop(k) for k in list(summary)
+                      if k.startswith(("test_accuracy", "test_weighted_f1", "test_macro_f1",
+                                       "test_balanced_acc", "test_top3_acc", "test_top5_acc"))
+                      and not k.endswith("_deployed")}
+        summary["headline_superseded"] = {
+            "run_id": summary["run_id"], "final_model": summary.get("final_model"),
+            "note": ("plain-argmax numbers from the notebook run that first wrote this "
+                     "file; the shipped model is now {} (run {}) - see the _deployed "
+                     "fields and outputs/evaluation/task1_recipe_comparison.csv".format(
+                         checkpoint.get("model_name"), disk_run)),
+            **superseded,
+        }
+
     summary.update({
+        "run_id": disk_run,
+        "final_model": checkpoint.get("model_name"),
+        "final_architecture": checkpoint.get("architecture"),
         "headline_operating_point": "horizontal-flip TTA + logit adjustment (tau={})".format(
             checkpoint.get("logit_adjustment_tau")),
-        "headline_note": ("what predict.py actually runs; the plain-argmax numbers below "
-                          "are retained for comparability with the notebook"),
+        "headline_note": ("what predict.py / the FastAPI service actually run for a "
+                          "single-image query; the graded submission additionally "
+                          "soft-votes candidate_tail_sqrt_dep and applies the "
+                          "label-shift correction - see scripts/promote_checkpoint.py"),
         "test_accuracy_deployed": test_metrics.get("accuracy"),
         "test_weighted_f1_deployed": test_metrics.get("weighted_f1"),
         "test_macro_f1_deployed": test_metrics.get("macro_f1"),
         "test_balanced_acc_deployed": test_metrics.get("balanced_acc"),
         "test_top3_acc_deployed": test_metrics.get("top3_acc"),
+        "train_accuracy": train_metrics.get("accuracy"),
+        "train_test_gap": (round(train_metrics["accuracy"] - test_metrics["accuracy"], 2)
+                           if train_metrics.get("accuracy") is not None
+                           and test_metrics.get("accuracy") is not None else None),
         "val_metrics": val_metrics,
         "logit_adjustment_tau": checkpoint.get("logit_adjustment_tau"),
         "config_contradictions_repaired": contradictions or None,
@@ -1229,6 +1260,43 @@ def sync_summary(path=ARTIFACT_DIR / "task1_cnn.pt", summary_path=None, verbose=
     return checkpoint, summary
 
 
+def _ensemble_split_probs(spec, x_val, x_test, class_names, device):
+    """``(val_p, test_p, first_checkpoint, name, file_label, tta)`` for one spec.
+
+    A spec is a checkpoint path, or several joined by ``+`` to soft-vote. For a
+    group the raw per-model posteriors on each split are averaged *before* the
+    tau sweep, so the ensemble is calibrated as one unit rather than inheriting
+    any member's tau. Every member must share the split's class order.
+    """
+    from src.models.item_type_classifier import load_item_type_model
+
+    members = [Path(p) for p in str(spec).split("+")]
+    val_parts, test_parts, ttas, first = [], [], [], None
+    for path in members:
+        model, checkpoint = load_item_type_model(path, device)
+        if list(checkpoint["class_names"]) != class_names:
+            raise ValueError(f"{path.name}: class order differs from the split")
+        mean = torch.tensor(checkpoint["channel_mean"], device=device).view(1, 3, 1, 1)
+        std = torch.tensor(checkpoint["channel_std"], device=device).view(1, 3, 1, 1)
+        member_tta = bool(checkpoint.get("tta", False))
+        ttas.append(member_tta)
+        val_parts.append(predict_split(model, x_val, mean, std, tta=member_tta))
+        test_parts.append(predict_split(model, x_test, mean, std, tta=member_tta))
+        if first is None:
+            first = checkpoint
+
+    val_p = torch.stack(val_parts).mean(0) if len(members) > 1 else val_parts[0]
+    test_p = torch.stack(test_parts).mean(0) if len(members) > 1 else test_parts[0]
+
+    if len(members) == 1:
+        name = first.get("model_name", members[0].stem)
+        file_label = members[0].name
+    else:
+        stems = "+".join(m.stem.replace("candidate_", "") for m in members)
+        name, file_label = f"ens({stems})", "+".join(m.name for m in members)
+    return val_p, test_p, first, name, file_label, all(ttas)
+
+
 def evaluate_checkpoints(paths, tau_grid=TAU_GRID, deployment_prior=True, out=None):
     """Score checkpoints on the shared split, tau selected on VALIDATION.
 
@@ -1236,6 +1304,11 @@ def evaluate_checkpoints(paths, tau_grid=TAU_GRID, deployment_prior=True, out=No
     adjustment on validation, adopt the tau with the best validation
     weighted-F1 (the criterion the notebook selects on), then report test once
     at that tau. Choosing tau on test would inflate every row here.
+
+    A path may be several checkpoints joined by ``+`` (e.g.
+    ``a.pt+b.pt``): those are soft-voted - raw posteriors averaged before the
+    tau sweep - and scored as a single row, so an ensemble is ranked on the same
+    footing as its members.
 
     With ``deployment_prior=True`` each row also carries ``dep_accuracy`` and
     ``dep_weighted_f1``: the same predictions re-weighted onto the class prior
@@ -1266,7 +1339,8 @@ def evaluate_checkpoints(paths, tau_grid=TAU_GRID, deployment_prior=True, out=No
                                                     importance_weights, support_shrink)
 
             train_prior = np.maximum(counts, 1) / counts.sum()
-            _, raw, _, _ = graded_probabilities(paths[0], verbose=False)
+            reference_ckpt = Path(str(paths[0]).split("+")[0])
+            _, raw, _, _ = graded_probabilities(reference_ckpt, verbose=False)
             graded_prior, _, _, _ = estimate_prior_em(
                 raw, train_prior, shrink=support_shrink(counts))
             weights = importance_weights(y_test, graded_prior, train_prior)
@@ -1275,18 +1349,13 @@ def evaluate_checkpoints(paths, tau_grid=TAU_GRID, deployment_prior=True, out=No
             deployment_prior = False
 
     rows = []
-    for path in paths:
-        path = Path(path)
-        model, checkpoint = load_item_type_model(path, device)
-        if list(checkpoint["class_names"]) != class_names:
-            print(f"  !! {path.name}: class order differs, skipped")
+    for spec in paths:
+        try:
+            val_p, test_p, checkpoint, name, file_label, tta = _ensemble_split_probs(
+                spec, x_val, x_test, class_names, device)
+        except ValueError as error:
+            print(f"  !! {error}, skipped")
             continue
-        mean = torch.tensor(checkpoint["channel_mean"], device=device).view(1, 3, 1, 1)
-        std = torch.tensor(checkpoint["channel_std"], device=device).view(1, 3, 1, 1)
-        tta = bool(checkpoint.get("tta", False))
-
-        val_p = predict_split(model, x_val, mean, std, tta=tta)
-        test_p = predict_split(model, x_test, mean, std, tta=tta)
         log_val, log_test = torch.log(val_p.clamp_min(1e-12)), torch.log(test_p.clamp_min(1e-12))
 
         best_tau, best_val = 0.0, None
@@ -1300,8 +1369,8 @@ def evaluate_checkpoints(paths, tau_grid=TAU_GRID, deployment_prior=True, out=No
         test_metrics = score(y_test, predicted)
         probabilities = F.softmax(adjusted, dim=1)
         row = {
-            "name": checkpoint.get("model_name", path.stem),
-            "file": path.name,
+            "name": name,
+            "file": file_label,
             "tta": tta,
             "tau": best_tau,
             "val_weighted_f1": best_val["weighted_f1"],
