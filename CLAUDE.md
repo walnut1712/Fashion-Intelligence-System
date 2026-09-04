@@ -62,22 +62,44 @@ A2_FashionDataset/
   FashionDataset/train/{images_train, styles_train.csv}   # gitignored, local only
   FashionDataset/test/{images_test, styles_prediction_template.csv}
   processed/           # written by 01_eda.ipynb — clean_train_metadata.csv, prediction_metadata.csv, splits
+  processed/images_train_120x160/   # 38,612 train ids re-exported at 120×160 (git lfs)
   input_images/        # 31 real-world user photos: mixed formats, backgrounds, multi-garment, non-clothing
 ```
 
 Facts that matter:
 
-- **Images are 60×80.** That resolution is the hard ceiling on every task's accuracy —
-  fine print, fabric and subtle colour simply are not representable.
+- **Images are 60×80** for Tasks 1, 2 and 4. `processed/images_train_120x160/` holds the same
+  38,612 train ids at 120×160 — genuinely higher resolution, not upscaled (downsizing them back
+  reproduces the 60×80 originals to MAE ≈ 1/255; they carry ~36% more high-frequency energy than
+  a bicubic upscale). No held-out test id appears in that folder.
+- **Resolution was not the bottleneck for Task 3.** Retrained at 120×160 with a fifth conv block,
+  test scores landed within ±0.2 of the 60×80 model on every metric. Do not assume more pixels
+  will move the other tasks either without measuring it.
 - `styles_train.csv` has **unquoted commas inside `productDisplayName`** (21 rows), which spill
   into `Unnamed: 10` / `Unnamed: 11`. Re-join those columns *then* drop them. Dropping them
   first silently truncates product names.
 - Splits are **grouped by product name** so near-duplicate photos of one item cannot straddle
   train/val/test, and stratified on the target(s).
+- **Product name is not a sufficient group.** Hashing at full resolution finds 1,399 byte-identical
+  images in 636 families, and **218 families span different product names** ("Idee Men Black
+  Sunglasses" / "IDEE Men Black Sunglasses" is one photograph) — 470 rows that name-grouping alone
+  leaves on both sides of a split. `processed/splits_120x160.csv` groups on `split_group`, which
+  merges names *and* duplicate families; 41 further rows whose duplicates carry conflicting
+  gender/usage labels are marked `use_for_supervised=False`. Prefer these shared splits for any
+  new work; they also make the four tasks comparable on one held-out set.
+- **Even those splits are not leakage-free** — they are duplicate-free, which is not the same
+  thing. Product variants shot in the same frame (compact powder shade 01 vs 07, MAE 0.1/255) are
+  near-identical, not byte-identical, and differently named, so both guards miss them. At least
+  1.5% of Task 3's held-out rows have such a twin in train; gender accuracy there is 98.8% against
+  89.9% elsewhere. Net effect on the headline numbers is ≈ +0.13 gender / −0.20 usage — inside the
+  noise threshold, but say "no duplicate images", never "no leakage".
 - `A2_FashionDataset/fashion-product-images-dataset.zip` (Kaggle, high-res) is the **same items
   at 900× the pixels** — 0 new rows, but it **contains labels for the assignment's held-out test
   ids**. Do not train on or score against those ids. Using the high-res images at all needs the
-  teacher's approval; treat it as blocked until the user says otherwise.
+  teacher's approval; treat it as blocked until the user says otherwise. Note the exception
+  already in the repo: `processed/images_train_120x160/` is a downsized export covering **only
+  the 38,612 train ids** — no held-out id is present, so that folder is safe to use, but do not
+  widen it to the test ids.
 
 ## Model state
 
@@ -85,13 +107,23 @@ Facts that matter:
   Test weighted-F1 87.13, macro-F1 73.09. Summary: `artifacts/task1/task1_summary.json`.
 - **Task 2** — PyTorch season CNN, test accuracy 67.5%, macro-F1 64.3 (baseline 49.6% / 16.6).
 - **Task 3** — VGG-style CNN with **early branching** (shared blocks, then a per-attribute conv
-  pathway and head). All three configurations (`base`, `balanced`, `balanced_aug`) train under one
-  60-epoch cap with early stopping, three seeds each; selection ranks on seed-averaged validation
-  macro-F1, and every tie-break must clear the same noise threshold or it falls through to the
-  simplest pipeline. `base` (seed 42) is retained — nothing beat it by a measurable margin.
-  Threshold adjustment was evaluated and **removed** — `class_weights` in the checkpoint are ones,
-  so the service takes plain argmax. Test: gender 90.08% / 77.08 macro-F1, usage 91.17% / 84.28,
-  exact match 82.09%.
+  pathway and head), now at **120×160** with five conv blocks per branch (`branch_widths
+  (128, 256, 512)`, 13.3M parameters) so the classifier still sees a 5×3 map. Trained with mixed
+  precision on the shared `splits_120x160.csv`. All three configurations (`base`, `balanced`,
+  `balanced_aug`) train under one 50-epoch cap with early stopping, **one seed each**; selection
+  ranks on validation macro-F1 and every tie-break must clear the same noise threshold or it falls
+  through to the simplest pipeline. **`balanced` (seed 42) is retained.** Threshold adjustment was
+  evaluated and **removed** — `class_weights` in the checkpoint are ones, so the service takes
+  plain argmax. Test: gender 90.07% / 77.19 macro-F1, usage 91.02% / 84.10, exact match 82.00%.
+
+  Two qualifiers travel with that result and must not be dropped from the writeup. **The noise
+  threshold (±1.17) is carried over** from the earlier three-seed run at 60×80, not measured here —
+  one seed leaves no spread to measure, and without the carried figure the sampling error (±0.67)
+  alone would decide the ranking. **And `base` is excluded from the tie by 1.47 against that
+  1.17**, a margin of 0.30, so the flip from `base` to `balanced` is provisional. Separately, the
+  50-epoch cap binds: `base` early-stopped at 34, but `balanced` and `balanced_aug` peaked at
+  epochs 46 and 45 and were still improving, so their scores are floors. That truncation works
+  *against* the selected model, which is why the result stands as reported.
 - **Task 4** — `Improved+TTA+bgaug` encoder, 128-dim, 32,837-item index. Deployment P@10 0.80;
   on the harder benchmark 0.53. Search modes are exposed via `?mode=` (`nobg` default).
 
@@ -99,13 +131,18 @@ Facts that matter:
 
 `usage`: 8 raw classes → 4. `Smart Casual` (55) and `Travel` (25, all bags) merge into `Casual`;
 `Party` (13) merges into `Formal`; `Home` (1, a cushion cover) and 72 missing-label rows are
-dropped — 73 rows total, 0.19%. Pooling the rare ones into an `Other` class was tried and failed
-(F1 = 0.000, ~15 points off usage macro-F1). `CONFIG["rare_strategy"]` in the EDA notebook still
+dropped — 73 rows total, 0.19%. The 120×160 pipeline drops a further **41 rows** whose duplicate
+images carry conflicting gender/usage labels (`use_for_supervised=False`), leaving 38,498.
+Pooling the rare ones into an `Other` class was tried and failed (F1 = 0.000, ~15 points off
+usage macro-F1). `CONFIG["rare_strategy"]` in the EDA notebook still
 supports `merge` / `drop` / `group`.
 
-`gender`: 5 classes. `Girls` and `Unisex` are the weak ones. Makeup items are systematically
-predicted `Men` — 70 makeup rows against a Personal Care category that is majority Men, and at
-60×80 a lipstick and a deodorant are the same object. That is a data limit, not a bug to fix.
+`gender`: 5 classes. `Unisex` (F1 0.566) and `Girls` (0.680) are the weak ones. An earlier note
+that makeup is systematically predicted `Men` **did not reproduce** — cosmetics score 78% and
+fragrance 100% on the held-out set. The real limitation is **Accessories: 38.5% of all gender
+errors** from watches, bags and belts that are near-identical across the men's and women's ranges,
+and 120×160 did not fix it. If makeup errors still show in the app, that is on user photos
+(out-of-distribution), not catalogue data.
 
 ## Conventions
 
