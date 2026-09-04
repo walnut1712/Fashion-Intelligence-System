@@ -1,0 +1,26 @@
+{
+  "images": 5829,
+  "k": 10,
+  "mode": "nobg",
+  "method": "Improved+TTA+bgaug",
+  "catalogue_size": 38612,
+  "seconds": 3218.9,
+  "ms_per_image": 552.22,
+  "confident_share": 0.702,
+  "mean_top1_similarity": 0.826,
+  "mean_coherence": 0.7425,
+  "ingest_fell_back_share": 0.3762,
+  "top_predicted_types": {
+    "Watches": 405,
+    "Kurtas": 354,
+    "Sarees": 296,
+    "Tshirts": 285,
+    "Handbags": 277,
+    "Perfume and Body Mist": 227,
+    "Wallets": 222,
+    "Heels": 222,
+    "Bra": 207,
+    "Tops": 203
+  },
+  "cluster_confident_share": 0.6826
+}
