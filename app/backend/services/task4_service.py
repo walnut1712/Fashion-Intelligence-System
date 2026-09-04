@@ -38,7 +38,7 @@ class Task4Service:
                 pass
         return value
 
-    def search(self, image_bytes, k=10, mode="nobg"):
+    def search(self, image_bytes, k=10, mode="nobg", diversity=0.0):
         if mode not in self.preprocess_modes:
             raise ValueError(
                 "Invalid Task 4 preprocessing mode '{}'. Available: {}".format(
@@ -46,7 +46,7 @@ class Task4Service:
                 )
             )
 
-        k = max(1, min(20, int(k)))
+        k = max(1, min(24, int(k)))
         temp_file = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
         temp_path = Path(temp_file.name)
         try:
@@ -54,7 +54,8 @@ class Task4Service:
             temp_file.flush()
             temp_file.close()
             results = self.engine.search(
-                [temp_path], k=k, mode=mode
+                [temp_path], k=k, mode=mode, diversity=diversity,
+                with_diagnostics=True,
             )
         finally:
             if not temp_file.closed:
@@ -62,7 +63,7 @@ class Task4Service:
             temp_path.unlink(missing_ok=True)
 
         if results is None or len(results) == 0:
-            return []
+            return {"items": [], "diagnostics": {}}
 
         output = []
         for position, (_, row) in enumerate(results.reset_index(drop=True).iterrows()):
@@ -91,7 +92,20 @@ class Task4Service:
                 "image_url": "/api/catalogue/{}/image".format(item_id)
                 if item_id is not None else None,
             })
-        return output
+
+        # Which segmentation tier ran, whether it fell back, and whether the
+        # match is worth presenting as confident. All of this already existed in
+        # the ingestion layer; the service simply never surfaced it, so a silent
+        # fallback to a centre crop looked identical to a clean removal.
+        first = results.iloc[0]
+        diagnostics = {
+            "top1_similarity": self._clean_value(first.get("top1_similarity")),
+            "coherence": self._clean_value(first.get("coherence")),
+            "confident": bool(first.get("confident", False)),
+            "ingest_method": self._clean_value(first.get("ingest_method")),
+            "ingest_fell_back": bool(first.get("ingest_fell_back", False)),
+        }
+        return {"items": output, "diagnostics": diagnostics}
 
     def resolve_image_path(self, item_id):
         item_id = str(item_id)
@@ -127,3 +141,126 @@ class Task4Service:
             for path in folder.glob("*.jpg")
             if path.stem.isdigit()
         )
+
+    def model_card(self):
+        """The published-metrics row the frontend shows, straight from the manifest.
+
+        Matches the shape of an ``FI.metrics.tasks[]`` entry in
+        ``app/frontend/demo-data.js``. Without this the UI fell back to its
+        hardcoded copy, which still advertised the clean baseline's numbers
+        (mAP@10 76.7, nDCG@10 89.6) while the service served a different,
+        background-augmented encoder.
+        """
+        manifest = self.manifest or {}
+        clean = manifest.get("clean_metrics", {})
+        hard = manifest.get("hard_metrics", {})
+
+        clean_p10 = float(clean.get("P@10", 0.0)) * 100
+        clean_colour = float(clean.get("colour@10", 0.0)) * 100
+        hard_p10 = float(hard.get("P@10", 0.0)) * 100
+
+        # The reported metrics come from the EVALUATION index, which excludes the
+        # held-out products so the queries are unseen. The served index covers the
+        # whole catalogue and is larger; quoting the served size here would claim
+        # the metrics were measured against items they never searched.
+        scored_against = manifest.get("evaluation_catalogue_size",
+                                      manifest.get("catalogue_size",
+                                                   len(self.engine.index)))
+        served = manifest.get("catalogue_size", len(self.engine.index))
+        detail = (
+            "colour@10 <b>{:.1f}</b> on {:,} held-out queries against a "
+            "{:,}-item evaluation index. Serving {:,} items. "
+            "Random baseline is <b>5.9%</b>."
+        ).format(clean_colour, 2000, scored_against, served)
+
+        note = (
+            "On photographs composited onto unseen backgrounds P@10 falls to "
+            "<b>{:.1f}</b>. The catalogue is flat-lay product shots, so a real "
+            "upload is harder than this headline."
+        ).format(hard_p10) if hard else (
+            "No out-of-domain benchmark recorded for this encoder."
+        )
+
+        return {
+            "id": "Task 4",
+            "name": "Visual search",
+            "headline": round(clean_p10, 1),
+            "headlineLabel": "P@10 (same articleType)",
+            "detail": detail,
+            "flag": "ok" if clean_p10 >= 75 else "warn",
+            "flagText": "{} · {}".format(
+                manifest.get("best_method", "unknown"),
+                manifest.get("provenance", {}).get("trained_by", "unknown notebook"),
+            ),
+            "note": note,
+        }
+
+    def search_regions(self, image_bytes, k=10, mode="nobg"):
+        """Per-garment search: propose regions, search each, keep the good ones.
+
+        The encoder produces one vector per image, so a photograph of someone
+        wearing a shirt, jeans and shoes is otherwise answered with a single
+        guess. Notebook 06 section 11 measured the alternative: 21 of 31 real
+        uploads found a closer match from a region than from the whole frame.
+        """
+        if mode not in self.preprocess_modes:
+            raise ValueError(
+                "Invalid Task 4 preprocessing mode '{}'. Available: {}".format(
+                    mode, self.preprocess_modes
+                )
+            )
+
+        k = max(1, min(24, int(k)))
+        temp_file = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
+        temp_path = Path(temp_file.name)
+        try:
+            temp_file.write(image_bytes)
+            temp_file.flush()
+            temp_file.close()
+            results = self.engine.search_regions(temp_path, k=k)
+        finally:
+            if not temp_file.closed:
+                temp_file.close()
+            temp_path.unlink(missing_ok=True)
+
+        if results is None or len(results) == 0:
+            return {"regions": [], "segmentation": None}
+
+        regions = []
+        for name, group in results.groupby("region", sort=False):
+            group = group.reset_index(drop=True)
+            items = []
+            for position, row in group.iterrows():
+                item_id = self._clean_value(row.get("id"))
+                if item_id is not None:
+                    try:
+                        item_id = int(item_id)
+                    except Exception:
+                        item_id = str(item_id)
+                similarity = self._clean_value(row.get("similarity"))
+                items.append({
+                    "rank": position + 1,
+                    "id": item_id,
+                    "articleType": self._clean_value(row.get("articleType")),
+                    "baseColour": self._clean_value(row.get("baseColour")),
+                    "productDisplayName": self._clean_value(row.get("productDisplayName")),
+                    "similarity": round(float(similarity), 4)
+                    if similarity is not None else None,
+                    "image_url": "/api/catalogue/{}/image".format(item_id)
+                    if item_id is not None else None,
+                })
+            regions.append({
+                "region": str(name),
+                "accepted": bool(group["accepted"].iloc[0]),
+                "coherence": self._clean_value(group["coherence"].iloc[0]),
+                "top_similarity": round(float(group["similarity"].iloc[0]), 4),
+                "items": items,
+            })
+
+        # Accepted regions first, then by how close the match was.
+        regions.sort(key=lambda r: (not r["accepted"], -r["top_similarity"]))
+        return {
+            "regions": regions,
+            "segmentation": self._clean_value(results["segmentation"].iloc[0]),
+            "accepted_count": sum(1 for r in regions if r["accepted"]),
+        }

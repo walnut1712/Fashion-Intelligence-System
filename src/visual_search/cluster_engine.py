@@ -1,6 +1,6 @@
 """Clustering model for Task 4 - loadable, testable on any image.
 
-Wraps the k-Means clustering built in ``notebooks/09_task4_clustering.ipynb``
+Wraps the k-Means clustering built in ``notebooks/07_task4_clustering.ipynb``
 into something that can be pointed at a photograph:
 
     engine = ClusterEngine.load()
@@ -27,7 +27,7 @@ import pandas as pd
 import torch
 import torch.nn.functional as F
 
-from .search_engine import ImprovedEncoder, load_user_image
+from .search_engine import ImprovedEncoder, build_encoder, load_user_image
 
 __all__ = ["ClusterEngine"]
 
@@ -73,7 +73,7 @@ class ClusterEngine:
         ] if not p.exists()]
         if missing:
             raise FileNotFoundError(
-                "Missing artefacts: {}. Run notebooks/09_task4_clustering.ipynb."
+                "Missing artefacts: {}. Run notebooks/07_task4_clustering.ipynb."
                 .format(", ".join(missing))
             )
 
@@ -85,11 +85,9 @@ class ClusterEngine:
         checkpoint = torch.load(
             artifact_dir / manifest.get("encoder_file", "task4_improved_encoder.pt"),
             map_location=device)
-        encoder = ImprovedEncoder(
-            embedding_dim=checkpoint["embedding_dim"],
-            n_types=checkpoint.get("n_types", 0),
-            n_colours=checkpoint.get("n_colours", 0),
-        )
+        # Rebuilt through the same helper SearchEngine.load uses, so the two
+        # paths cannot disagree about the architecture again.
+        encoder = build_encoder(checkpoint)
         encoder.load_state_dict(checkpoint["state_dict"])
         encoder.to(device).eval()
 
