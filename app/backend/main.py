@@ -107,6 +107,8 @@ def _live_metrics():
     tasks = []
     if task1_service is not None:
         tasks.append(task1_service.model_card())
+    if task4_service is not None:
+        tasks.append(task4_service.model_card())
     if not tasks:
         return None
     return {"source": "artifacts/task{1,2,3,4}/*.json (live from loaded checkpoints)",
@@ -214,7 +216,7 @@ async def search_task4(
         raise HTTPException(status_code=400, detail="Empty image")
 
     try:
-        results = task4_service.search(image_bytes, k=k, mode=mode)
+        search_result = task4_service.search(image_bytes, k=k, mode=mode)
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error))
     except Exception as error:
@@ -225,10 +227,48 @@ async def search_task4(
 
     return {
         "filename": image.filename,
-        "k": max(1, min(20, int(k))),
+        "k": max(1, min(24, int(k))),
         "mode": mode,
         "method": task4_service.manifest.get("best_method"),
-        "results": results,
+        "results": search_result["items"],
+        "diagnostics": search_result["diagnostics"],
+    }
+
+
+@app.post("/api/task4/regions")
+async def search_task4_regions(
+    image: UploadFile = File(...),
+    k: int = 6,
+    mode: str = "nobg",
+):
+    """Per-garment retrieval for a photo containing more than one item.
+
+    A whole-frame query returns one guess; this returns one group per proposed
+    region, accepted ones first.
+    """
+    if task4_service is None:
+        raise HTTPException(status_code=503, detail=task4_error)
+
+    image_bytes = await image.read()
+    if not image_bytes:
+        raise HTTPException(status_code=400, detail="Empty image")
+
+    try:
+        result = task4_service.search_regions(image_bytes, k=k, mode=mode)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error))
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail="{}: {}".format(type(error).__name__, error),
+        )
+
+    return {
+        "filename": image.filename,
+        "k": max(1, min(24, int(k))),
+        "mode": mode,
+        "method": task4_service.manifest.get("best_method"),
+        **result,
     }
 
 
@@ -287,7 +327,7 @@ async def analyze(
         article_type = task1_service.predict(image_bytes, ingest=ingest)
         season = task2_service.predict(image_bytes)
         task3_result = task3_service.predict(image_bytes)
-        similar_items = task4_service.search(
+        search_result = task4_service.search(
             image_bytes,
             k=k,
             mode=search_mode,
@@ -312,8 +352,9 @@ async def analyze(
         "visual_search": {
             "method": task4_service.manifest.get("best_method"),
             "mode": search_mode,
-            "k": max(1, min(20, int(k))),
-            "similar_items": similar_items,
+            "k": max(1, min(24, int(k))),
+            "similar_items": search_result["items"],
+            "diagnostics": search_result["diagnostics"],
         },
         "backend_stage": "all_tasks_connected",
     }
