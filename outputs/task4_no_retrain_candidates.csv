@@ -1,0 +1,15 @@
+candidate,benchmark,dim,P@10,colour@10,both@10,nDCG@10,index MB
+clean encoder,clean,128,81.2,56.28,45.9,89.57,16.03
+clean encoder,hard,128,9.24,22.67,3.23,22.42,16.03
+deployed (bg-aug),clean,128,80.23,53.95,43.05,89.03,16.03
+deployed (bg-aug),hard,128,53.32,46.11,27.08,69.59,16.03
+ensemble (clean+bgaug),clean,128,81.43,56.27,45.79,89.75,16.03
+ensemble (clean+bgaug),hard,128,42.89,41.62,20.27,61.0,16.03
+bgaug + colour fusion w=0.15,clean,256,80.23,54.12,43.2,89.06,32.07
+bgaug + colour fusion w=0.15,hard,256,53.31,46.28,27.2,69.61,32.07
+bgaug + colour fusion w=0.35,clean,256,80.27,54.5,43.6,89.06,32.07
+bgaug + colour fusion w=0.35,hard,256,53.57,46.2,27.0,69.91,32.07
+bgaug + PCA 64d,clean,64,80.3,53.95,43.08,89.05,8.02
+bgaug + PCA 64d,hard,64,52.17,45.41,26.45,68.38,8.02
+bgaug + PCA 32d,clean,32,80.09,54.02,43.13,88.93,4.01
+bgaug + PCA 32d,hard,32,51.94,45.23,26.27,68.23,4.01

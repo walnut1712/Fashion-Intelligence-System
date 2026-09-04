@@ -1,0 +1,13 @@
+candidate,benchmark,delta both@10,ci low,ci high,p,significant,rank,BH threshold,survives BH,survives Bonferroni
+clean encoder,clean,2.845,2.05,3.57,0.0,True,1,0.004166666666666667,True,True
+clean encoder,hard,-23.85,-25.16,-22.505,0.0,True,2,0.008333333333333333,True,True
+ensemble (clean+bgaug),clean,2.735,2.195,3.27,0.0,True,3,0.012500000000000002,True,True
+ensemble (clean+bgaug),hard,-6.82,-7.875,-5.765,0.0,True,4,0.016666666666666666,True,True
+bgaug + PCA 32d,hard,-0.82,-1.155,-0.485,0.0,True,5,0.020833333333333332,True,True
+bgaug + PCA 64d,hard,-0.635,-0.93,-0.365,0.0,True,6,0.025000000000000005,True,True
+bgaug + colour fusion w=0.35,clean,0.55,0.225,0.91,0.003,True,7,0.02916666666666667,True,True
+bgaug + colour fusion w=0.15,clean,0.145,0.01,0.28,0.04,True,8,0.03333333333333333,False,False
+bgaug + colour fusion w=0.15,hard,0.11,0.0,0.225,0.048,True,9,0.0375,False,False
+bgaug + PCA 32d,clean,0.075,-0.205,0.36,0.596,False,10,0.041666666666666664,False,False
+bgaug + colour fusion w=0.35,hard,-0.085,-0.455,0.295,0.648,False,11,0.04583333333333334,False,False
+bgaug + PCA 64d,clean,0.02,-0.175,0.205,0.823,False,12,0.05000000000000001,False,False
