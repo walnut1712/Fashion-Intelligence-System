@@ -1,0 +1,7 @@
+model,benchmark,P@10,colour@10,both@10,scale_range,note
+clean baseline,clean,81.2,56.28,45.9,0.55-1.00,"items composited at 0.55-1.00 of frame height; the notebook uses 0.35-0.95, so absolute values sit above the manifest's"
+clean baseline,hard (training bank),12.65,28.17,4.6,0.55-1.00,"items composited at 0.55-1.00 of frame height; the notebook uses 0.35-0.95, so absolute values sit above the manifest's"
+clean baseline,hard (disjoint bank),12.16,27.18,4.31,0.55-1.00,"items composited at 0.55-1.00 of frame height; the notebook uses 0.35-0.95, so absolute values sit above the manifest's"
+deployed (bg-aug),clean,80.23,53.95,43.05,0.55-1.00,"items composited at 0.55-1.00 of frame height; the notebook uses 0.35-0.95, so absolute values sit above the manifest's"
+deployed (bg-aug),hard (training bank),60.28,48.63,30.53,0.55-1.00,"items composited at 0.55-1.00 of frame height; the notebook uses 0.35-0.95, so absolute values sit above the manifest's"
+deployed (bg-aug),hard (disjoint bank),60.62,48.91,30.71,0.55-1.00,"items composited at 0.55-1.00 of frame height; the notebook uses 0.35-0.95, so absolute values sit above the manifest's"
