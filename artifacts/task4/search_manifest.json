@@ -1,8 +1,8 @@
 {
   "best_method": "Improved+TTA+bgaug",
-  "index_file": "search_index_bg_augmented.npy",
+  "index_file": "search_index_full.npy",
   "encoder_file": "task4_improved_encoder.pt",
-  "catalogue_size": 32837,
+  "catalogue_size": 38612,
   "embedding_dim": 128,
   "image_size_pil": [
     60,
@@ -21,14 +21,27 @@
   "use_tta": true,
   "uses_reranking": false,
   "background_augmented": true,
-  "deployment_metrics": {
+  "clean_metrics": {
     "P@10": 0.8022,
     "colour@10": 0.5394,
     "both@10": 0.4304
   },
-  "hard_benchmark_metrics": {
+  "hard_metrics": {
     "P@10": 0.5276,
     "colour@10": 0.4522,
     "both@10": 0.2662
-  }
+  },
+  "architecture": "improved",
+  "provenance": {
+    "encoder_file": "task4_improved_encoder.pt",
+    "trained_by": "notebooks/06_task4_background_augmentation.ipynb",
+    "baseline_encoder": "task4_encoder_clean.pt",
+    "background_augmented": true,
+    "git_commit": "7983cf32",
+    "metrics_protocol": "hard_metrics were measured against the TRAINING background bank, before the disjoint evaluation bank existed. They are not comparable with hard numbers produced after that change - re-run notebook 06 to refresh them.",
+    "deployment_index_built_by": "scripts/build_task4_outputs.py -> full-catalogue rebuild"
+  },
+  "evaluation_index_file": "search_index_eval.npy",
+  "evaluation_catalogue_size": 32837,
+  "index_scope": "The served index covers the whole catalogue, because a customer must be able to find anything the shop stocks. The 15% product-level holdout is a property of the measurement, not of the shop, so the evaluation index excludes it and every reported metric is computed against that smaller index."
 }

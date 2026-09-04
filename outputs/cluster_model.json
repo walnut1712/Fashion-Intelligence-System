@@ -4,11 +4,13 @@
   "embeddings_from": "Improved+TTA+bgaug",
   "k": 120,
   "embedding_dim": 128,
-  "catalogue_size": 32837,
+  "catalogue_size": 38612,
   "centroids_file": "kmeans_centroids.npy",
   "assignments_file": "cluster_assignments.csv",
   "summary_file": "cluster_summary.csv",
-  "mean_purity": 0.806,
+  "mean_purity": 0.828,
   "recommended_probes": 3,
-  "recall_at_10_with_3_probes": 0.963
+  "recall_at_10_with_3_probes": 0.963,
+  "index_file": "search_index_full.npy",
+  "note": "Refitted over the full deployment index. Notebook 07 owns the analysis and its figures; re-run it to refresh them."
 }
