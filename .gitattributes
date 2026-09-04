@@ -1,1 +1,2 @@
 A2_FashionDataset/processed/images_train_120x160/*.jpg filter=lfs diff=lfs merge=lfs -text
+artifacts/task1_120x160/task1_120x160_onecycle_best.pt filter=lfs diff=lfs merge=lfs -text
