@@ -1,0 +1,3 @@
+ingestion,images,mean_top1_similarity,mean_coherence,confident_share,note
+segmented (nobg),3636,0.8213,0.7481,0.7148,"on images_test, which are already flat-lay products on white; declining to segment costs nothing and avoids deleting the product"
+declined -> centre crop,2193,0.8263,0.75,0.6721,"on images_test, which are already flat-lay products on white; declining to segment costs nothing and avoids deleting the product"
