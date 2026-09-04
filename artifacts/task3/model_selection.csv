@@ -1,4 +1,4 @@
 model,runs,mean macro-F1,usage macro-F1,exact match,parameters
-base,3,81.07,82.8,81.48,4249577
-balanced,3,80.81,83.35,80.95,4249577
-balanced_aug,3,79.62,82.29,78.89,4249577
+balanced,1,82.82,85.26,82.98,13297641
+balanced_aug,1,81.79,85.08,81.04,13297641
+base,1,81.35,84.45,82.58,13297641
