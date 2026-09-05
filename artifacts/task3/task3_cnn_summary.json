@@ -1,12 +1,17 @@
 {
-  "final_model": "balanced",
-  "parameters": 13297641,
+  "final_model": "base",
+  "selected_by_rule": "base",
+  "parameters": 4249577,
   "noise_floor": 0.674,
-  "test_gender_accuracy": 90.07,
-  "test_gender_macro_f1": 77.19,
-  "test_usage_accuracy": 91.02,
-  "test_usage_macro_f1": 84.1,
-  "test_exact_match": 82.0,
+  "test_gender_accuracy": 90.33,
+  "test_gender_macro_f1": 76.37,
+  "test_usage_accuracy": 90.24,
+  "test_usage_macro_f1": 82.66,
+  "test_exact_match": 81.59,
+  "temperature": {
+    "gender": 5.8289,
+    "usage": 5.9429
+  },
   "baseline_gender_accuracy": 54.2,
   "baseline_usage_accuracy": 77.11
 }

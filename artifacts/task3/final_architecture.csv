@@ -1,25 +1,28 @@
 component,setting
-Input,3 x 160 x 120 RGB
+Input,3 x 80 x 60 RGB
 Reference design,"VGG-style: paired 3x3 convolutions per block, channels doubling"
 Multi-task structure,"early branching - shared trunk, then one pathway per attribute"
 Convolution kernel,"3 x 3, stride 1, padding 1 (all layers)"
 "Filters, shared trunk",32 -> 64
-"Filters, each branch",128 -> 256 -> 512
+"Filters, each branch",128 -> 256
 Convolutions per block,"2, each followed by batch normalisation"
 Activation,ReLU
 Normalisation,BatchNorm2d after every convolution
 Pooling,"max pooling, 2 x 2, stride 2"
-Shared trunk output,64 x 40 x 30
-Branch output,512 x 5 x 3
+Shared trunk output,64 x 20 x 15
+Branch output,256 x 5 x 3
 Classifier input,flatten
-Flattened size,7680
+Flattened size,3840
 Classifier,"Dropout(0.5) -> Linear(., 256) -> ReLU -> Dropout(0.5) -> Linear(256, classes)"
 Output,"gender 5 scores, usage 4 scores; softmax applied at prediction time"
 Loss,"cross-entropy per attribute, summed with equal weight"
 Optimiser,"AdamW, lr 0.001, weight decay 0.0001"
 Learning rate schedule,halved after 3 epochs without validation improvement
 Regularisation,"dropout 0.5, weight decay, batch norm, early stopping"
-Class imbalance,balanced batch sampling (equal classes per batch)
-Training seed,42 (one run per configuration)
-Selection rule,highest validation mean macro-F1; ties within +-1.17 broken on usage macro-F1
-Total parameters,"13,297,641"
+Class imbalance,none applied
+Confidence calibration,"temperature scaling, gender T=5.83, usage T=5.94"
+Training seed,42 (best of 3 repeated runs)
+Selection rule,highest validation mean macro-F1; ties within +-0.67 broken on usage macro-F1
+Configuration the rule retained,base
+Configuration deployed,base
+Total parameters,"4,249,577"
