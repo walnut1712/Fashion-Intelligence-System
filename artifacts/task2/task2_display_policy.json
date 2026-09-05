@@ -1,0 +1,50 @@
+{
+  "all_season_families": [
+    "Watches",
+    "Jewellery",
+    "Lips",
+    "Bags",
+    "Wallets",
+    "Belts",
+    "Eyewear",
+    "Fragrance"
+  ],
+  "all_season_article_types": [
+    "Backpacks",
+    "Duffel Bag",
+    "Messenger Bag"
+  ],
+  "min_family_confidence": 0.6,
+  "min_article_type_confidence": 0.6,
+  "semantic_dual_overrides": {
+    "Shorts": [
+      "Spring",
+      "Summer"
+    ]
+  },
+  "semantic_single_confidence": 0.78,
+  "dual_season": {
+    "enabled": true,
+    "max_top1": 0.65,
+    "max_gap": 0.1,
+    "allowed_pairs": [
+      [
+        "Spring",
+        "Summer"
+      ],
+      [
+        "Summer",
+        "Fall"
+      ],
+      [
+        "Fall",
+        "Winter"
+      ],
+      [
+        "Winter",
+        "Spring"
+      ]
+    ]
+  },
+  "note": "Application semantic policy only. Official Task 2 remains a four-class Season CNN."
+}
