@@ -180,6 +180,44 @@
     return ranked;
   }
 
+  /*
+    Task3B only adds a small fine-grained recommendation.
+    It NEVER replaces the primary Task3 Usage prediction.
+  */
+  function normalizeUsagePrediction(
+    value,
+    recommendation
+  ) {
+    var ranked =
+      normalizePrediction(value);
+
+    if (!ranked.length) {
+      return [];
+    }
+
+    var output =
+      ranked.map(
+        function (row) {
+          return {
+            label: row.label,
+            p: row.p
+          };
+        }
+      );
+
+    if (
+      recommendation &&
+      recommendation.recommendation_available === true &&
+      recommendation.display_label
+    ) {
+      output[0].recommendation_label =
+        recommendation.display_label;
+    }
+
+    return output;
+  }
+
+
   function normalizeResult(value) {
     return {
       id: value.id,
@@ -686,6 +724,28 @@
           var top =
             ranked[0];
 
+          /*
+            Task3B recommendation:
+            only visible for Occasion when backend says
+            recommendation_available=true.
+          */
+          var usageRecommendationHtml =
+            (
+              a.key === "usage" &&
+              top.recommendation_label
+            )
+              ? (
+                  '<div class="attr-family">' +
+                    'recommend: <b>' +
+                    esc(
+                      top.recommendation_label
+                    ) +
+                    '</b>' +
+                  '</div>'
+                )
+              : "";
+
+
           var displayProbability =
             probability01(
               top.p
@@ -941,7 +1001,8 @@
 
               recommendationHtml +
 
-              barHtml +
+              usageRecommendationHtml +
+          barHtml +
 
               altHtml +
 
@@ -1434,9 +1495,11 @@
                       ),
 
                     usage:
-                      normalizePrediction(
+                      normalizeUsagePrediction(
                         predictions
-                          .usage
+                          .usage,
+                        predictions
+                          .usage_recommendation
                       )
                   }
                 },
