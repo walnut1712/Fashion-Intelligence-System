@@ -958,3 +958,122 @@ def test_v2_warm_start_from_the_shipped_clean_encoder():
     total = sum(p.numel() for p in target.parameters())
     assert carried / total > 0.95, "only {:.1%} of parameters transferred".format(
         carried / total)
+
+
+# ------------------------------------------------------- resolution ----
+# The 120x160 catalogue lifts the ceiling every limitations section in this
+# project ends at. These guard the two things that make the comparison a
+# comparison: the data layer must not assume 60x80, and both arms must be built
+# from one gallery.
+
+@pytest.mark.parametrize("shape", [(80, 60, 3), (160, 120, 3)])
+def test_the_augmentation_pipeline_follows_the_frame(shape):
+    """composite, degrade and simulate_ingestion take size from their input."""
+    from src.data.synthetic_backgrounds import (
+        TRAINING_DEGRADATIONS, composite, degrade, make_backgrounds,
+        make_eval_backgrounds, simulate_ingestion)
+
+    height, width, _ = shape
+    generator = np.random.default_rng(0)
+    image = np.full(shape, 240, dtype=np.uint8)
+    image[height // 4:3 * height // 4, width // 4:3 * width // 4] = 60
+    mask = np.zeros(shape[:2], dtype=bool)
+    mask[height // 4:3 * height // 4, width // 4:3 * width // 4] = True
+
+    backgrounds = make_backgrounds(4, shape=shape, seed=1)
+    assert backgrounds.shape[1:] == shape
+    assert make_eval_backgrounds(4, size=(width, height)).shape[1:] == shape
+
+    composited = composite(image, mask, backgrounds[0], generator)
+    degraded = degrade(composited, generator, TRAINING_DEGRADATIONS)
+    ingested = simulate_ingestion(degraded, generator)
+    for stage in (composited, degraded, ingested):
+        assert stage.shape == shape
+
+
+def test_mask_morphology_scales_with_the_frame():
+    """A 3x3 opening removes proportionally less of a taller frame.
+
+    Left unscaled, the same item would keep visibly more mask at 120x160 than at
+    60x80 and the two arms would not be segmenting alike.
+    """
+    from src.data.synthetic_backgrounds import _scaled_structure
+
+    _, small = _scaled_structure(80)
+    _, large = _scaled_structure(160)
+    assert small == 1 and large == 2
+
+
+def test_region_minimum_is_a_fraction_not_a_pixel_count():
+    """At 120x160 a fixed 48x48 floor would accept crops four times thinner."""
+    from src.visual_search.search_engine import MIN_CROP_FRACTION
+
+    assert MIN_CROP_FRACTION == pytest.approx((48 * 48) / (60 * 80))
+    assert round(MIN_CROP_FRACTION * 120 * 160) == 48 * 48 * 4
+
+
+def test_the_two_resolution_caches_describe_the_same_gallery():
+    """Position-for-position alignment is what lets the arms be compared."""
+    processed = PROJECT_ROOT / "A2_FashionDataset" / "processed"
+    paths = {r: (processed / f"task4_cache_{r}_ids.npy",
+                 processed / f"task4_gallery_{r}.csv") for r in ("60x80", "120x160")}
+    if not all(p.exists() for pair in paths.values() for p in pair):
+        pytest.skip("resolution caches not built")
+
+    import pandas as pd
+
+    ids = {r: np.load(p[0]) for r, p in paths.items()}
+    assert np.array_equal(ids["60x80"], ids["120x160"]), (
+        "the two caches are not in the same row order"
+    )
+    for resolution, (_, gallery_path) in paths.items():
+        gallery = pd.read_csv(gallery_path)
+        assert np.array_equal(gallery["id"].to_numpy(), ids[resolution])
+
+
+def test_the_task4_gallery_drops_the_unusable_rows():
+    """The 41 conflicting-label rows must not reach training at either size."""
+    processed = PROJECT_ROOT / "A2_FashionDataset" / "processed"
+    supervised = processed / "train_metadata_120x160_supervised.csv"
+    gallery_path = processed / "task4_gallery_120x160.csv"
+    if not (supervised.exists() and gallery_path.exists()):
+        pytest.skip("120x160 pipeline not present")
+
+    import pandas as pd
+
+    flags = pd.read_csv(supervised)
+    excluded = set(flags.loc[~flags["use_for_supervised"].astype(bool), "id"])
+    gallery = pd.read_csv(gallery_path)
+    assert len(excluded) == 41
+    assert not (set(gallery["id"]) & excluded)
+
+
+def test_channel_statistics_survive_a_large_sample():
+    """float32 accumulation silently destroyed these at 120x160.
+
+    4,000 images at 120x160 is 76.8 million values per channel. A float32
+    running sum passes its 24-bit mantissa near 16.7 million, after which adding
+    0.85 changes nothing, and the reported mean for a catalogue of
+    white-background product shots came back as 0.2185. The 60x80 arm sat just
+    under the limit and looked fine, so a smaller test would not have caught it.
+    """
+    from src.training.task4_training import channel_statistics
+
+    # Bright and constant, so the true answer is known exactly and any
+    # accumulation error is unmissable.
+    images = np.full((4000, 160, 120, 3), 217, dtype=np.uint8)
+    mean, std = channel_statistics(images, np.arange(len(images)), sample=4000)
+
+    assert np.allclose(mean, 217 / 255, atol=1e-4), mean
+    assert np.allclose(std, 0.0, atol=1e-4), std
+
+
+def test_channel_statistics_use_only_the_positions_given():
+    """Held-out pixels must not reach the normalisation every model uses."""
+    from src.training.task4_training import channel_statistics
+
+    images = np.zeros((200, 16, 12, 3), dtype=np.uint8)
+    images[:100] = 255                       # "catalogue"
+    images[100:] = 0                         # "held out"
+    mean, _ = channel_statistics(images, np.arange(100), sample=100)
+    assert np.allclose(mean, 1.0, atol=1e-6)

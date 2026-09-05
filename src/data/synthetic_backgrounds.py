@@ -60,8 +60,17 @@ EVAL_DEGRADATIONS = ("perspective", "shadow")
 _DEGRADATION_ORDER = ("rotate", "perspective", "whitebalance", "shadow",
                       "occlude", "blur", "jpeg")
 
+#: The catalogue resolution this module was written against. Every function
+#: takes its size from its input or its argument; this is only the fallback, so
+#: that a 120x160 run needs no edits here - it passes a shape and everything
+#: downstream follows.
 DEFAULT_SHAPE = (80, 60, 3)          # (H, W, C)
 DEFAULT_SCALE_RANGE = (0.35, 0.95)
+
+#: Morphology and area thresholds below were tuned on 80-pixel-tall frames. A
+#: 3x3 opening removes proportionally less of a 160-tall frame, so the structure
+#: is scaled by the linear factor rather than left to shrink in real terms.
+REFERENCE_HEIGHT = 80
 
 #: Share of uploads whose segmentation succeeds, measured on ``images_test`` in
 #: ``outputs/task4_ingestion_fallback.csv``: 3,636 segmented against 2,193 that
@@ -124,7 +133,7 @@ def make_backgrounds(count=600, shape=DEFAULT_SHAPE, seed=42, source_images=None
     return backgrounds
 
 
-def make_eval_backgrounds(count=600, size=(60, 80), seed=20260904):
+def make_eval_backgrounds(count=600, size=None, seed=20260904):
     """Evaluation-only bank, from families the training pipeline never generates.
 
     Reuses the corruption families in ``src/evaluation/ood_benchmark.py``, which
@@ -133,6 +142,8 @@ def make_eval_backgrounds(count=600, size=(60, 80), seed=20260904):
     """
     from src.evaluation.ood_benchmark import _background
 
+    if size is None:                       # (W, H), matching PIL's convention
+        size = (DEFAULT_SHAPE[1], DEFAULT_SHAPE[0])
     generator = np.random.default_rng(seed)
     return np.stack([
         _background(EVAL_FAMILIES[i % len(EVAL_FAMILIES)], size, generator)
@@ -307,6 +318,18 @@ def degrade(image, generator, families=TRAINING_DEGRADATIONS, strength=1.0,
 
 
 # --------------------------------------------------- serve-path simulation ----
+def _scaled_structure(height):
+    """A morphological structure that keeps its size *relative to the frame*."""
+    from scipy import ndimage
+
+    factor = max(1, int(round(height / REFERENCE_HEIGHT)))
+    if factor == 1:
+        return np.ones((3, 3), dtype=bool), 1
+    # A larger frame gets the same operation at the same relative scale, done by
+    # iterating the 3x3 rather than by inventing a bigger kernel.
+    return np.ones((3, 3), dtype=bool), factor
+
+
 def _border_colour_mask(image, tolerance=20):
     """Foreground where the pixel differs from the frame-edge background colour.
 
@@ -322,9 +345,9 @@ def _border_colour_mask(image, tolerance=20):
         axis=0)
     mask = np.abs(image.astype(np.float32) - background).max(axis=2) > tolerance
 
-    structure = np.ones((3, 3), dtype=bool)
-    mask = ndimage.binary_opening(mask, structure=structure, iterations=1)
-    mask = ndimage.binary_closing(mask, structure=structure, iterations=2)
+    structure, factor = _scaled_structure(image.shape[0])
+    mask = ndimage.binary_opening(mask, structure=structure, iterations=1 * factor)
+    mask = ndimage.binary_closing(mask, structure=structure, iterations=2 * factor)
 
     labels, count = ndimage.label(mask, structure=structure)
     if count == 0:
