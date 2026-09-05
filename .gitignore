@@ -41,3 +41,8 @@ artifacts/task1/candidate_*.pt
 # Generated labelling aid: 3.6 MB of base64 thumbnails, rebuilt on demand by
 # scripts/build_label_sheet.py. The labels it produces are committed; it is not.
 outputs/input_images_labelling.html
+
+# Task 4 resolution caches: 2.2 GB at 120x160, rebuilt by
+# scripts/build_task4_cache.py from data that is already tracked.
+A2_FashionDataset/processed/task4_cache_*.npy
+A2_FashionDataset/processed/task4_masks_*.npy

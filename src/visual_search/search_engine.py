@@ -361,7 +361,11 @@ BAND_LAYOUT = (("upper", 0.00, 0.55), ("lower", 0.45, 1.00),
 # A thin strip becomes a smear once stretched to 60x80, and smears land in
 # whichever dense cluster happens to be nearby - which is how an early version
 # matched a third of its regions to Socks, Handbags and Backpacks.
-MIN_CROP_PIXELS = 48 * 48
+#: Expressed as a share of the frame, not an absolute pixel count. At 60x80 this
+#: is the 48x48 it has always been; at 120x160 the same fraction is 96x96, where
+#: a fixed 2,304 pixels would have accepted crops four times thinner.
+MIN_CROP_FRACTION = (48 * 48) / (60 * 80)
+MIN_CROP_PIXELS = 48 * 48                  # kept: the 60x80 value, for reference
 MIN_ASPECT, MAX_ASPECT = 0.25, 4.0
 
 #: Ranking is by SIMILARITY, never coherence. Ranking by coherence backfired:
@@ -435,10 +439,12 @@ def propose_regions(rgb, min_cover=0.10, min_component=0.03):
                         "cover": float(band.mean())})
 
     keep = []
+    frame_pixels = rgb.shape[0] * rgb.shape[1]
+    minimum_pixels = max(1, int(round(MIN_CROP_FRACTION * frame_pixels)))
     for region in regions:
         bx0, by0, bx1, by1 = region["bbox"]
         w, h = bx1 - bx0, by1 - by0
-        if w * h < MIN_CROP_PIXELS:
+        if w * h < minimum_pixels:
             continue
         if not (MIN_ASPECT <= w / max(h, 1) <= MAX_ASPECT):
             continue
