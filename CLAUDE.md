@@ -212,8 +212,15 @@ supports `merge` / `drop` / `group`.
 resolution-limited or fixable by reweighting — see the `class_weighted` result above. An earlier
 note that makeup is systematically predicted `Men` **did not reproduce** — cosmetics score 72%
 and fragrance 100% on the held-out set. The real limitation is **Accessories: 38.7% of all gender
-errors** from watches, bags and belts that are near-identical across the men's and women's ranges;
-neither 120×160 nor class weighting moved it. If makeup errors still show in the app, that is on
+errors**, and CELL 25 establishes what kind of limitation it is. It is **not** mainly men's vs
+women's ranges looking alike: **39% of all gender errors place or displace `Unisex`**, and
+forgiving those alone would take gender accuracy from 90.33% to **94.07%**. The label is often not
+in the pixels at all. Seven families of byte-identical photographs carry different genders (one
+Ray-Ban aviator is filed as both `Men` and `Unisex`, one Maxima watch as both `Men` and `Women`),
+and a gender word in `productDisplayName` matches the label on **98.8% of test rows and 100% of
+accessories** — the attribute records how the seller listed an item. That is diagnosis, not a
+shortcut: `styles_prediction_template.csv` carries no product name, and a text model would be off
+brief. Neither 120×160 nor class weighting moved it, and neither will. If makeup errors still show in the app, that is on
 user photos (out-of-distribution), not catalogue data.
 
 ## Conventions
