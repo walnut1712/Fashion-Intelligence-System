@@ -1,0 +1,7 @@
+encoder,benchmark,metric,value
+deployed (bg-aug),clean,P@1,82.35
+deployed (bg-aug),clean,P@10,80.23
+deployed (bg-aug),clean,colour@10,53.95
+deployed (bg-aug),clean,colourfam@10,57.0
+deployed (bg-aug),clean,both@10,43.05
+deployed (bg-aug),clean,bothfam@10,45.61

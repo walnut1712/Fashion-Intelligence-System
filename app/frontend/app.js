@@ -28,8 +28,10 @@
     objectUrl: null,
     busy: false,
     k: 12,
+    view: "whole",     // whole | regions
     prediction: null,
-    results: null
+    results: null,
+    regions: null
   };
   var testSampleIds = null;
 
@@ -63,6 +65,22 @@
       article_type: value.articleType || value.article_type,
       base_colour: value.baseColour || value.base_colour,
       image_url: value.image_url
+    };
+  }
+
+  /* The service already decides whether it trusts a retrieval - top-1 similarity
+     against 0.70 and neighbour coherence against 0.50, thresholds derived from
+     catalogue photographs scoring 0.837/0.833 and real uploads 0.664/0.489. That
+     verdict used to be fetched and dropped here, so the one thing the system knew
+     about its own weakest case never reached the screen. */
+  function normalizeDiagnostics(value) {
+    if (!value) return null;
+    return {
+      confident: value.confident !== false,
+      top1_similarity: value.top1_similarity,
+      coherence: value.coherence,
+      ingest_method: value.ingest_method,
+      ingest_fell_back: !!value.ingest_fell_back
     };
   }
 
@@ -256,6 +274,93 @@
     }).join("");
   }
 
+  /* Shown only when the engine itself is not confident. A wrong answer presented
+     with the same certainty as a right one is the failure the confidence gate
+     exists to prevent, and the gate is advisory - every result is still returned
+     and ranked, this only says how much to trust the top of the list. */
+  function lowConfidenceNotice(d) {
+    if (!d || d.confident) return "";
+
+    var reasons = [];
+    if (typeof d.top1_similarity === "number" && d.top1_similarity < 0.70) {
+      reasons.push("closest match is only " + pct(d.top1_similarity));
+    }
+    if (typeof d.coherence === "number" && d.coherence < 0.50) {
+      reasons.push("the matches disagree with each other");
+    }
+    if (d.ingest_fell_back) {
+      reasons.push("the background could not be separated from the item");
+    }
+
+    return '<div class="banner banner-inline">' + icon("alert") +
+      "<span><b>Low confidence in these matches.</b> " +
+      (reasons.length ? esc(reasons.join("; ")) + ". " : "") +
+      "The catalogue is flat-lay product shots on white, so a photograph taken " +
+      "in the wild is harder than the published accuracy suggests.</span></div>";
+  }
+
+  /* propose_regions names bands by geometry; a reader wants body parts. */
+  var REGION_LABELS = {
+    whole: "Whole image", upper: "Upper body", lower: "Lower body",
+    top3: "Top third", mid3: "Middle third", low3: "Bottom third"
+  };
+
+  function regionLabel(name) {
+    if (REGION_LABELS[name]) return REGION_LABELS[name];
+    var piece = /^part(\d+)$/.exec(name);
+    return piece ? "Separate piece " + piece[1] : name;
+  }
+
+  function renderRegions(host) {
+    var data = state.regions;
+    if (!data || !data.regions || !data.regions.length) {
+      host.innerHTML = '<div class="empty">' + icon("search", "ic-lg") +
+        "<p>No separate garments were found in this photograph.</p></div>";
+      return;
+    }
+
+    /* The API sorts accepted regions first. Rejected ones are still shown,
+       dimmed: "we looked here and were not convinced" is more useful than
+       silently dropping the region, and it is how the acceptance rule can be
+       judged rather than trusted. */
+    host.innerHTML = data.regions.map(function (r) {
+      var tiles = r.items.map(normalizeResult).slice(0, state.k);
+      return '<div class="region-group' + (r.accepted ? "" : " region-skipped") + '">' +
+        '<div class="region-head">' +
+          '<span class="region-name">' + esc(regionLabel(r.region)) + "</span>" +
+          '<span class="region-tag' + (r.accepted ? "" : " region-tag-off") + '">' +
+            (r.accepted ? "kept" : "not convincing") + "</span>" +
+          '<span class="region-meta">closest ' + pct(r.top_similarity) +
+            " · agreement " + pct(r.coherence) + "</span>" +
+        "</div>" +
+        '<div class="result-grid">' + tiles.map(tileHtml).join("") + "</div>" +
+      "</div>";
+    }).join("") +
+    '<p class="card-note">Segmentation: ' + esc(data.segmentation || "none") +
+      " · " + data.accepted_count + " of " + data.regions.length +
+      " regions kept.</p>";
+  }
+
+  function tileHtml(r, i) {
+    var t = simTier(r.similarity);
+    var live = state.mode === "live";
+    var thumb = live
+      ? '<img src="' + API_BASE + (r.image_url || "") + '" alt="" loading="lazy"' +
+        ' data-colour="' + esc(r.base_colour || "") + '">'
+      : swatch(r.base_colour);
+
+    return '<figure class="tile">' +
+      '<div class="tile-thumb">' + thumb + "</div>" +
+      '<figcaption>' +
+        '<div class="tile-rank">#' + (i + 1) + " · id " + esc(r.id) + "</div>" +
+        '<div class="tile-name" title="' + esc(r.article_type || "") + '">' +
+          esc(r.article_type || "—") + "</div>" +
+        '<div class="tile-sub">' + esc(r.base_colour || "") + "</div>" +
+      "</figcaption>" +
+      '<span class="chip chip-' + t + '">' + pct(r.similarity) + "</span>" +
+    "</figure>";
+  }
+
   function renderResults() {
     var host = $("results");
 
@@ -271,34 +376,34 @@
       return;
     }
 
+    if (state.view === "regions") {
+      if (state.mode !== "live") {
+        host.innerHTML = '<div class="empty">' + icon("alert", "ic-lg") +
+          "<p>Per-garment search needs the live model; the offline demo has no " +
+          "segmentation.</p></div>";
+        return;
+      }
+      renderRegions(host);
+      bindThumbFallback(host);
+      return;
+    }
+
     if (!state.results || !state.results.results.length) {
       host.innerHTML = '<div class="empty">' + icon("search", "ic-lg") +
         "<p>Upload an item to retrieve its nearest neighbours from the catalogue.</p></div>";
       return;
     }
 
-    var live = state.mode === "live";
-    host.innerHTML = '<div class="result-grid">' +
-      state.results.results.map(function (r, i) {
-        var t = simTier(r.similarity);
-        var thumb = live
-          ? '<img src="' + API_BASE + (r.image_url || "") + '" alt="" loading="lazy"' +
-            ' data-colour="' + esc(r.base_colour || "") + '">'
-          : swatch(r.base_colour);
+    host.innerHTML = lowConfidenceNotice(state.results.diagnostics) +
+      '<div class="result-grid">' +
+      state.results.results.map(tileHtml).join("") + "</div>";
 
-        return '<figure class="tile">' +
-          '<div class="tile-thumb">' + thumb + "</div>" +
-          '<figcaption>' +
-            '<div class="tile-rank">#' + (i + 1) + " · id " + esc(r.id) + "</div>" +
-            '<div class="tile-name" title="' + esc(r.article_type || "") + '">' + esc(r.article_type || "—") + "</div>" +
-            '<div class="tile-sub">' + esc(r.base_colour || "") + "</div>" +
-          "</figcaption>" +
-          '<span class="chip chip-' + t + '">' + pct(r.similarity) + "</span>" +
-          "</figure>";
-      }).join("") + "</div>";
+    bindThumbFallback(host);
+  }
 
-    /* Any catalogue image the server cannot produce degrades to a colour
-       swatch rather than a broken-image glyph. */
+  /* Any catalogue image the server cannot produce degrades to a colour swatch
+     rather than a broken-image glyph. */
+  function bindThumbFallback(host) {
     host.querySelectorAll(".tile-thumb img").forEach(function (img) {
       img.addEventListener("error", function () {
         img.parentNode.innerHTML = swatch(img.dataset.colour);
@@ -321,7 +426,11 @@
         '<div>' +
           '<div class="mc-detail">' + t.detail + "</div>" +
           '<span class="mc-flag mc-flag-' + t.flag + '">' + esc(t.flagText) + "</span>" +
-          '<div class="mc-detail" style="margin-top:5px;color:var(--text-muted)">' + esc(t.note) + "</div>" +
+          /* Same treatment as t.detail two lines up. Both are authored by us -
+             demo-data.js, or Task4Service.model_card() - and both use <b> for the
+             figure that matters. Escaping only this one printed the tags literally:
+             "P@10 falls to <b>60.6</b>". */
+          '<div class="mc-detail" style="margin-top:5px;color:var(--text-muted)">' + t.note + "</div>" +
         "</div>" +
         "</div>";
     }).join("");
@@ -382,7 +491,20 @@
     renderAll();
 
     var work;
-    if (state.mode === "live" && state.file) {
+    if (state.view === "regions" && state.mode === "live" && state.file) {
+      var rfd = new FormData();
+      rfd.append("image", state.file);
+      work = withTimeout(
+        fetch(API_BASE + "/api/task4/regions?k=" + encodeURIComponent(state.k) +
+              "&mode=nobg", { method: "POST", body: rfd }).then(function (r) {
+          if (!r.ok) throw new Error("server returned HTTP " + r.status);
+          return r.json();
+        }),
+        30000
+      ).then(function (data) {
+        return { prediction: state.prediction, results: state.results, regions: data };
+      });
+    } else if (state.mode === "live" && state.file) {
       var fd = new FormData();
       fd.append("image", state.file);
       work = withTimeout(
@@ -410,7 +532,9 @@
           },
           results: {
             results: ((data.visual_search && data.visual_search.similar_items) || [])
-              .map(normalizeResult)
+              .map(normalizeResult),
+            diagnostics: normalizeDiagnostics(
+              data.visual_search && data.visual_search.diagnostics)
           }
         };
       });
@@ -429,6 +553,7 @@
     work.then(function (out) {
       state.prediction = out.prediction;
       state.results = out.results;
+      state.regions = out.regions || null;
     }).catch(function (err) {
       setMode("demo", err && err.message ? err.message : "request failed");
       state.prediction = FI.demo.predict(state.key);
@@ -538,11 +663,20 @@
     $("btn-rerun").addEventListener("click", run);
     $("btn-sample").addEventListener("click", useSample);
 
-    document.querySelectorAll(".seg-btn").forEach(function (b) {
+    document.querySelectorAll("[data-k]").forEach(function (b) {
       b.addEventListener("click", function () {
-        document.querySelectorAll(".seg-btn").forEach(function (o) { o.classList.remove("is-on"); });
+        document.querySelectorAll("[data-k]").forEach(function (o) { o.classList.remove("is-on"); });
         b.classList.add("is-on");
         state.k = Number(b.dataset.k);
+        if (state.key) run(); else renderResults();
+      });
+    });
+
+    document.querySelectorAll("[data-view]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        document.querySelectorAll("[data-view]").forEach(function (o) { o.classList.remove("is-on"); });
+        b.classList.add("is-on");
+        state.view = b.dataset.view;
         if (state.key) run(); else renderResults();
       });
     });

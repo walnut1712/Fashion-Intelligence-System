@@ -33,6 +33,7 @@ from __future__ import annotations
 import time
 from collections import defaultdict
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -48,7 +49,10 @@ __all__ = [
     "VisualSearchIndex",
     "CatalogueIndex",
     "paired_bootstrap",
+    "bootstrap_mean",
     "mcnemar",
+    "evaluate_real_photos",
+    "colour_families",
 ]
 
 DEFAULT_K_VALUES = (1, 5, 10, 20)
@@ -196,6 +200,198 @@ def mcnemar(hits_a, hits_b):
     }
 
 
+def colour_families(values):
+    """Map each ``baseColour`` to a family, by a lexical rule and nothing else.
+
+    ``colour@10`` is an exact string match over 46 labels, so retrieving a Navy
+    Blue shirt for a Blue query scores zero. 42% of the catalogue carries a
+    colour that has a same-family sibling, which means a real share of the
+    26-point gap between ``P@10`` (~80) and ``colour@10`` (~54) is vocabulary,
+    not perception.
+
+    The rule: a multi-word colour joins the family of whichever single-word
+    colour in the vocabulary it contains. "Navy Blue" is a kind of Blue; "Grey
+    Melange" is a kind of Grey. Everything else is its own family.
+
+    This is deliberately lexical. Teal is not folded into Blue, Olive is not
+    folded into Green, and Silver/Gold/Bronze/Copper are not folded into a
+    metallics class - each of those would be a perceptual judgement about what
+    counts as the same colour, and the point of this mapping is to remove a
+    naming artefact, not to make the metric easier. Any number produced with it
+    must be reported beside the exact-match one, never instead of it.
+    """
+    labels = [str(v) for v in pd.unique(pd.Series(list(values)).dropna())]
+    singles = {label for label in labels if " " not in label}
+    mapping = {}
+    for label in labels:
+        family = label
+        if " " not in label:
+            mapping[label] = label
+            continue
+        for word in label.split():
+            if word in singles:
+                family = word
+                break
+        mapping[label] = family
+    return mapping
+
+
+def bootstrap_mean(scores, n_resamples=2000, seed=0, alpha=0.05):
+    """Percentile bootstrap interval for a single mean.
+
+    ``paired_bootstrap`` answers "is A better than B"; this answers "what is this
+    number, give or take". It exists for the real-photograph benchmark, where
+    there is no second model to pair against and where the sample is small enough
+    that quoting a bare mean would overstate what 31 photographs can establish.
+    """
+    values = np.asarray(scores, dtype=float)
+    if len(values) == 0:
+        return {"mean": float("nan"), "ci_low": float("nan"),
+                "ci_high": float("nan"), "n": 0}
+
+    rng = np.random.default_rng(seed)
+    draws = rng.integers(0, len(values), size=(n_resamples, len(values)))
+    resampled = values[draws].mean(axis=1)
+    low, high = np.quantile(resampled, [alpha / 2, 1 - alpha / 2])
+    return {
+        "mean": float(values.mean()),
+        "ci_low": float(low),
+        "ci_high": float(high),
+        "n": int(len(values)),
+    }
+
+
+def evaluate_real_photos(engine, labels, images_dir, k=10, mode="nobg",
+                         confidence=None, seed=0, n_resamples=2000):
+    """Score retrieval on hand-labelled photographs of real items.
+
+    Every other Task 4 number is measured on a proxy. ``P@10 80.2`` is catalogue
+    photographs retrieving catalogue photographs; ``P@10 60.6`` is catalogue
+    items composited onto procedural backgrounds. Neither is a photograph someone
+    took, and the gap between the two proxies - plus a mean top-1 similarity of
+    0.664 on real uploads against 0.837 on catalogue images - is large enough
+    that the synthetic benchmark cannot be assumed to stand in for the real one.
+
+    Three groups are reported separately rather than pooled, because they fail
+    for different reasons and averaging them hides all three:
+
+    ``single``
+        one garment, the case the encoder is built for. This is the headline.
+    ``multi``
+        several garments in one frame. The encoder emits one vector per image,
+        so an outfit is averaged into a vector describing none of its parts;
+        counting these as misses would blame the encoder for a known structural
+        limit rather than measuring it.
+    ``non_clothing``
+        not a fashion item at all. There is no correct answer to retrieve, so
+        the only meaningful question is whether the confidence gate declines.
+
+    ``labels`` needs ``file`` and ``articleType``; ``baseColour``, ``n_garments``
+    and ``notes`` are optional. Rows with no type are skipped and counted.
+
+    Returns ``(summary, per_photo)``.
+    """
+    labels = pd.DataFrame(labels).copy()
+    if "file" not in labels.columns or "articleType" not in labels.columns:
+        raise ValueError("labels need at least 'file' and 'articleType' columns")
+
+    labels["articleType"] = labels["articleType"].fillna("").astype(str).str.strip()
+    if "baseColour" in labels.columns:
+        labels["baseColour"] = labels["baseColour"].fillna("").astype(str).str.strip()
+    else:
+        labels["baseColour"] = ""
+    if "n_garments" in labels.columns:
+        labels["n_garments"] = pd.to_numeric(labels["n_garments"],
+                                             errors="coerce").fillna(1).astype(int)
+    else:
+        labels["n_garments"] = 1
+
+    unlabelled = int((labels["articleType"] == "").sum())
+    scored = labels[labels["articleType"] != ""].reset_index(drop=True)
+    if scored.empty:
+        raise ValueError(
+            "No labelled rows. Run scripts/build_label_sheet.py, label the "
+            "photographs, and save the CSV it produces.")
+
+    # A type that is not in the catalogue can never be retrieved, so scoring it
+    # would report the vocabulary as an encoder failure.
+    vocabulary = set(engine.metadata["articleType"].dropna().unique())
+    unknown = sorted(set(scored["articleType"]) - vocabulary - {"none"})
+    if unknown:
+        raise ValueError(
+            "These labels are not catalogue articleTypes: {}".format(unknown))
+
+    images_dir = Path(images_dir)
+    paths = [images_dir / name for name in scored["file"]]
+    absent = [p.name for p in paths if not p.exists()]
+    if absent:
+        raise FileNotFoundError("Missing upload(s): {}".format(absent[:5]))
+
+    results = engine.search(paths, k=k, mode=mode, with_diagnostics=True,
+                            confidence=confidence)
+
+    p_at_k = "P@{}".format(k)
+    colour_at_k = "colour@{}".format(k)
+    both_at_k = "both@{}".format(k)
+
+    rows = []
+    for position, record in scored.iterrows():
+        got = results[results["query"] == Path(paths[position]).name]
+        type_hit = (got["articleType"].to_numpy() == record["articleType"])
+        colour_hit = (got["baseColour"].to_numpy() == record["baseColour"]
+                      if record["baseColour"] else np.zeros(len(got), bool))
+        group = ("non_clothing" if record["n_garments"] == 0
+                 else "single" if record["n_garments"] == 1 else "multi")
+        rows.append({
+            "file": record["file"],
+            "group": group,
+            "n_garments": int(record["n_garments"]),
+            "true_articleType": record["articleType"],
+            "true_baseColour": record["baseColour"],
+            "top1_articleType": got["articleType"].iloc[0] if len(got) else None,
+            "P@1": float(type_hit[0]) if len(type_hit) else 0.0,
+            p_at_k: float(type_hit.mean()) if len(type_hit) else 0.0,
+            colour_at_k: float(colour_hit.mean()) if len(got) else 0.0,
+            both_at_k: float((type_hit & colour_hit).mean()) if len(got) else 0.0,
+            "top1_similarity": float(got["top1_similarity"].iloc[0]) if len(got) else np.nan,
+            "coherence": float(got["coherence"].iloc[0]) if len(got) else np.nan,
+            "confident": bool(got["confident"].iloc[0]) if len(got) else False,
+            "ingest_method": got["ingest_method"].iloc[0] if len(got) else None,
+            "ingest_fell_back": bool(got["ingest_fell_back"].iloc[0]) if len(got) else False,
+            "notes": record.get("notes", ""),
+        })
+    per_photo = pd.DataFrame(rows)
+
+    summary = {
+        "n_photos": int(len(labels)),
+        "n_unlabelled": unlabelled,
+        "n_scored": int(len(per_photo)),
+        "mode": mode,
+        "k": int(k),
+        "gate_pass_rate": float(per_photo["confident"].mean()),
+        "ingest_fallback_rate": float(per_photo["ingest_fell_back"].mean()),
+        "mean_top1_similarity": float(per_photo["top1_similarity"].mean()),
+        "mean_coherence": float(per_photo["coherence"].mean()),
+    }
+    for group in ("single", "multi", "non_clothing"):
+        subset = per_photo[per_photo["group"] == group]
+        summary["n_" + group] = int(len(subset))
+        if group == "non_clothing":
+            # Nothing to retrieve, so the only score that means anything is
+            # whether the system had the sense to say it did not know.
+            summary["non_clothing_declined_rate"] = (
+                float((~subset["confident"]).mean()) if len(subset) else float("nan"))
+            continue
+        for metric in ("P@1", p_at_k, colour_at_k, both_at_k):
+            interval = bootstrap_mean(subset[metric], n_resamples=n_resamples,
+                                      seed=seed)
+            summary["{}_{}".format(group, metric)] = interval["mean"]
+            summary["{}_{}_ci".format(group, metric)] = (
+                interval["ci_low"], interval["ci_high"])
+
+    return summary, per_photo
+
+
 # --------------------------------------------------------------- protocol ----
 @dataclass
 class RetrievalProtocol:
@@ -220,6 +416,10 @@ class RetrievalProtocol:
         self.subcat = g["subCategory"].to_numpy()
         self.mastercat = g["masterCategory"].to_numpy()
         self.colour = g[self.control].fillna("Unknown").to_numpy()
+        # Same attribute, coarser vocabulary. Reported beside the exact match so
+        # the naming artefact and the perceptual error can be told apart.
+        self.colour_map = colour_families(self.colour)
+        self.colour_group = np.array([self.colour_map.get(c, c) for c in self.colour])
         self.product_name = g["productDisplayName"].fillna("").to_numpy()
 
         # how many other items share each attribute - Recall@K and the nDCG ideal
@@ -410,15 +610,24 @@ class RetrievalProtocol:
         # A result is useful to a shopper when the TYPE and the COLOUR match.
         type_hit = self.article[ranked[:, :k]] == self.article[queries][:, None]
         colour_hit = self.colour[ranked[:, :k]] == self.colour[queries][:, None]
+        family_hit = (self.colour_group[ranked[:, :k]]
+                      == self.colour_group[queries][:, None])
         summary["type@10"] = float(type_hit.mean())
         summary["colour@10"] = float(colour_hit.mean())
         summary["both@10"] = float((type_hit & colour_hit).mean())
+        # Colour scored on families rather than exact labels. Never a
+        # replacement for colour@10 - the pair is the point, because the gap
+        # between them is how much of the colour deficit is only naming.
+        summary["colourfam@10"] = float(family_hit.mean())
+        summary["bothfam@10"] = float((type_hit & family_hit).mean())
         summary["ms_per_query"] = elapsed
         summary["dim"] = index.dim
         # per-query means, so two models can be compared with a paired test
         summary["_per_query_both"] = (type_hit & colour_hit).mean(axis=1)
         summary["_per_query_type"] = type_hit.mean(axis=1)
         summary["_per_query_colour"] = colour_hit.mean(axis=1)
+        summary["_per_query_colourfam"] = family_hit.mean(axis=1)
+        summary["_per_query_bothfam"] = (type_hit & family_hit).mean(axis=1)
 
         if store:
             self.results.setdefault("deployment", {})[label or index.name] = summary
@@ -452,7 +661,9 @@ class RetrievalProtocol:
         """Paired comparison of two deployment summaries on the same queries."""
         key = {"both@10": "_per_query_both",
                "type@10": "_per_query_type",
-               "colour@10": "_per_query_colour"}[metric]
+               "colour@10": "_per_query_colour",
+               "colourfam@10": "_per_query_colourfam",
+               "bothfam@10": "_per_query_bothfam"}[metric]
         stats = paired_bootstrap(summary_a[key], summary_b[key], **kwargs)
         stats["metric"] = metric
         return stats

@@ -43,5 +43,14 @@
   },
   "evaluation_index_file": "search_index_eval.npy",
   "evaluation_catalogue_size": 32837,
-  "index_scope": "The served index covers the whole catalogue, because a customer must be able to find anything the shop stocks. The 15% product-level holdout is a property of the measurement, not of the shop, so the evaluation index excludes it and every reported metric is computed against that smaller index."
+  "index_scope": "The served index covers the whole catalogue, because a customer must be able to find anything the shop stocks. The 15% product-level holdout is a property of the measurement, not of the shop, so the evaluation index excludes it and every reported metric is computed against that smaller index.",
+  "hard_metrics_disjoint": {
+    "P@10": 0.6062,
+    "colour@10": 0.4891,
+    "both@10": 0.3071,
+    "background_bank": "eval (checker, stripes) - never generated in training",
+    "scale_range": "0.55-1.00",
+    "source": "outputs/task4_disjoint_benchmark.csv",
+    "note": "Measured at a compositing scale of 0.55-1.00 against the notebook's 0.35-0.95, so it is not directly comparable with hard_metrics; it is reported because hard_metrics were measured against the training background bank and are circular."
+  }
 }

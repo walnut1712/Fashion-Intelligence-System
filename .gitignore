@@ -37,3 +37,7 @@ artifacts/task1/graded_probabilities_*.npz
 # Only the adopted model (artifacts/task1/task1_cnn.pt) is committed; the
 # comparison itself lives in outputs/evaluation/task1_recipe_comparison.csv.
 artifacts/task1/candidate_*.pt
+
+# Generated labelling aid: 3.6 MB of base64 thumbnails, rebuilt on demand by
+# scripts/build_label_sheet.py. The labels it produces are committed; it is not.
+outputs/input_images_labelling.html

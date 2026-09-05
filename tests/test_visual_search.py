@@ -18,6 +18,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import pytest
 import torch
 
@@ -27,12 +28,34 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.evaluation.metrics import (  # noqa: E402
     CatalogueIndex,
+    colour_families,
     RetrievalProtocol,
     VisualSearchIndex,
     mcnemar,
     paired_bootstrap,
 )
-from src.visual_search.search_engine import ImprovedEncoder  # noqa: E402
+from src.data import synthetic_backgrounds  # noqa: E402
+from src.data.synthetic_backgrounds import (  # noqa: E402
+    DEFAULT_SEGMENT_PROBABILITY,
+    EVAL_DEGRADATIONS,
+    TRAINING_DEGRADATIONS,
+    degrade,
+    simulate_ingestion,
+)
+from src.visual_search.search_engine import (  # noqa: E402
+    BAND_LAYOUT,
+    BAND_NAMES,
+    NON_WEARABLE_CATEGORIES,
+    ImprovedEncoder,
+)
+
+
+def _noise_image(seed=0):
+    """A frame with enough structure that segmentation has something to find."""
+    generator = np.random.default_rng(seed)
+    image = np.full((80, 60, 3), 240, dtype=np.uint8)
+    image[18:62, 12:48] = generator.integers(0, 160, (44, 36, 3))
+    return image
 
 ARTIFACT_DIR = PROJECT_ROOT / "artifacts" / "task4"
 MANIFEST_PATH = ARTIFACT_DIR / "search_manifest.json"
@@ -627,3 +650,311 @@ def test_the_evaluation_index_is_kept_separate_and_smaller(manifest):
     if path.exists():
         index = np.load(path, mmap_mode="r")
         assert len(index) == manifest["evaluation_catalogue_size"]
+
+
+# ------------------------------------------- photographic degradation ----
+# Background augmentation took hard-benchmark P@10 from 12.2 to 60.6, and the
+# residual named in notebook 06 is the flat-lay-versus-worn gap. These guard the
+# second augmentation axis - what a camera does to a photograph - and above all
+# the train/eval separation, without which a gain is measured on the model's own
+# augmentation and means nothing.
+
+def test_training_and_evaluation_degradations_are_disjoint():
+    """The same discipline the background banks already follow.
+
+    A model graded on a corruption its training loop generates is graded on
+    itself. ``EVAL_FAMILIES`` and ``TRAINING_FAMILIES`` established this; the
+    degradation families must not quietly break it.
+    """
+    assert not set(TRAINING_DEGRADATIONS) & set(EVAL_DEGRADATIONS)
+    assert set(TRAINING_DEGRADATIONS) | set(EVAL_DEGRADATIONS) == set(
+        synthetic_backgrounds._DEGRADATION_ORDER)
+
+
+def test_degrade_is_deterministic_under_a_fixed_seed():
+    """Two runs of a reported number must produce that number twice."""
+    image = _noise_image()
+    first = degrade(image, np.random.default_rng(11), TRAINING_DEGRADATIONS)
+    second = degrade(image, np.random.default_rng(11), TRAINING_DEGRADATIONS)
+    assert np.array_equal(first, second)
+    assert not np.array_equal(first, image), "nothing was applied"
+
+
+def test_degrade_at_zero_strength_is_the_identity():
+    """The ramp starts at zero, so zero must mean untouched.
+
+    Notebook 06 ramps the background probability from 0 rather than starting at
+    full strength, because a from-scratch run at full strength collapsed. The
+    degradation strength is ramped the same way and needs the same property.
+    """
+    image = _noise_image()
+    unchanged = degrade(image, np.random.default_rng(3), TRAINING_DEGRADATIONS,
+                        strength=0.0)
+    assert np.array_equal(unchanged, image)
+
+
+def test_degrade_does_not_depend_on_the_order_families_are_listed():
+    """Corruptions apply in photographic order, not in call order."""
+    image = _noise_image()
+    forward = degrade(image, np.random.default_rng(5), TRAINING_DEGRADATIONS)
+    reversed_ = degrade(image, np.random.default_rng(5),
+                        tuple(reversed(TRAINING_DEGRADATIONS)))
+    assert np.array_equal(forward, reversed_)
+
+
+def test_degrade_rejects_an_unknown_family():
+    """A typo in a family name must fail loudly, not silently do nothing."""
+    with pytest.raises(ValueError, match="Unknown degradation families"):
+        degrade(_noise_image(), np.random.default_rng(0), ("rotate", "sepia"))
+
+
+def test_rotation_fills_the_corners_with_the_backdrop_not_black():
+    """Black corners would be a perfect rotation detector.
+
+    A constant saturated wedge appears in no real photograph, so an encoder
+    would learn to spot the augmentation rather than the invariance it is meant
+    to teach.
+    """
+    image = np.full((80, 60, 3), 200, dtype=np.uint8)
+    rotated = degrade(image, np.random.default_rng(2), ("rotate",),
+                      probability=1.0)
+    corners = np.array([rotated[0, 0], rotated[0, -1],
+                        rotated[-1, 0], rotated[-1, -1]])
+    assert corners.min() > 150, "corners were filled with something dark"
+
+
+# ------------------------------------------------ serve-path simulation ----
+
+def test_simulate_ingestion_never_returns_an_empty_frame():
+    """Deleting the product is the failure mode this whole path guards against."""
+    generator = np.random.default_rng(4)
+    for seed in range(12):
+        frame = simulate_ingestion(_noise_image(seed), generator)
+        assert frame.shape == (80, 60, 3)
+        assert frame.std() > 1.0, "segmentation returned a blank frame"
+
+
+def test_simulate_ingestion_declines_rather_than_deleting_the_product():
+    """No plausible mask means hand the image back, exactly as production does.
+
+    ``load_user_image`` falls back to a centre crop rather than returning a white
+    rectangle; a uniform frame has nothing to segment and must survive intact.
+    """
+    flat = np.full((80, 60, 3), 128, dtype=np.uint8)
+    result, info = simulate_ingestion(flat, np.random.default_rng(0),
+                                      p_segment=1.0, return_info=True)
+    assert not info["segmented"]
+    assert np.array_equal(result, flat)
+
+
+def test_simulate_ingestion_follows_the_measured_fallback_rate():
+    """The 62/38 split is measured, not chosen.
+
+    ``outputs/task4_ingestion_fallback.csv``: 3,636 images segmented against
+    2,193 that fell back to a centre crop.
+    """
+    assert DEFAULT_SEGMENT_PROBABILITY == pytest.approx(3636 / (3636 + 2193))
+
+    generator = np.random.default_rng(0)
+    attempted = sum(
+        generator.random() < DEFAULT_SEGMENT_PROBABILITY for _ in range(4000))
+    assert 0.58 < attempted / 4000 < 0.66
+
+
+# ------------------------------------------------- published metrics ----
+
+def test_the_manifest_records_an_out_of_domain_number_that_is_not_circular(manifest):
+    """``hard_metrics`` was measured on the encoder's own augmentation.
+
+    The manifest's provenance note says so itself: those figures predate the
+    disjoint evaluation bank and grade the model against the background families
+    its training loop generates. A separate, honestly-measured number has to
+    exist for anything to publish.
+    """
+    disjoint = manifest.get("hard_metrics_disjoint")
+    if disjoint is None:
+        pytest.skip("no disjoint measurement recorded yet")
+    assert "P@10" in disjoint
+    assert disjoint.get("source"), "an out-of-domain number needs its provenance"
+    assert disjoint["P@10"] > manifest["clean_metrics"]["P@10"] * 0.5, (
+        "an encoder scoring below half its clean P@10 out of domain has collapsed"
+    )
+
+
+def test_the_model_card_publishes_the_disjoint_number(manifest):
+    """The card used to print 52.8 - the circular figure - as the honest one."""
+    if not manifest.get("hard_metrics_disjoint"):
+        pytest.skip("no disjoint measurement recorded yet")
+    service = pytest.importorskip(
+        "app.backend.services.task4_service", reason="backend not importable")
+
+    card = service.Task4Service().model_card()
+    expected = manifest["hard_metrics_disjoint"]["P@10"] * 100
+    assert "{:.1f}".format(expected) in card["note"]
+    stale = manifest.get("hard_metrics", {}).get("P@10")
+    if stale and abs(stale * 100 - expected) > 0.05:
+        assert "{:.1f}".format(stale * 100) not in card["note"]
+
+
+# ------------------------------------------------------ colour families ----
+# colour@10 (~54) trails P@10 (~80) by 26 points. Part of that is an exact
+# string match over 46 labels rather than a perceptual failure: 42% of the
+# catalogue carries a colour with a same-family sibling. These pin the mapping
+# to a lexical rule so it cannot quietly grow into "whatever makes the number
+# better" - measured, it recovers 3.04 points, leaving 23 that are real.
+
+def test_colour_families_merge_only_lexical_variants():
+    """A multi-word colour joins the single-word colour it contains."""
+    mapping = colour_families([
+        "Blue", "Navy Blue", "Turquoise Blue", "White", "Off White",
+        "Grey", "Grey Melange", "Teal", "Olive", "Green", "Sea Green"])
+    assert mapping["Navy Blue"] == "Blue"
+    assert mapping["Turquoise Blue"] == "Blue"
+    assert mapping["Off White"] == "White"
+    assert mapping["Grey Melange"] == "Grey"
+    assert mapping["Sea Green"] == "Green"
+    assert mapping["Blue"] == "Blue"
+
+
+def test_colour_families_make_no_perceptual_claims():
+    """Teal is not Blue and Olive is not Green under this rule.
+
+    Folding them in would be a judgement about what counts as the same colour,
+    which is exactly what this mapping must not do - it removes a naming
+    artefact, it does not make the metric easier.
+    """
+    mapping = colour_families(["Blue", "Teal", "Green", "Olive", "Silver",
+                               "Gold", "Bronze", "Copper", "Metallic"])
+    assert mapping["Teal"] == "Teal"
+    assert mapping["Olive"] == "Olive"
+    for metallic in ("Silver", "Gold", "Bronze", "Copper"):
+        assert mapping[metallic] == metallic
+
+
+def test_colour_families_never_merge_two_single_word_colours():
+    """The rule can only ever collapse a compound onto a base, never base onto base."""
+    gallery_path = ARTIFACT_DIR / "gallery_metadata.csv"
+    if not gallery_path.exists():
+        pytest.skip("gallery metadata not present")
+    import pandas as pd
+
+    values = pd.read_csv(gallery_path)["baseColour"].dropna().unique()
+    mapping = colour_families(values)
+    for label, family in mapping.items():
+        if " " not in label:
+            assert family == label, "{} was merged into {}".format(label, family)
+    assert len(set(mapping.values())) < len(set(mapping))
+
+
+# ------------------------------------------------------- band plausibility ----
+
+def test_band_names_cover_the_layout_and_exclude_whole():
+    """The prior must apply to bands only, never to the whole image."""
+    assert BAND_NAMES == {name for name, _, _ in BAND_LAYOUT}
+    assert "whole" not in BAND_NAMES
+
+
+def test_the_wearable_mask_excludes_only_unwearable_categories():
+    """A band of a worn outfit is never a perfume or a cushion cover."""
+    metadata = pd.DataFrame({
+        "masterCategory": ["Apparel", "Footwear", "Accessories",
+                           "Personal Care", "Home", "Sporting Goods", "Free Items"],
+    })
+    wearable = ~metadata["masterCategory"].isin(NON_WEARABLE_CATEGORIES).to_numpy()
+    assert list(wearable) == [True, True, True, False, False, False, False]
+
+
+def test_bands_do_not_return_unwearable_items():
+    """Regression for the measured failure.
+
+    ``600_google-pattern-socks.jpg`` returned "Perfume and Body Mist" at 0.741
+    from its top third - accepted, and outscoring every real garment in a
+    photograph of socks. Two of 36 accepted band matches were of this kind.
+    """
+    upload = (PROJECT_ROOT / "A2_FashionDataset" / "input_images"
+              / "600_google-pattern-socks.jpg")
+    if not upload.exists() or not MANIFEST_PATH.exists():
+        pytest.skip("upload or Task 4 artefacts not present")
+
+    from src.visual_search.search_engine import SearchEngine
+
+    results = SearchEngine.load().search_regions(upload, k=5)
+    bands = results[results["region"].isin(BAND_NAMES)]
+    assert len(bands), "no band regions were proposed"
+    offenders = bands[bands["masterCategory"].isin(NON_WEARABLE_CATEGORIES)]
+    assert offenders.empty, "bands returned {}".format(
+        sorted(offenders["articleType"].unique()))
+
+    # The whole image keeps the unfiltered catalogue: a photograph of a perfume
+    # bottle must still be able to find perfume.
+    whole = results[results["region"] == "whole"]
+    assert len(whole), "the whole-image region disappeared"
+
+
+# --------------------------------------------------- V2 warm start ----
+# The colour branch was costed as 9 runs x 30 epochs from scratch and shelved.
+# The two models share their convolutional stack exactly, so it is a fine-tune.
+
+def test_v2_warm_start_transfers_the_whole_backbone():
+    """Every ConvBlock tensor must cross; a silent partial load would waste a run."""
+    from src.visual_search.search_engine import ImprovedEncoderV2
+
+    source = ImprovedEncoder(embedding_dim=128, n_types=124, n_colours=47)
+    target = ImprovedEncoderV2(embedding_dim=128, n_types=124, n_colours=47)
+
+    loaded, skipped = target.warm_start(source.state_dict())
+    backbone = [k for k in source.state_dict() if k.startswith("backbone.")]
+    assert len(backbone) == 48
+    assert all(k.replace("backbone.", "blocks.", 1) in loaded for k in backbone)
+
+    # project changes shape (256->96 against 256->128) and cannot transfer.
+    assert "project.weight" in skipped and "project.bias" in skipped
+
+
+def test_v2_warm_start_actually_copies_the_weights():
+    """load_state_dict succeeding is not evidence the values arrived."""
+    from src.visual_search.search_engine import ImprovedEncoderV2
+
+    source = ImprovedEncoder(embedding_dim=128, n_types=124, n_colours=47)
+    target = ImprovedEncoderV2(embedding_dim=128, n_types=124, n_colours=47)
+    target.warm_start(source.state_dict())
+
+    key = "backbone.0.block.0.weight"
+    assert torch.equal(source.state_dict()[key],
+                       target.state_dict()[key.replace("backbone.", "blocks.", 1)])
+
+
+def test_v2_still_embeds_after_a_warm_start():
+    """A warm-started model has to be usable, not merely loadable."""
+    from src.visual_search.search_engine import ImprovedEncoderV2
+
+    target = ImprovedEncoderV2(embedding_dim=128, n_types=124, n_colours=47)
+    target.warm_start(
+        ImprovedEncoder(embedding_dim=128, n_types=124, n_colours=47).state_dict())
+    target.eval()
+
+    vectors = target.embed(torch.randn(4, 3, 80, 60))
+    assert vectors.shape == (4, 128)
+    assert torch.allclose(vectors.norm(dim=1), torch.ones(4), atol=1e-5)
+
+
+def test_v2_warm_start_from_the_shipped_clean_encoder():
+    """The real checkpoint, not a synthetic one - shapes there are what matter."""
+    if not CLEAN_CHECKPOINT.exists():
+        pytest.skip("clean encoder not present")
+    from src.visual_search.search_engine import ImprovedEncoderV2
+
+    checkpoint = torch.load(CLEAN_CHECKPOINT, map_location="cpu")
+    assert not checkpoint.get("background_augmented", False), (
+        "the warm start must begin from the clean encoder, not an augmented one"
+    )
+    target = ImprovedEncoderV2(
+        embedding_dim=checkpoint["embedding_dim"],
+        n_types=checkpoint.get("n_types", 124),
+        n_colours=checkpoint.get("n_colours", 47))
+
+    loaded, _ = target.warm_start(checkpoint["state_dict"])
+    carried = sum(target.state_dict()[k].numel() for k in loaded)
+    total = sum(p.numel() for p in target.parameters())
+    assert carried / total > 0.95, "only {:.1%} of parameters transferred".format(
+        carried / total)

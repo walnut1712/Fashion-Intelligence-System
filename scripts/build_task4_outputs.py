@@ -22,10 +22,18 @@ The clustering pass is skipped with a warning rather than failing when the
 cluster artefacts are missing or stale, because retrieval is the deliverable and
 clustering is the extra.
 
+``--rebuild-index`` regenerates the two search indexes from the encoder the
+manifest names. It exists because nothing did: the manifest claims this script
+built ``search_index_full.npy``, but both indexes were in fact produced ad hoc
+while moving Task 4 from serving the evaluation split to serving the whole
+catalogue. An encoder that cannot be turned into a deployable index by running a
+command cannot be honestly promoted.
+
 Usage
 -----
     python scripts/build_task4_outputs.py
     python scripts/build_task4_outputs.py --k 20 --limit 200 --mode letterbox
+    python scripts/build_task4_outputs.py --rebuild-index          # after retraining
 """
 
 import argparse
@@ -34,15 +42,20 @@ import sys
 import time
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
+from PIL import Image
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.evaluation.metrics import RetrievalProtocol  # noqa: E402
 from src.visual_search.search_engine import SearchEngine  # noqa: E402
 
 TEST_DIR = PROJECT_ROOT / "A2_FashionDataset" / "FashionDataset" / "test" / "images_test"
+TRAIN_DIR = PROJECT_ROOT / "A2_FashionDataset" / "FashionDataset" / "train" / "images_train"
+ARTIFACT_DIR = PROJECT_ROOT / "artifacts" / "task4"
 OUTPUT_DIR = PROJECT_ROOT / "outputs"
 
 
@@ -62,11 +75,107 @@ def parse_args():
                         help="only process the first N images (for a smoke test)")
     parser.add_argument("--no-clusters", action="store_true",
                         help="skip the cluster assignment pass")
+    parser.add_argument("--rebuild-index", action="store_true",
+                        help="re-embed the catalogue and rewrite both search "
+                             "indexes from the encoder the manifest names, then exit")
+    parser.add_argument("--catalogue-images", type=Path, default=TRAIN_DIR,
+                        help="directory of catalogue images for --rebuild-index")
     return parser.parse_args()
+
+
+def rebuild_index(engine, image_dir, artifact_dir=ARTIFACT_DIR, batch_size=256):
+    """Re-embed every catalogue photograph and rewrite both index files.
+
+    Two indexes, and conflating them would misreport the system:
+
+    ``search_index_full.npy``
+        every item the shop stocks, because a customer must be able to find
+        anything in the catalogue. This is what the API serves.
+    ``search_index_eval.npy``
+        the same embeddings minus the 15% product-level holdout, so that a query
+        drawn from the holdout cannot retrieve itself. Every published metric is
+        measured against this one.
+
+    The split is not stored anywhere - it is regenerated from
+    ``RetrievalProtocol``, which is seeded, so the same gallery always yields the
+    same holdout and the evaluation index stays comparable across rebuilds.
+    """
+    metadata_path = artifact_dir / "gallery_metadata.csv"
+    if not metadata_path.exists():
+        sys.exit("Cannot rebuild without {}".format(metadata_path))
+    gallery = pd.read_csv(metadata_path)
+    print("Gallery: {:,} rows".format(len(gallery)))
+
+    height, width = engine.size[1], engine.size[0]
+    ids = gallery["id"].to_numpy()
+    missing = [i for i in ids[:64] if not (image_dir / "{}.jpg".format(i)).exists()]
+    if missing:
+        sys.exit("Catalogue images not found in {} (e.g. {})".format(image_dir, missing[:3]))
+
+    vectors = []
+    started = time.perf_counter()
+    for start in range(0, len(ids), batch_size):
+        chunk = ids[start:start + batch_size]
+        # A plain resize, not the upload ingestion path: these are the frames the
+        # encoder was trained on, and letterboxing would pad the handful of
+        # square catalogue images it learnt stretched.
+        arrays = np.stack([
+            np.asarray(Image.open(image_dir / "{}.jpg".format(i)).convert("RGB")
+                       .resize((width, height)))
+            for i in chunk
+        ])
+        vectors.append(engine.embed_arrays(arrays))
+        print("  {:>6,}/{:,}".format(min(start + batch_size, len(ids)), len(ids)),
+              flush=True)
+    full = np.vstack(vectors).astype(np.float32)
+    print("Embedded {:,} items in {:.1f} min".format(
+        len(full), (time.perf_counter() - started) / 60))
+
+    catalogue_pos = RetrievalProtocol(gallery=gallery).catalogue_pos
+    evaluation = full[catalogue_pos]
+
+    # Report drift rather than overwriting in silence: a rebuild that quietly
+    # changes what the published metrics were measured on is how a stale number
+    # ends up on the model card.
+    previous_path = artifact_dir / "search_index_full.npy"
+    if previous_path.exists():
+        previous = np.load(previous_path)
+        if previous.shape == full.shape:
+            cosine = (previous * full).sum(1)
+            print("Agreement with the existing index: mean {:.6f}, min {:.6f}".format(
+                float(cosine.mean()), float(cosine.min())))
+        else:
+            print("Existing index has shape {} against {} - replacing".format(
+                previous.shape, full.shape))
+
+    np.save(previous_path, full)
+    np.save(artifact_dir / "search_index_eval.npy", evaluation)
+    np.save(artifact_dir / "gallery_ids.npy", ids)
+    print("Wrote search_index_full.npy {} and search_index_eval.npy {}".format(
+        full.shape, evaluation.shape))
+
+    manifest_path = artifact_dir / "search_manifest.json"
+    with open(manifest_path) as handle:
+        manifest = json.load(handle)
+    manifest["catalogue_size"] = int(len(full))
+    manifest["evaluation_catalogue_size"] = int(len(evaluation))
+    manifest.setdefault("provenance", {})["deployment_index_built_by"] = (
+        "scripts/build_task4_outputs.py --rebuild-index")
+    with open(manifest_path, "w") as handle:
+        json.dump(manifest, handle, indent=2)
+    print("Manifest sizes updated: {:,} served, {:,} scored".format(
+        len(full), len(evaluation)))
 
 
 def main():
     args = parse_args()
+
+    if args.rebuild_index:
+        engine = SearchEngine.load()
+        print("Encoder: {} | {}".format(
+            engine.manifest.get("encoder_file", "unknown"), engine.device))
+        rebuild_index(engine, args.catalogue_images, batch_size=args.batch)
+        return
 
     if not args.images.is_dir():
         sys.exit("Test image directory not found: {}".format(args.images))

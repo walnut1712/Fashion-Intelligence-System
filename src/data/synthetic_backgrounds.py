@@ -19,21 +19,54 @@ Two banks, and they must not be confused:
 ``make_eval_backgrounds``
     checkerboards and stripes, from ``src/evaluation/ood_benchmark.py``. Used
     only for measurement, so a model cannot be graded on its own augmentation.
+
+Swapping the backdrop is only half of what separates a catalogue photograph from
+an uploaded one. The composited item is still perfectly upright, perfectly sharp,
+lit exactly as the studio lit it, unoccluded and losslessly stored - none of which
+survives a phone camera. ``degrade`` supplies the missing half, and splits into
+training and evaluation families on the same principle as the backgrounds.
+
+``simulate_ingestion`` closes a third gap. A live upload does not reach the
+encoder as a composite: it goes through ``load_user_image(mode="nobg")``, which
+segments the subject onto white - or gives up and centre-crops, keeping the
+original backdrop, which measurement puts at 38% of images. Training on raw
+composites means training on a distribution the service never sends.
 """
 
 from __future__ import annotations
 
+import io
+
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFilter
 
 __all__ = ["make_backgrounds", "make_eval_backgrounds", "composite",
-           "TRAINING_FAMILIES", "EVAL_FAMILIES"]
+           "degrade", "simulate_ingestion",
+           "TRAINING_FAMILIES", "EVAL_FAMILIES",
+           "TRAINING_DEGRADATIONS", "EVAL_DEGRADATIONS"]
 
 TRAINING_FAMILIES = ("solid", "gradient", "noise", "blobs", "blurred-crop")
 EVAL_FAMILIES = ("checker", "stripes")
 
+#: Corruptions a camera applies that compositing does not. Disjoint from
+#: ``EVAL_DEGRADATIONS`` for the same reason the background banks are disjoint.
+TRAINING_DEGRADATIONS = ("rotate", "blur", "whitebalance", "occlude", "jpeg")
+EVAL_DEGRADATIONS = ("perspective", "shadow")
+
+#: Applied in this order whatever order the caller lists them in, so a run does
+#: not depend on tuple ordering: geometry, then light, then things in the way,
+#: then the lens, then the file format - which is the order a photograph
+#: actually acquires them.
+_DEGRADATION_ORDER = ("rotate", "perspective", "whitebalance", "shadow",
+                      "occlude", "blur", "jpeg")
+
 DEFAULT_SHAPE = (80, 60, 3)          # (H, W, C)
 DEFAULT_SCALE_RANGE = (0.35, 0.95)
+
+#: Share of uploads whose segmentation succeeds, measured on ``images_test`` in
+#: ``outputs/task4_ingestion_fallback.csv``: 3,636 segmented against 2,193 that
+#: fell back to a centre crop. A round number here would be an invention.
+DEFAULT_SEGMENT_PROBABILITY = 3636 / (3636 + 2193)
 
 
 def make_backgrounds(count=600, shape=DEFAULT_SHAPE, seed=42, source_images=None):
@@ -136,3 +169,227 @@ def composite(image, mask, background, generator, scale_range=DEFAULT_SCALE_RANG
     offset_y = int(generator.integers(0, max(1, height - target_height + 1)))
     canvas.paste(item_img, (offset_x, offset_y), mask_img)
     return np.asarray(canvas, dtype=np.uint8)
+
+
+# ------------------------------------------------- photographic degradation ----
+def _border_median(image):
+    """Background colour estimated from the frame edge, as uint8 RGB.
+
+    Used to fill the corners a rotation opens up. Filling with black instead
+    would hand the encoder a perfect rotation detector - a constant, saturated
+    wedge no real photograph contains - and it would learn that rather than the
+    invariance the augmentation is meant to teach.
+    """
+    edges = np.concatenate([image[0], image[-1], image[:, 0], image[:, -1]], axis=0)
+    return tuple(int(v) for v in np.median(edges, axis=0))
+
+
+def _perspective_coefficients(source_corners, target_corners):
+    """Solve the eight coefficients ``Image.PERSPECTIVE`` wants.
+
+    PIL samples the input at ``((ax + by + c) / (gx + hy + 1), ...)`` for each
+    output pixel ``(x, y)``, so the unknowns are recovered from four output
+    corners and the input points they should read from - an exactly determined
+    8x8 system, no least squares needed.
+    """
+    rows, values = [], []
+    for (x, y), (u, v) in zip(target_corners, source_corners):
+        rows.append([x, y, 1, 0, 0, 0, -u * x, -u * y])
+        rows.append([0, 0, 0, x, y, 1, -v * x, -v * y])
+        values.extend((u, v))
+    return np.linalg.solve(np.asarray(rows, dtype=np.float64),
+                          np.asarray(values, dtype=np.float64))
+
+
+def degrade(image, generator, families=TRAINING_DEGRADATIONS, strength=1.0,
+            probability=0.5):
+    """Apply the corruptions a camera adds and compositing does not.
+
+    ``composite`` produces an item that is upright, sharp, studio-lit, unoccluded
+    and losslessly stored. A photograph of the same garment is none of those, and
+    an encoder trained only on composites can key on the difference. Each named
+    family fires independently with ``probability``; ``strength`` scales every
+    magnitude, so 0.0 is the identity and the parameter can be ramped exactly as
+    the background probability already is.
+
+    Families are applied in ``_DEGRADATION_ORDER``, not in the order given.
+
+    Returns a new ``uint8`` array of the same shape; ``image`` is not modified.
+    """
+    if strength <= 0 or not families:
+        return np.ascontiguousarray(image, dtype=np.uint8)
+
+    selected = [f for f in _DEGRADATION_ORDER if f in set(families)]
+    unknown = set(families) - set(_DEGRADATION_ORDER)
+    if unknown:
+        raise ValueError("Unknown degradation families: {}. Known: {}".format(
+            sorted(unknown), list(_DEGRADATION_ORDER)))
+
+    picture = Image.fromarray(np.asarray(image, dtype=np.uint8))
+    width, height = picture.size
+
+    for family in selected:
+        # Draw for every family whether or not it fires, so that adding a family
+        # to the list does not reshuffle the draws of the ones after it.
+        fires = generator.random() < probability
+
+        if family == "rotate":
+            angle = strength * generator.uniform(-12.0, 12.0)
+            if fires:
+                picture = picture.rotate(
+                    angle, resample=Image.BILINEAR,
+                    fillcolor=_border_median(np.asarray(picture)))
+
+        elif family == "perspective":
+            jitter = strength * 0.08 * np.array([width, height], dtype=np.float64)
+            offsets = generator.uniform(-1.0, 1.0, (4, 2)) * jitter
+            if fires:
+                corners = np.array([[0, 0], [width, 0], [width, height], [0, height]],
+                                   dtype=np.float64)
+                picture = picture.transform(
+                    (width, height), Image.PERSPECTIVE,
+                    _perspective_coefficients(corners + offsets, corners),
+                    resample=Image.BILINEAR,
+                    fillcolor=_border_median(np.asarray(picture)))
+
+        elif family == "whitebalance":
+            gain = 1.0 + strength * generator.uniform(-0.10, 0.10, 3)
+            if fires:
+                array = np.asarray(picture, dtype=np.float32) * gain
+                picture = Image.fromarray(np.clip(array, 0, 255).astype(np.uint8))
+
+        elif family == "shadow":
+            darkness = 1.0 - strength * generator.uniform(0.15, 0.45)
+            angle = generator.uniform(0, 2 * np.pi)
+            edge = generator.uniform(0.25, 0.75)
+            if fires:
+                yy, xx = np.mgrid[0:height, 0:width]
+                projection = (np.cos(angle) * xx / width
+                              + np.sin(angle) * yy / height)
+                low, high = projection.min(), projection.max()
+                projection = (projection - low) / max(high - low, 1e-6)
+                # smoothstep, so the shadow has a soft edge rather than a line
+                ramp = np.clip((projection - edge) / 0.35, 0, 1)
+                ramp = ramp * ramp * (3 - 2 * ramp)
+                factor = (darkness + (1.0 - darkness) * ramp)[..., None]
+                array = np.asarray(picture, dtype=np.float32) * factor
+                picture = Image.fromarray(np.clip(array, 0, 255).astype(np.uint8))
+
+        elif family == "occlude":
+            fraction = strength * generator.uniform(0.05, 0.20)
+            aspect = generator.uniform(0.4, 2.5)
+            centre = generator.uniform(0.15, 0.85, 2)
+            colour = generator.integers(0, 256, 3)
+            if fires:
+                area = fraction * width * height
+                box_w = int(np.clip(round(np.sqrt(area * aspect)), 1, width))
+                box_h = int(np.clip(round(np.sqrt(area / aspect)), 1, height))
+                x0 = int(np.clip(centre[0] * width - box_w / 2, 0, width - box_w))
+                y0 = int(np.clip(centre[1] * height - box_h / 2, 0, height - box_h))
+                array = np.asarray(picture).copy()
+                array[y0:y0 + box_h, x0:x0 + box_w] = colour
+                picture = Image.fromarray(array)
+
+        elif family == "blur":
+            radius = strength * generator.uniform(0.0, 0.8)
+            if fires and radius > 0.01:
+                picture = picture.filter(ImageFilter.GaussianBlur(radius))
+
+        elif family == "jpeg":
+            quality = int(round(100 - strength * generator.uniform(10.0, 65.0)))
+            if fires:
+                buffer = io.BytesIO()
+                picture.save(buffer, format="JPEG", quality=max(1, min(100, quality)))
+                buffer.seek(0)
+                picture = Image.open(buffer).convert("RGB")
+
+    return np.asarray(picture, dtype=np.uint8)
+
+
+# --------------------------------------------------- serve-path simulation ----
+def _border_colour_mask(image, tolerance=20):
+    """Foreground where the pixel differs from the frame-edge background colour.
+
+    The same estimator notebook 06 uses to cut catalogue items off white, and the
+    numpy tier of ``src/data/user_image.py``'s segmentation ladder. Modelling the
+    backdrop from the border rather than assuming white is what lets it work on a
+    composite, where the backdrop is whatever the background bank supplied.
+    """
+    from scipy import ndimage
+
+    background = np.median(
+        np.concatenate([image[0], image[-1], image[:, 0], image[:, -1]], axis=0),
+        axis=0)
+    mask = np.abs(image.astype(np.float32) - background).max(axis=2) > tolerance
+
+    structure = np.ones((3, 3), dtype=bool)
+    mask = ndimage.binary_opening(mask, structure=structure, iterations=1)
+    mask = ndimage.binary_closing(mask, structure=structure, iterations=2)
+
+    labels, count = ndimage.label(mask, structure=structure)
+    if count == 0:
+        return mask
+    areas = np.bincount(labels.ravel())
+    areas[0] = 0                                   # background label
+    keep = np.flatnonzero(areas > 0.15 * areas.max())
+    return np.isin(labels, keep)
+
+
+def simulate_ingestion(image, generator, p_segment=DEFAULT_SEGMENT_PROBABILITY,
+                       margin=0.06, tolerance=20, return_info=False):
+    """Put a composite through the shape of the pipeline that serves real uploads.
+
+    ``load_user_image(mode="nobg")`` does not hand the encoder the photograph. It
+    segments the subject onto white and crops tight, and when no plausible mask
+    comes back it declines and centre-crops instead, leaving the backdrop in
+    place. Training only on raw composites therefore trains on a distribution the
+    service never sends, and never shows the encoder what a *failed* segmentation
+    looks like - a halo of leftover backdrop, or a garment with a piece missing.
+
+    ``p_segment`` defaults to the rate measured on ``images_test``, not a round
+    number. Declining is modelled by returning the composite untouched.
+
+    This is deliberately the cheap tier only. The served ladder is rembg ->
+    GrabCut -> border colour -> flood fill, and its docstring records 510 ms per
+    image; at 60x80 that is unaffordable per sample per epoch, and the border
+    colour model alone is microseconds. Training therefore sees a slightly worse
+    segmentation than production delivers, which errs in the safe direction.
+    """
+    array = np.asarray(image, dtype=np.uint8)
+    info = {"segmented": False, "reason": "declined"}
+
+    if generator.random() >= p_segment:
+        return (array.copy(), info) if return_info else array.copy()
+
+    height, width = array.shape[:2]
+    mask = _border_colour_mask(array, tolerance=tolerance)
+    covered = mask.mean()
+
+    # Production declines on an implausible mask rather than deleting the
+    # product; ``load_user_image`` uses an ink fraction of 0.05 for the same
+    # call. A mask covering nearly everything has segmented nothing.
+    if covered < 0.05 or covered > 0.95:
+        info["reason"] = "implausible mask ({:.2f} covered)".format(covered)
+        return (array.copy(), info) if return_info else array.copy()
+
+    ys, xs = np.where(mask)
+    pad_y = int(round(margin * height))
+    pad_x = int(round(margin * width))
+    y0 = max(0, ys.min() - pad_y)
+    y1 = min(height, ys.max() + 1 + pad_y)
+    x0 = max(0, xs.min() - pad_x)
+    x1 = min(width, xs.max() + 1 + pad_x)
+
+    subject = np.full_like(array, 255)
+    subject[mask] = array[mask]
+    tile = Image.fromarray(subject[y0:y1, x0:x1])
+
+    # Letterbox onto white at the original size, so the frame the encoder sees
+    # keeps its aspect ratio and the item is not stretched.
+    tile.thumbnail((width, height), Image.BILINEAR)
+    canvas = Image.new("RGB", (width, height), (255, 255, 255))
+    canvas.paste(tile, ((width - tile.width) // 2, (height - tile.height) // 2))
+
+    info.update(segmented=True, reason="border colour", covered=float(covered))
+    result = np.asarray(canvas, dtype=np.uint8)
+    return (result, info) if return_info else result
