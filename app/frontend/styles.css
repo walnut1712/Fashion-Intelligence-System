@@ -168,6 +168,31 @@ button { font: inherit; color: inherit; }
 }
 .banner .ic { margin-top: 2px; }
 
+/* The page-level banner reports the app's own state (demo mode, a failed
+   request). This one reports the model's, so it sits with the results it
+   qualifies rather than at the top of the page. */
+.banner-inline { margin-bottom: 14px; font-size: 13px; }
+
+/* One block per proposed garment. The encoder emits a single vector per image,
+   so an outfit averages into a vector describing none of its parts - splitting
+   the frame is the only way to ask about each garment separately. */
+.seg-stack { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.region-group { margin-bottom: 18px; }
+.region-head {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 8px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.region-name { font-weight: 600; font-size: 13.5px; }
+.region-meta { font-size: 12px; color: var(--text-muted); }
+.region-skipped { opacity: 0.55; }
+.region-tag {
+  font-size: 11px; padding: 1px 7px; border-radius: 999px;
+  background: var(--ok-bg, #E4F0E4); color: var(--ok-fg, #2C5E2E);
+}
+.region-tag-off { background: var(--warn-bg); color: var(--warn-fg); }
+.banner-inline b { font-weight: 600; }
+
 /* ----------------------------------------------------------------- card  */
 .card {
   background: var(--surface-1);

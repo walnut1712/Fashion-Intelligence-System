@@ -139,10 +139,16 @@
         <h2 id="h-similar" class="card-title">Similar items</h2>
         <p class="card-note">Nearest neighbours by cosine similarity in the 128-dimension embedding space.</p>
       </div>
-      <div class="seg" role="group" aria-label="Number of results to retrieve">
-        <button type="button" class="seg-btn" data-k="6">6</button>
-        <button type="button" class="seg-btn is-on" data-k="12">12</button>
-        <button type="button" class="seg-btn" data-k="24">24</button>
+      <div class="seg-stack">
+        <div class="seg" role="group" aria-label="What to search with">
+          <button type="button" class="seg-btn is-on" data-view="whole">Whole image</button>
+          <button type="button" class="seg-btn" data-view="regions">Per garment</button>
+        </div>
+        <div class="seg" role="group" aria-label="Number of results to retrieve">
+          <button type="button" class="seg-btn" data-k="6">6</button>
+          <button type="button" class="seg-btn is-on" data-k="12">12</button>
+          <button type="button" class="seg-btn" data-k="24">24</button>
+        </div>
       </div>
     </div>
 

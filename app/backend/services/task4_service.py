@@ -153,7 +153,15 @@ class Task4Service:
         """
         manifest = self.manifest or {}
         clean = manifest.get("clean_metrics", {})
-        hard = manifest.get("hard_metrics", {})
+
+        # Prefer the disjoint-bank measurement. ``hard_metrics`` was measured
+        # against the background families the encoder trains on, which is a model
+        # graded on its own augmentation, and the manifest says as much in its
+        # provenance note - yet those were the numbers this card published (52.8
+        # where the disjoint measurement is 60.6). Fall back only when no disjoint
+        # figure has been recorded.
+        hard = manifest.get("hard_metrics_disjoint") or manifest.get("hard_metrics", {})
+        hard_is_disjoint = bool(manifest.get("hard_metrics_disjoint"))
 
         clean_p10 = float(clean.get("P@10", 0.0)) * 100
         clean_colour = float(clean.get("colour@10", 0.0)) * 100
@@ -174,10 +182,11 @@ class Task4Service:
         ).format(clean_colour, 2000, scored_against, served)
 
         note = (
-            "On photographs composited onto unseen backgrounds P@10 falls to "
-            "<b>{:.1f}</b>. The catalogue is flat-lay product shots, so a real "
-            "upload is harder than this headline."
-        ).format(hard_p10) if hard else (
+            "On photographs composited onto {} P@10 falls to <b>{:.1f}</b>. The "
+            "catalogue is flat-lay product shots, so a real upload is harder than "
+            "this headline."
+        ).format("backgrounds unseen in training" if hard_is_disjoint
+                 else "new backgrounds", hard_p10) if hard else (
             "No out-of-domain benchmark recorded for this encoder."
         )
 
@@ -256,6 +265,18 @@ class Task4Service:
                 "top_similarity": round(float(group["similarity"].iloc[0]), 4),
                 "items": items,
             })
+
+        # A component that is the whole subject returns the whole image's list
+        # again - which happens whenever segmentation finds one connected blob,
+        # and only 1 of the 31 real uploads ever split into more. Showing the
+        # same twelve results under two headings is noise, so drop the copy and
+        # keep the one the reader can interpret.
+        whole = next((r for r in regions if r["region"] == "whole"), None)
+        if whole is not None:
+            signature = [item["id"] for item in whole["items"]]
+            regions = [r for r in regions
+                       if r["region"] == "whole"
+                       or [item["id"] for item in r["items"]] != signature]
 
         # Accepted regions first, then by how close the match was.
         regions.sort(key=lambda r: (not r["accepted"], -r["top_similarity"]))

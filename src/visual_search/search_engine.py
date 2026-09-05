@@ -44,6 +44,7 @@ from src.data.user_image import (  # noqa: F401
 
 __all__ = ["SearchEngine", "load_user_image", "ImprovedEncoder",
            "ImprovedEncoderV2", "GeM", "CosineHead", "build_encoder", "ARCHITECTURES",
+           "NON_WEARABLE_CATEGORIES", "BAND_NAMES",
            "foreground_mask", "list_images", "PREPROCESS_MODES",
            "DEFAULT_CONFIDENCE"]
 
@@ -231,6 +232,43 @@ class ImprovedEncoderV2(nn.Module):
         self.type_head = CosineHead(embedding_dim, n_types, scale, margin) if n_types else None
         self.colour_head = CosineHead(colour_dim, n_colours, scale, margin) if n_colours else None
 
+    def warm_start(self, state_dict, strict_shapes=True):
+        """Lift a trained ``ImprovedEncoder``'s backbone into this model.
+
+        The colour-branch architecture was specified in notebook 06 as a ladder
+        of three candidates x three seeds x thirty epochs *from scratch*, which
+        on a CPU-only machine is days rather than a night, and that cost is why
+        it was never run.
+
+        It does not need to be from scratch. The two models share their
+        convolutional stack exactly - the same four ``ConvBlock`` widths, the
+        same tensors - and differ only in the key prefix (``backbone.N`` against
+        ``blocks.N``) because one uses ``Sequential`` and the other a
+        ``ModuleList``. All 48 backbone tensors transfer, which is 96.5% of the
+        parameters, leaving 14 to train: the two projections, the BNNeck and the
+        cosine heads.
+
+        Be clear about what this does and does not buy. The features transfer;
+        the embedding space does not, because ``project`` changes shape
+        (256->96 here against 256->128 there) and is necessarily fresh. So this
+        is a shorter run, not a free one - budget more epochs than the twelve a
+        pure fine-tune needs.
+
+        Returns ``(loaded, skipped)`` tensor-name lists so a caller can assert
+        on what actually transferred rather than trusting a silent load.
+        """
+        own = self.state_dict()
+        loaded, skipped = [], []
+        for key, value in state_dict.items():
+            target = key.replace("backbone.", "blocks.", 1)
+            if target in own and (not strict_shapes or own[target].shape == value.shape):
+                own[target] = value.clone()
+                loaded.append(target)
+            else:
+                skipped.append(key)
+        self.load_state_dict(own)
+        return loaded, skipped
+
     def features(self, x):
         """Return (embedding_before_bnneck, colour_branch_features)."""
         colour_feature = None
@@ -332,6 +370,22 @@ MIN_ASPECT, MAX_ASPECT = 0.25, 4.0
 REGION_ACCEPTANCE = {"min_similarity": 0.62, "min_coherence": 0.50,
                      "similarity_tolerance": 0.01}
 
+#: Bands split a photograph of a *worn* outfit, so a band is a garment or an
+#: accessory on a body - never a bottle of perfume, a lipstick or a cushion
+#: cover. Measured on the 31 real uploads, 2 of 36 accepted band matches were
+#: these: `600_google-pattern-socks.jpg` returned "Perfume and Body Mist" at
+#: 0.741 from its top third, outscoring every real garment in the frame.
+#:
+#: Only masterCategory, and only for bands. A positional rule - footwear cannot
+#: appear in an upper band - was considered and rejected: it assumes the frame
+#: is a full-body shot, and many uploads are a single product, where the top
+#: third of a shoe is legitimately footwear. Whole-image and component regions
+#: are left alone, because a photograph of a perfume bottle should still find
+#: perfume.
+NON_WEARABLE_CATEGORIES = frozenset(
+    {"Personal Care", "Home", "Sporting Goods", "Free Items"})
+BAND_NAMES = frozenset(name for name, _, _ in BAND_LAYOUT)
+
 
 def propose_regions(rgb, min_cover=0.10, min_component=0.03):
     """Whole subject, separate components, and horizontal bands of the subject."""
@@ -422,6 +476,15 @@ class SearchEngine:
         self.size = tuple(manifest["image_size_pil"])
         self.use_tta = bool(manifest.get("use_tta", True))
         self._tensor = torch.from_numpy(index).to(device)
+        # Which catalogue rows could plausibly be a band of a worn outfit.
+        # Precomputed because ``search_regions`` needs it per band. Metadata
+        # without a masterCategory column keeps every row: an index that cannot
+        # answer the question should not have the filter applied to it silently.
+        if "masterCategory" in self.metadata.columns:
+            self._wearable = ~self.metadata["masterCategory"].isin(
+                NON_WEARABLE_CATEGORIES).to_numpy()
+        else:
+            self._wearable = np.ones(len(self.metadata), dtype=bool)
 
     # -- construction --------------------------------------------------
     @classmethod
@@ -473,17 +536,31 @@ class SearchEngine:
             else:
                 arrays = np.stack([load_user_image(p, self.size, mode=mode)
                                    for p in batch_paths])
-            tensor = torch.from_numpy(arrays.astype(np.float32).transpose(0, 3, 1, 2) / 255.0)
-            tensor = ((tensor - torch.tensor(self.mean).view(1, 3, 1, 1))
-                      / torch.tensor(self.std).view(1, 3, 1, 1)).to(self.device)
-
-            embedded = self.encoder.embed(tensor)
-            if self.use_tta:                      # average with the mirror image
-                mirrored = self.encoder.embed(torch.flip(tensor, dims=[3]))
-                embedded = F.normalize(embedded + mirrored, p=2, dim=1)
-            vectors.append(embedded.float().cpu().numpy())
+            vectors.append(self.embed_arrays(arrays))
         stacked = np.vstack(vectors)
         return (stacked, infos) if return_info else stacked
+
+    @torch.no_grad()
+    def embed_arrays(self, arrays):
+        """Embed already-loaded ``uint8`` frames: normalise, encode, TTA.
+
+        Split out of ``embed`` so that rebuilding the catalogue index does not
+        have to restate the normalisation and the mirror average. Catalogue
+        photographs are already the target size and do not want the ingestion
+        pipeline user uploads get - letterboxing pads the handful of square
+        catalogue images the encoder was trained on stretched - so the index
+        builder supplies frames directly and everything downstream stays shared.
+        """
+        tensor = torch.from_numpy(
+            np.asarray(arrays).astype(np.float32).transpose(0, 3, 1, 2) / 255.0)
+        tensor = ((tensor - torch.tensor(self.mean).view(1, 3, 1, 1))
+                  / torch.tensor(self.std).view(1, 3, 1, 1)).to(self.device)
+
+        embedded = self.encoder.embed(tensor)
+        if self.use_tta:                          # average with the mirror image
+            mirrored = self.encoder.embed(torch.flip(tensor, dims=[3]))
+            embedded = F.normalize(embedded + mirrored, p=2, dim=1)
+        return embedded.float().cpu().numpy()
 
     # -- result shaping ------------------------------------------------
     def _dedupe(self, positions, scores):
@@ -644,7 +721,16 @@ class SearchEngine:
         whole_similarity = float(scores[0][0])          # region 0 is always "whole"
         frames = []
         for row, region in enumerate(regions):
-            positions, row_scores = self._dedupe(indices[row], scores[row])
+            candidates, candidate_scores = indices[row], scores[row]
+            if region["name"] in BAND_NAMES:
+                # Drop rather than merely refuse to accept: a band whose best
+                # match is a perfume should return its best *garment*, not an
+                # unusable answer flagged false.
+                keep = self._wearable[candidates]
+                if keep.any():
+                    candidates, candidate_scores = candidates[keep], candidate_scores[keep]
+
+            positions, row_scores = self._dedupe(candidates, candidate_scores)
             positions, row_scores = positions[:k], row_scores[:k]
 
             frame = self.metadata.iloc[positions].copy()
