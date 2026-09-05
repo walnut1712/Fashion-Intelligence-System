@@ -1,0 +1,382 @@
+{
+  "description": "Taxonomy alignment from Task1 articleType classes to SFS garment categories. This mapping contains no season labels or season heuristics.",
+  "task1_class_count": 92,
+  "sfs_category_count": 50,
+  "coverage": {
+    "exact": 36,
+    "approximate": 31,
+    "unsupported": 25
+  },
+  "supported_count": 67,
+  "supported_fraction": 0.7282608695652174,
+  "mapping": {
+    "Accessory Gift Set": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Backpacks": {
+      "sfs_category": "backpack",
+      "status": "exact"
+    },
+    "Bangle": {
+      "sfs_category": "bracelet",
+      "status": "approximate"
+    },
+    "Basketballs": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Belts": {
+      "sfs_category": "belt",
+      "status": "exact"
+    },
+    "Booties": {
+      "sfs_category": "boots",
+      "status": "approximate"
+    },
+    "Boxers": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Bra": {
+      "sfs_category": "bra",
+      "status": "exact"
+    },
+    "Bracelet": {
+      "sfs_category": "bracelet",
+      "status": "exact"
+    },
+    "Briefs": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Camisoles": {
+      "sfs_category": "camisole",
+      "status": "exact"
+    },
+    "Capris": {
+      "sfs_category": "pants",
+      "status": "approximate"
+    },
+    "Caps": {
+      "sfs_category": "hat",
+      "status": "approximate"
+    },
+    "Casual Shoes": {
+      "sfs_category": "shoes",
+      "status": "approximate"
+    },
+    "Churidar": {
+      "sfs_category": "pants",
+      "status": "approximate"
+    },
+    "Clutches": {
+      "sfs_category": "clutch",
+      "status": "exact"
+    },
+    "Cufflinks": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Deodorant": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Dresses": {
+      "sfs_category": "dress",
+      "status": "exact"
+    },
+    "Duffel Bag": {
+      "sfs_category": "bag",
+      "status": "approximate"
+    },
+    "Dupatta": {
+      "sfs_category": "scarf",
+      "status": "approximate"
+    },
+    "Earrings": {
+      "sfs_category": "earrings",
+      "status": "exact"
+    },
+    "Flats": {
+      "sfs_category": "flats",
+      "status": "exact"
+    },
+    "Flip Flops": {
+      "sfs_category": "sandals",
+      "status": "approximate"
+    },
+    "Formal Shoes": {
+      "sfs_category": "shoes",
+      "status": "approximate"
+    },
+    "Foundation and Primer": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Fragrance Gift Set": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Free Gifts": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Gloves": {
+      "sfs_category": "gloves",
+      "status": "exact"
+    },
+    "Handbags": {
+      "sfs_category": "bag",
+      "status": "approximate"
+    },
+    "Heels": {
+      "sfs_category": "heels",
+      "status": "exact"
+    },
+    "Innerwear Vests": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Jackets": {
+      "sfs_category": "jacket",
+      "status": "exact"
+    },
+    "Jeans": {
+      "sfs_category": "jeans",
+      "status": "exact"
+    },
+    "Jeggings": {
+      "sfs_category": "leggings",
+      "status": "approximate"
+    },
+    "Jewellery Set": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Jumpsuit": {
+      "sfs_category": "jumpsuit",
+      "status": "exact"
+    },
+    "Kajal and Eyeliner": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Kurta Sets": {
+      "sfs_category": "tunic",
+      "status": "approximate"
+    },
+    "Kurtas": {
+      "sfs_category": "tunic",
+      "status": "approximate"
+    },
+    "Kurtis": {
+      "sfs_category": "tunic",
+      "status": "approximate"
+    },
+    "Laptop Bag": {
+      "sfs_category": "bag",
+      "status": "approximate"
+    },
+    "Leggings": {
+      "sfs_category": "leggings",
+      "status": "exact"
+    },
+    "Lip Liner": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Lipstick": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Lounge Pants": {
+      "sfs_category": "pants",
+      "status": "approximate"
+    },
+    "Lounge Shorts": {
+      "sfs_category": "shorts",
+      "status": "approximate"
+    },
+    "Messenger Bag": {
+      "sfs_category": "bag",
+      "status": "approximate"
+    },
+    "Mobile Pouch": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Mufflers": {
+      "sfs_category": "scarf",
+      "status": "approximate"
+    },
+    "Nail Polish": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Necklace and Chains": {
+      "sfs_category": "necklace",
+      "status": "approximate"
+    },
+    "Night suits": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Nightdress": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Patiala": {
+      "sfs_category": "pants",
+      "status": "approximate"
+    },
+    "Pendant": {
+      "sfs_category": "pendant",
+      "status": "exact"
+    },
+    "Perfume and Body Mist": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Ring": {
+      "sfs_category": "ring",
+      "status": "exact"
+    },
+    "Rompers": {
+      "sfs_category": "romper",
+      "status": "exact"
+    },
+    "Rucksacks": {
+      "sfs_category": "backpack",
+      "status": "exact"
+    },
+    "Salwar": {
+      "sfs_category": "pants",
+      "status": "approximate"
+    },
+    "Sandals": {
+      "sfs_category": "sandals",
+      "status": "exact"
+    },
+    "Sarees": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Scarves": {
+      "sfs_category": "scarf",
+      "status": "exact"
+    },
+    "Shirts": {
+      "sfs_category": "shirt",
+      "status": "exact"
+    },
+    "Shoe Accessories": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Shorts": {
+      "sfs_category": "shorts",
+      "status": "exact"
+    },
+    "Skirts": {
+      "sfs_category": "skirt",
+      "status": "exact"
+    },
+    "Socks": {
+      "sfs_category": "socks",
+      "status": "exact"
+    },
+    "Sports Sandals": {
+      "sfs_category": "sandals",
+      "status": "approximate"
+    },
+    "Sports Shoes": {
+      "sfs_category": "sneakers",
+      "status": "approximate"
+    },
+    "Stockings": {
+      "sfs_category": "tights",
+      "status": "approximate"
+    },
+    "Stoles": {
+      "sfs_category": "scarf",
+      "status": "approximate"
+    },
+    "Sunglasses": {
+      "sfs_category": "sunglasses",
+      "status": "exact"
+    },
+    "Suspenders": {
+      "sfs_category": "suspenders",
+      "status": "exact"
+    },
+    "Sweaters": {
+      "sfs_category": "sweater",
+      "status": "exact"
+    },
+    "Sweatshirts": {
+      "sfs_category": "sweatshirt",
+      "status": "exact"
+    },
+    "Swimwear": {
+      "sfs_category": "swimwear",
+      "status": "exact"
+    },
+    "Ties": {
+      "sfs_category": "tie",
+      "status": "exact"
+    },
+    "Tops": {
+      "sfs_category": "top",
+      "status": "exact"
+    },
+    "Track Pants": {
+      "sfs_category": "pants",
+      "status": "approximate"
+    },
+    "Tracksuits": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Travel Accessory": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Trousers": {
+      "sfs_category": "pants",
+      "status": "approximate"
+    },
+    "Trunk": {
+      "sfs_category": null,
+      "status": "unsupported"
+    },
+    "Tshirts": {
+      "sfs_category": "shirt",
+      "status": "approximate"
+    },
+    "Tunics": {
+      "sfs_category": "tunic",
+      "status": "exact"
+    },
+    "Waist Pouch": {
+      "sfs_category": "bag",
+      "status": "approximate"
+    },
+    "Waistcoat": {
+      "sfs_category": "vest",
+      "status": "exact"
+    },
+    "Wallets": {
+      "sfs_category": "wallet",
+      "status": "exact"
+    },
+    "Watches": {
+      "sfs_category": "watch",
+      "status": "exact"
+    },
+    "Water Bottle": {
+      "sfs_category": null,
+      "status": "unsupported"
+    }
+  }
+}
