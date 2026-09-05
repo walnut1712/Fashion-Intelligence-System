@@ -1,0 +1,5 @@
+target,probabilities,T,accuracy %,mean confidence %,ECE,reported 99%+ ,right when it does %
+gender,as trained,1.0,90.33,98.56,8.24,91.0,94.21
+gender,temperature scaled,5.829,90.33,90.18,1.23,51.1,99.54
+usage,as trained,1.0,90.24,99.04,8.81,93.2,93.01
+usage,temperature scaled,5.943,90.24,91.06,1.35,32.1,98.75
