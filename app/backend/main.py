@@ -9,12 +9,14 @@ from fastapi.staticfiles import StaticFiles
 
 from app.backend.services.task1_service import Task1Service
 from app.backend.services.task2_service import Task2Service
+from app.backend.services.task2b_service import Task2BService
 from app.backend.services.task3_service import Task3Service
+from app.backend.services.task3b_service import Task3BService
 from app.backend.services.task4_service import Task4Service
 
 
 # ============================================================
-# GLOBAL SERVICES
+# Services
 # ============================================================
 
 task1_service = None
@@ -23,29 +25,41 @@ task1_error = None
 task2_service = None
 task2_error = None
 
+task2b_service = None
+task2b_error = None
+
 task3_service = None
 task3_error = None
+
+task3b_service = None
+task3b_error = None
 
 task4_service = None
 task4_error = None
 
 
-# ============================================================
-# MODEL LOADING
-# ============================================================
-
 def load_models():
     """
-    Load each task independently so one failed checkpoint
-    does not bring down the whole API.
-    """
+    Load each task independently.
 
+    Task2A:
+        official catalogue-season CNN
+
+    Task2B:
+        auxiliary SFS-based suitable-season recommendation
+
+    A Task2B failure must NOT take the official Task2A pipeline down.
+    """
     global task1_service, task1_error
     global task2_service, task2_error
+    global task2b_service, task2b_error
     global task3_service, task3_error
+    global task3b_service, task3b_error
     global task4_service, task4_error
 
+    # --------------------------------------------------------
     # Task 1
+    # --------------------------------------------------------
     try:
         task1_service = Task1Service()
         task1_error = None
@@ -53,27 +67,62 @@ def load_models():
 
     except Exception as error:
         task1_service = None
-        task1_error = "{}: {}".format(
-            type(error).__name__,
-            error,
+        task1_error = (
+            "{}: {}".format(
+                type(error).__name__,
+                error,
+            )
         )
-        print("Task 1 failed:", task1_error)
+        print(
+            "Task 1 failed:",
+            task1_error,
+        )
 
-    # Task 2
+    # --------------------------------------------------------
+    # Task 2A
+    # --------------------------------------------------------
     try:
         task2_service = Task2Service()
         task2_error = None
-        print("Task 2 model ready")
+        print("Task 2A catalogue-season model ready")
 
     except Exception as error:
         task2_service = None
-        task2_error = "{}: {}".format(
-            type(error).__name__,
-            error,
+        task2_error = (
+            "{}: {}".format(
+                type(error).__name__,
+                error,
+            )
         )
-        print("Task 2 failed:", task2_error)
+        print(
+            "Task 2A failed:",
+            task2_error,
+        )
 
+    # --------------------------------------------------------
+    # Task 2B
+    # --------------------------------------------------------
+    try:
+        task2b_service = Task2BService()
+        task2b_error = None
+        print("Task 2B SFS recommendation model ready")
+
+    except Exception as error:
+        task2b_service = None
+        task2b_error = (
+            "{}: {}".format(
+                type(error).__name__,
+                error,
+            )
+        )
+        print(
+            "Task 2B failed:",
+            task2b_error,
+        )
+
+    # --------------------------------------------------------
     # Task 3
+    # --------------------------------------------------------
     try:
         task3_service = Task3Service()
         task3_error = None
@@ -81,13 +130,41 @@ def load_models():
 
     except Exception as error:
         task3_service = None
-        task3_error = "{}: {}".format(
-            type(error).__name__,
-            error,
+        task3_error = (
+            "{}: {}".format(
+                type(error).__name__,
+                error,
+            )
         )
-        print("Task 3 failed:", task3_error)
+        print(
+            "Task 3 failed:",
+            task3_error,
+        )
 
+    # --------------------------------------------------------
+    # Task 3B - auxiliary occasion recommendation
+    # --------------------------------------------------------
+    try:
+        task3b_service = Task3BService()
+        task3b_error = None
+        print("Task 3B SFS occasion recommendation ready")
+
+    except Exception as error:
+        task3b_service = None
+        task3b_error = (
+            "{}: {}".format(
+                type(error).__name__,
+                error,
+            )
+        )
+        print(
+            "Task 3B failed:",
+            task3b_error,
+        )
+
+    # --------------------------------------------------------
     # Task 4
+    # --------------------------------------------------------
     try:
         task4_service = Task4Service()
         task4_error = None
@@ -95,16 +172,17 @@ def load_models():
 
     except Exception as error:
         task4_service = None
-        task4_error = "{}: {}".format(
-            type(error).__name__,
-            error,
+        task4_error = (
+            "{}: {}".format(
+                type(error).__name__,
+                error,
+            )
         )
-        print("Task 4 failed:", task4_error)
+        print(
+            "Task 4 failed:",
+            task4_error,
+        )
 
-
-# ============================================================
-# APP LIFESPAN
-# ============================================================
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -113,7 +191,7 @@ async def lifespan(app: FastAPI):
 
 
 # ============================================================
-# FASTAPI APP
+# FastAPI
 # ============================================================
 
 app = FastAPI(
@@ -121,11 +199,6 @@ app = FastAPI(
     version="0.3.0",
     lifespan=lifespan,
 )
-
-
-# ============================================================
-# CORS
-# ============================================================
 
 app.add_middleware(
     CORSMiddleware,
@@ -137,23 +210,31 @@ app.add_middleware(
 
 
 # ============================================================
-# LIVE META
+# Metadata
 # ============================================================
 
 def _live_meta():
+    """
+    Label vocabularies that the backend can verify.
+    """
     meta = {}
 
     if task1_service is not None:
-        meta["itemType"] = task1_service.class_names
+        meta["itemType"] = (
+            task1_service.class_names
+        )
 
     return meta
 
 
-# ============================================================
-# LIVE METRICS
-# ============================================================
-
 def _live_metrics():
+    """
+    Existing official model-card metrics.
+
+    Task2B is deliberately NOT mixed into the official
+    assignment Task2 metric row because it is an auxiliary
+    external-data recommendation model.
+    """
     tasks = []
 
     if task1_service is not None:
@@ -165,109 +246,119 @@ def _live_metrics():
         return None
 
     return {
-        "source":
+        "source": (
             "artifacts/task{1,2,3,4}/*.json "
-            "(live from loaded checkpoints)",
+            "(live from loaded checkpoints)"
+        ),
         "tasks": tasks,
     }
 
 
 # ============================================================
-# HEALTH
+# Health
 # ============================================================
 
 @app.get("/api/health")
 def health():
+    if task2b_service is not None:
+        task2b_health = (
+            task2b_service.health_info()
+        )
+        task2b_health["error"] = None
+
+    else:
+        task2b_health = {
+            "loaded": False,
+            "method": "hard_top1_sfs",
+            "classes": None,
+            "num_classes": None,
+            "sfs_categories": None,
+            "task1_classes": None,
+            "supported_task1_classes": None,
+            "supported_fraction": None,
+            "device": "cpu",
+            "error": task2b_error,
+        }
 
     return {
         "status": "ok",
-
         "meta": _live_meta(),
-
         "metrics": _live_metrics(),
-
         "models": {
-
             "task1": {
                 "loaded":
-                    task1_service is not None,
-
+                    task1_service
+                    is not None,
                 "classes":
                     task1_service.num_classes
                     if task1_service
                     else None,
-
                 "device":
                     str(task1_service.device)
                     if task1_service
                     else None,
-
                 "error":
                     task1_error,
             },
 
             "task2": {
                 "loaded":
-                    task2_service is not None,
-
+                    task2_service
+                    is not None,
                 "classes":
                     task2_service.num_classes
                     if task2_service
                     else None,
-
                 "device":
                     str(task2_service.device)
                     if task2_service
                     else None,
-
                 "error":
                     task2_error,
+                "role":
+                    "official_catalogue_season",
             },
+
+            "task2b": task2b_health,
 
             "task3": {
                 "loaded":
-                    task3_service is not None,
-
+                    task3_service
+                    is not None,
                 "classes":
                     task3_service.num_classes
                     if task3_service
                     else None,
-
                 "device":
                     str(task3_service.device)
                     if task3_service
                     else None,
-
                 "error":
                     task3_error,
             },
 
             "task4": {
                 "loaded":
-                    task4_service is not None,
-
+                    task4_service
+                    is not None,
                 "catalogue_size":
                     task4_service.catalogue_size
                     if task4_service
                     else None,
-
                 "embedding_dim":
                     task4_service.embedding_dim
                     if task4_service
                     else None,
-
                 "method":
                     task4_service.manifest.get(
                         "best_method"
                     )
                     if task4_service
                     else None,
-
                 "device":
                     str(task4_service.device)
                     if task4_service
                     else None,
-
                 "error":
                     task4_error,
             },
@@ -276,7 +367,7 @@ def health():
 
 
 # ============================================================
-# TASK 1 ENDPOINT
+# Task 1
 # ============================================================
 
 @app.post("/api/task1/predict")
@@ -284,7 +375,6 @@ async def predict_task1(
     image: UploadFile = File(...),
     ingest: str = None,
 ):
-
     if task1_service is None:
         raise HTTPException(
             status_code=503,
@@ -293,7 +383,9 @@ async def predict_task1(
 
     if (
         image.content_type
-        and not image.content_type.startswith("image/")
+        and not image.content_type.startswith(
+            "image/"
+        )
     ):
         raise HTTPException(
             status_code=415,
@@ -309,9 +401,11 @@ async def predict_task1(
         )
 
     try:
-        prediction = task1_service.predict(
-            image_bytes,
-            ingest=ingest,
+        prediction = (
+            task1_service.predict(
+                image_bytes,
+                ingest=ingest,
+            )
         )
 
     except ValueError as error:
@@ -323,9 +417,11 @@ async def predict_task1(
     except Exception as error:
         raise HTTPException(
             status_code=500,
-            detail="{}: {}".format(
-                type(error).__name__,
-                error,
+            detail=(
+                "{}: {}".format(
+                    type(error).__name__,
+                    error,
+                )
             ),
         )
 
@@ -336,14 +432,16 @@ async def predict_task1(
 
 
 # ============================================================
-# TASK 2 ENDPOINT
+# Task 2A
 # ============================================================
 
 @app.post("/api/task2/predict")
 async def predict_task2(
     image: UploadFile = File(...),
 ):
-
+    """
+    Official Task2A catalogue-season classifier.
+    """
     if task2_service is None:
         raise HTTPException(
             status_code=503,
@@ -359,85 +457,58 @@ async def predict_task2(
         )
 
     try:
-
-        # ----------------------------------------------------
-        # Task 1 context
-        # ----------------------------------------------------
-
-        article_type = None
-        article_type_confidence = None
-
-        article_family = None
-        article_family_confidence = None
-
-        if task1_service is not None:
-
-            task1_result = task1_service.predict(
+        prediction = (
+            task2_service.predict(
                 image_bytes
             )
+        )
 
-            if isinstance(
-                task1_result,
-                dict,
-            ):
-
-                # Article type
-                article_type = (
-                    task1_result.get(
-                        "label"
-                    )
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=(
+                "{}: {}".format(
+                    type(error).__name__,
+                    error,
                 )
+            ),
+        )
 
-                article_type_confidence = (
-                    task1_result.get(
-                        "confidence"
-                    )
-                )
+    return {
+        "filename": image.filename,
+        "prediction": prediction,
+        "role": "official_catalogue_season",
+    }
 
-                # Family / subCategory
-                family_result = (
-                    task1_result.get(
-                        "family"
-                    )
-                    or {}
-                )
 
-                if isinstance(
-                    family_result,
-                    dict,
-                ):
+# ============================================================
+# Task 2B
+# ============================================================
 
-                    article_family = (
-                        family_result.get(
-                            "label"
-                        )
-                    )
+@app.get("/api/task2b/predict")
+def predict_task2b(
+    article_type: str,
+):
+    """
+    Direct Task2B diagnostic endpoint.
 
-                    article_family_confidence = (
-                        family_result.get(
-                            "confidence"
-                        )
-                    )
+    Example:
+        /api/task2b/predict?article_type=Sandals
 
-        # ----------------------------------------------------
-        # Task 2 prediction
-        # ----------------------------------------------------
+    This endpoint does not inspect an image.
+    It receives the Task1 articleType directly.
+    """
+    if task2b_service is None:
+        raise HTTPException(
+            status_code=503,
+            detail=task2b_error,
+        )
 
-        prediction = task2_service.predict(
-
-            image_bytes,
-
-            article_type=
-                article_type,
-
-            article_type_confidence=
-                article_type_confidence,
-
-            article_family=
-                article_family,
-
-            article_family_confidence=
-                article_family_confidence,
+    try:
+        prediction = (
+            task2b_service.predict(
+                article_type
+            )
         )
 
     except ValueError as error:
@@ -449,27 +520,30 @@ async def predict_task2(
     except Exception as error:
         raise HTTPException(
             status_code=500,
-            detail="{}: {}".format(
-                type(error).__name__,
-                error,
+            detail=(
+                "{}: {}".format(
+                    type(error).__name__,
+                    error,
+                )
             ),
         )
 
     return {
-        "filename": image.filename,
+        "article_type": article_type,
         "prediction": prediction,
+        "role":
+            "auxiliary_suitable_season_recommendation",
     }
 
 
 # ============================================================
-# TASK 3 ENDPOINT
+# Task 3
 # ============================================================
 
 @app.post("/api/task3/predict")
 async def predict_task3(
     image: UploadFile = File(...),
 ):
-
     if task3_service is None:
         raise HTTPException(
             status_code=503,
@@ -485,22 +559,20 @@ async def predict_task3(
         )
 
     try:
-        prediction = task3_service.predict(
-            image_bytes
-        )
-
-    except ValueError as error:
-        raise HTTPException(
-            status_code=400,
-            detail=str(error),
+        prediction = (
+            task3_service.predict(
+                image_bytes
+            )
         )
 
     except Exception as error:
         raise HTTPException(
             status_code=500,
-            detail="{}: {}".format(
-                type(error).__name__,
-                error,
+            detail=(
+                "{}: {}".format(
+                    type(error).__name__,
+                    error,
+                )
             ),
         )
 
@@ -511,19 +583,15 @@ async def predict_task3(
 
 
 # ============================================================
-# TASK 4 SEARCH
+# Task 4
 # ============================================================
 
 @app.post("/api/task4/search")
 async def search_task4(
-
     image: UploadFile = File(...),
-
     k: int = 10,
-
     mode: str = "nobg",
 ):
-
     if task4_service is None:
         raise HTTPException(
             status_code=503,
@@ -554,41 +622,31 @@ async def search_task4(
     except Exception as error:
         raise HTTPException(
             status_code=500,
-            detail="{}: {}".format(
-                type(error).__name__,
-                error,
+            detail=(
+                "{}: {}".format(
+                    type(error).__name__,
+                    error,
+                )
             ),
         )
 
     return {
-        "filename":
-            image.filename,
-
-        "k":
-            max(
-                1,
-                min(
-                    20,
-                    int(k),
-                ),
+        "filename": image.filename,
+        "k": max(
+            1,
+            min(
+                20,
+                int(k),
             ),
-
-        "mode":
-            mode,
-
+        ),
+        "mode": mode,
         "method":
             task4_service.manifest.get(
                 "best_method"
             ),
-
-        "results":
-            results,
+        "results": results,
     }
 
-
-# ============================================================
-# CATALOGUE IMAGE
-# ============================================================
 
 @app.get(
     "/api/catalogue/{item_id}/image"
@@ -596,7 +654,6 @@ async def search_task4(
 def catalogue_image(
     item_id: str,
 ):
-
     if task4_service is None:
         raise HTTPException(
             status_code=503,
@@ -612,7 +669,9 @@ def catalogue_image(
     if image_path is None:
         raise HTTPException(
             status_code=404,
-            detail="Catalogue image not found",
+            detail=(
+                "Catalogue image not found"
+            ),
         )
 
     return FileResponse(
@@ -620,13 +679,8 @@ def catalogue_image(
     )
 
 
-# ============================================================
-# TEST SAMPLES
-# ============================================================
-
 @app.get("/api/test-samples")
 def test_samples():
-
     if task4_service is None:
         raise HTTPException(
             status_code=503,
@@ -635,69 +689,72 @@ def test_samples():
 
     return {
         "ids":
-            task4_service.list_test_sample_ids()
+            task4_service
+            .list_test_sample_ids()
     }
 
 
 # ============================================================
-# FULL ANALYSIS ENDPOINT
+# Combined analysis
 # ============================================================
 
 @app.post("/api/analyze")
 async def analyze(
-
     image: UploadFile = File(...),
-
     k: int = 10,
-
     search_mode: str = "nobg",
-
     ingest: str = None,
 ):
+    """
+    Run all official tasks and, when available, Task2B.
 
-    # --------------------------------------------------------
-    # Ensure all models are available
-    # --------------------------------------------------------
+    Task2A:
+        image -> catalogue season
 
+    Task2B:
+        Task1 top-1 articleType
+            -> SFS taxonomy
+            -> suitable-season recommendation
+
+    Task2B is auxiliary and does not replace Task2A.
+    """
+
+    # Official tasks remain required.
     if task1_service is None:
         raise HTTPException(
             status_code=503,
-            detail=
-                "Task 1 unavailable: {}".format(
-                    task1_error
-                ),
+            detail=(
+                "Task 1 unavailable: {}"
+                .format(task1_error)
+            ),
         )
 
     if task2_service is None:
         raise HTTPException(
             status_code=503,
-            detail=
-                "Task 2 unavailable: {}".format(
-                    task2_error
-                ),
+            detail=(
+                "Task 2 unavailable: {}"
+                .format(task2_error)
+            ),
         )
 
     if task3_service is None:
         raise HTTPException(
             status_code=503,
-            detail=
-                "Task 3 unavailable: {}".format(
-                    task3_error
-                ),
+            detail=(
+                "Task 3 unavailable: {}"
+                .format(task3_error)
+            ),
         )
 
     if task4_service is None:
         raise HTTPException(
             status_code=503,
-            detail=
-                "Task 4 unavailable: {}".format(
-                    task4_error
-                ),
+            detail=(
+                "Task 4 unavailable: {}"
+                .format(task4_error)
+            ),
         )
-
-    # --------------------------------------------------------
-    # Read uploaded image
-    # --------------------------------------------------------
 
     image_bytes = await image.read()
 
@@ -710,11 +767,9 @@ async def analyze(
     started = time.perf_counter()
 
     try:
-
-        # ====================================================
-        # TASK 1
-        # ====================================================
-
+        # ----------------------------------------------------
+        # Task 1 first
+        # ----------------------------------------------------
         article_type = (
             task1_service.predict(
                 image_bytes,
@@ -722,114 +777,27 @@ async def analyze(
             )
         )
 
-        # ====================================================
-        # TASK 1 ARTICLE TYPE
-        # ====================================================
-
-        article_type_label = None
-        article_type_confidence = None
-
-        if isinstance(
-            article_type,
-            dict,
-        ):
-
-            article_type_label = (
-                article_type.get(
-                    "label"
-                )
-            )
-
-            article_type_confidence = (
-                article_type.get(
-                    "confidence"
-                )
-            )
-
-        # ====================================================
-        # TASK 1 FAMILY / CATEGORY
-        # ====================================================
-
-        article_family_label = None
-        article_family_confidence = None
-
-        if isinstance(
-            article_type,
-            dict,
-        ):
-
-            article_family_result = (
-                article_type.get(
-                    "family"
-                )
-                or {}
-            )
-
-            if isinstance(
-                article_family_result,
-                dict,
-            ):
-
-                article_family_label = (
-                    article_family_result.get(
-                        "label"
-                    )
-                )
-
-                article_family_confidence = (
-                    article_family_result.get(
-                        "confidence"
-                    )
-                )
-
-        # ====================================================
-        # TASK 2
-        #
-        # Official CNN:
-        # Fall / Spring / Summer / Winter
-        #
-        # Semantic display layer can output:
-        #
-        # All Season
-        # Spring / Summer
-        # Summer / Fall
-        # Fall / Winter
-        # Winter / Spring
-        # ====================================================
-
+        # ----------------------------------------------------
+        # Official Task 2A remains unchanged
+        # ----------------------------------------------------
         season = (
             task2_service.predict(
-
-                image_bytes,
-
-                article_type=
-                    article_type_label,
-
-                article_type_confidence=
-                    article_type_confidence,
-
-                article_family=
-                    article_family_label,
-
-                article_family_confidence=
-                    article_family_confidence,
+                image_bytes
             )
         )
 
-        # ====================================================
-        # TASK 3
-        # ====================================================
-
+        # ----------------------------------------------------
+        # Task 3
+        # ----------------------------------------------------
         task3_result = (
             task3_service.predict(
                 image_bytes
             )
         )
 
-        # ====================================================
-        # TASK 4
-        # ====================================================
-
+        # ----------------------------------------------------
+        # Task 4
+        # ----------------------------------------------------
         similar_items = (
             task4_service.search(
                 image_bytes,
@@ -839,43 +807,146 @@ async def analyze(
         )
 
     except ValueError as error:
-
         raise HTTPException(
             status_code=400,
             detail=str(error),
         )
 
     except Exception as error:
-
         raise HTTPException(
             status_code=500,
-            detail="{}: {}".format(
-                type(error).__name__,
-                error,
+            detail=(
+                "{}: {}".format(
+                    type(error).__name__,
+                    error,
+                )
             ),
         )
 
-    # ========================================================
-    # RESPONSE
-    # ========================================================
+    # --------------------------------------------------------
+    # Auxiliary Task 2B
+    #
+    # It is intentionally isolated from the official task
+    # execution above. If Task2B fails, the official four-task
+    # response still succeeds.
+    # --------------------------------------------------------
 
-    return {
+    season_recommendation = None
+    season_recommendation_error = None
 
-        "filename":
-            image.filename,
-
-        "latency_ms":
-            round(
-                (
-                    time.perf_counter()
-                    - started
+    if task2b_service is not None:
+        try:
+            season_recommendation = (
+                task2b_service
+                .predict_from_task1(
+                    article_type
                 )
-                * 1000,
-                1,
-            ),
+            )
+
+        except Exception as error:
+            season_recommendation_error = (
+                "{}: {}".format(
+                    type(error).__name__,
+                    error,
+                )
+            )
+
+    else:
+        season_recommendation_error = (
+            task2b_error
+            or "Task2B service unavailable"
+        )
+
+    # --------------------------------------------------------
+    # Task 3B - auxiliary fine-grained occasion recommendation
+    # --------------------------------------------------------
+    usage_recommendation = None
+    usage_recommendation_error = None
+
+    if task3b_service is not None:
+        try:
+            # Task1 production response may be either a ranked list
+            # or a {label, confidence, top3} dictionary.
+            if isinstance(article_type, list):
+                article_type_label = (
+                    article_type[0].get("label")
+                    if article_type
+                    else None
+                )
+
+            elif isinstance(article_type, dict):
+                article_type_label = article_type.get("label")
+
+                if not article_type_label:
+                    ranked = article_type.get("top3") or []
+                    article_type_label = (
+                        ranked[0].get("label")
+                        if ranked
+                        else None
+                    )
+
+            else:
+                article_type_label = str(article_type)
+
+            usage_value = task3_result["usage"]
+
+            if isinstance(usage_value, list):
+                usage_label = (
+                    usage_value[0].get("label")
+                    if usage_value
+                    else None
+                )
+
+            elif isinstance(usage_value, dict):
+                usage_label = usage_value.get("label")
+
+                if not usage_label:
+                    ranked = usage_value.get("top3") or []
+                    usage_label = (
+                        ranked[0].get("label")
+                        if ranked
+                        else None
+                    )
+
+            else:
+                usage_label = str(usage_value)
+
+            if article_type_label and usage_label:
+                usage_recommendation = (
+                    task3b_service.recommend(
+                        article_type_label,
+                        usage_label,
+                    )
+                )
+
+        except Exception as error:
+            usage_recommendation_error = (
+                "{}: {}".format(
+                    type(error).__name__,
+                    error,
+                )
+            )
+
+    else:
+        usage_recommendation_error = (
+            task3b_error
+            or "Task3B service unavailable"
+        )
+
+    response = {
+        "filename": image.filename,
+
+        "latency_ms": round(
+            (
+                time.perf_counter()
+                - started
+            )
+            * 1000,
+            1,
+        ),
 
         "predictions": {
-
+            # Official assignment outputs
             "articleType":
                 article_type,
 
@@ -883,18 +954,20 @@ async def analyze(
                 season,
 
             "gender":
-                task3_result[
-                    "gender"
-                ],
+                task3_result["gender"],
 
             "usage":
-                task3_result[
-                    "usage"
-                ],
+                task3_result["usage"],
+
+            # Auxiliary external-data layer
+            "season_recommendation":
+                season_recommendation,
+
+            "usage_recommendation":
+                usage_recommendation,
         },
 
         "visual_search": {
-
             "method":
                 task4_service
                 .manifest
@@ -905,26 +978,40 @@ async def analyze(
             "mode":
                 search_mode,
 
-            "k":
-                max(
-                    1,
-                    min(
-                        20,
-                        int(k),
-                    ),
+            "k": max(
+                1,
+                min(
+                    20,
+                    int(k),
                 ),
+            ),
 
             "similar_items":
                 similar_items,
         },
 
         "backend_stage":
-            "task2_semantic_policy_v2",
+            "task2b_task3b_connected",
     }
+
+    if (
+        season_recommendation_error
+        is not None
+    ):
+        response[
+            "season_recommendation_error"
+        ] = season_recommendation_error
+
+    if usage_recommendation_error is not None:
+        response[
+            "usage_recommendation_error"
+        ] = usage_recommendation_error
+
+    return response
 
 
 # ============================================================
-# FRONTEND
+# Frontend
 # ============================================================
 
 FRONTEND = (
@@ -933,7 +1020,6 @@ FRONTEND = (
     .parents[1]
     / "frontend"
 )
-
 
 app.mount(
     "/",
