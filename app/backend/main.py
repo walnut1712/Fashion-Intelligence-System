@@ -11,6 +11,7 @@ from app.backend.services.task1_service import Task1Service
 from app.backend.services.task2_service import Task2Service
 from app.backend.services.task2b_service import Task2BService
 from app.backend.services.task3_service import Task3Service
+from app.backend.services.task3b_service import Task3BService
 from app.backend.services.task4_service import Task4Service
 
 
@@ -29,6 +30,9 @@ task2b_error = None
 
 task3_service = None
 task3_error = None
+
+task3b_service = None
+task3b_error = None
 
 task4_service = None
 task4_error = None
@@ -50,6 +54,7 @@ def load_models():
     global task2_service, task2_error
     global task2b_service, task2b_error
     global task3_service, task3_error
+    global task3b_service, task3b_error
     global task4_service, task4_error
 
     # --------------------------------------------------------
@@ -134,6 +139,27 @@ def load_models():
         print(
             "Task 3 failed:",
             task3_error,
+        )
+
+    # --------------------------------------------------------
+    # Task 3B - auxiliary occasion recommendation
+    # --------------------------------------------------------
+    try:
+        task3b_service = Task3BService()
+        task3b_error = None
+        print("Task 3B SFS occasion recommendation ready")
+
+    except Exception as error:
+        task3b_service = None
+        task3b_error = (
+            "{}: {}".format(
+                type(error).__name__,
+                error,
+            )
+        )
+        print(
+            "Task 3B failed:",
+            task3b_error,
         )
 
     # --------------------------------------------------------
@@ -831,6 +857,82 @@ async def analyze(
             or "Task2B service unavailable"
         )
 
+    # --------------------------------------------------------
+    # Task 3B - auxiliary fine-grained occasion recommendation
+    # --------------------------------------------------------
+    usage_recommendation = None
+    usage_recommendation_error = None
+
+    if task3b_service is not None:
+        try:
+            # Task1 production response may be either a ranked list
+            # or a {label, confidence, top3} dictionary.
+            if isinstance(article_type, list):
+                article_type_label = (
+                    article_type[0].get("label")
+                    if article_type
+                    else None
+                )
+
+            elif isinstance(article_type, dict):
+                article_type_label = article_type.get("label")
+
+                if not article_type_label:
+                    ranked = article_type.get("top3") or []
+                    article_type_label = (
+                        ranked[0].get("label")
+                        if ranked
+                        else None
+                    )
+
+            else:
+                article_type_label = str(article_type)
+
+            usage_value = task3_result["usage"]
+
+            if isinstance(usage_value, list):
+                usage_label = (
+                    usage_value[0].get("label")
+                    if usage_value
+                    else None
+                )
+
+            elif isinstance(usage_value, dict):
+                usage_label = usage_value.get("label")
+
+                if not usage_label:
+                    ranked = usage_value.get("top3") or []
+                    usage_label = (
+                        ranked[0].get("label")
+                        if ranked
+                        else None
+                    )
+
+            else:
+                usage_label = str(usage_value)
+
+            if article_type_label and usage_label:
+                usage_recommendation = (
+                    task3b_service.recommend(
+                        article_type_label,
+                        usage_label,
+                    )
+                )
+
+        except Exception as error:
+            usage_recommendation_error = (
+                "{}: {}".format(
+                    type(error).__name__,
+                    error,
+                )
+            )
+
+    else:
+        usage_recommendation_error = (
+            task3b_error
+            or "Task3B service unavailable"
+        )
+
     response = {
         "filename": image.filename,
 
@@ -860,6 +962,9 @@ async def analyze(
             # Auxiliary external-data layer
             "season_recommendation":
                 season_recommendation,
+
+            "usage_recommendation":
+                usage_recommendation,
         },
 
         "visual_search": {
@@ -886,7 +991,7 @@ async def analyze(
         },
 
         "backend_stage":
-            "task2b_connected",
+            "task2b_task3b_connected",
     }
 
     if (
@@ -896,6 +1001,11 @@ async def analyze(
         response[
             "season_recommendation_error"
         ] = season_recommendation_error
+
+    if usage_recommendation_error is not None:
+        response[
+            "usage_recommendation_error"
+        ] = usage_recommendation_error
 
     return response
 
