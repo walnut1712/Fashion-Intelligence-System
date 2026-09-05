@@ -14,6 +14,15 @@ output matches the notebook's evaluation. Threshold adjustment was evaluated in 
 notebook and not adopted, so those multipliers are currently all ones and prediction
 is a plain argmax; the multiply is kept so that a checkpoint which does use them
 serves correctly without a code change.
+
+The checkpoint also carries a temperature per attribute, fitted on the validation
+split, which divides the logits before the softmax. Trained to convergence with
+cross-entropy the network saturates its softmax and reports near-certainty on
+almost everything, including what it gets wrong, and this response is what the
+caller displays as a confidence. Dividing every logit by the same positive number
+cannot reorder them, so the label served is unchanged and only the probability
+beside it moves. A checkpoint without the field is served at temperature 1, exactly
+as before.
 """
 
 from pathlib import Path
@@ -160,12 +169,26 @@ class Task3Service:
         self.uses_thresholds = any(not np.allclose(w, 1.0)
                                    for w in self.class_weights.values())
 
+        # Calibration temperature, one per attribute. Absent, or non-positive from a
+        # malformed checkpoint, means serve the probabilities as the network produced them.
+        saved_temperature = checkpoint.get("temperature", {}) or {}
+        self.temperature = {
+            target: (float(saved_temperature[target])
+                     if target in saved_temperature and float(saved_temperature[target]) > 0
+                     else 1.0)
+            for target in self.TARGETS
+        }
+        self.is_calibrated = any(t != 1.0 for t in self.temperature.values())
+
         self.mean = np.array(checkpoint["channel_mean"], dtype=np.float32).reshape(1, 1, 3)
         self.std = np.array(checkpoint["channel_std"], dtype=np.float32).reshape(1, 1, 3)
         self.test_metrics = checkpoint.get("test_metrics", {})
 
         print("Task 3 loaded:", self.model_name,
-              "| threshold adjustment:", "on" if self.uses_thresholds else "off")
+              "| threshold adjustment:", "on" if self.uses_thresholds else "off",
+              "| temperature:", ", ".join(f"{t} {self.temperature[t]:.2f}"
+                                          for t in self.TARGETS)
+              if self.is_calibrated else "off")
 
     def _load_checkpoint(self):
         try:
@@ -191,10 +214,11 @@ class Task3Service:
         output = {}
         for target in self.TARGETS:
             names = self.class_names[target]
-            probabilities = F.softmax(logits[target][0].float(), dim=0).cpu().numpy()
+            probabilities = F.softmax(logits[target][0].float() / self.temperature[target],
+                                      dim=0).cpu().numpy()
 
-            # Ranking uses the adjusted scores; the reported figure stays the
-            # model's own probability, which is what a confidence display needs.
+            # Ranking uses the adjusted scores; the reported figure stays the model's
+            # own calibrated probability, which is what a confidence display needs.
             order = np.argsort(-(probabilities * self.class_weights[target]))
             output[target] = [
                 {"label": names[index], "p": round(float(probabilities[index]), 4)}
