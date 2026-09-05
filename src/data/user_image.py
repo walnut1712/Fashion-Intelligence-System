@@ -68,7 +68,7 @@ except ImportError:  # pragma: no cover
 
 SUPPORTED_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".bmp", ".gif", ".tiff"}
 
-PREPROCESS_MODES = ("letterbox", "crop", "nobg")
+PREPROCESS_MODES = ("direct", "letterbox", "crop", "nobg")
 
 _REMBG_SESSION = None
 
@@ -389,7 +389,10 @@ def foreground_mask(array, max_side=256, min_centre=0.55, max_runs=2.5):
 
 # ------------------------------------------------------------- fit to size ----
 def _fit_to_size(img, size, background=(255, 255, 255), mode="letterbox"):
-    """Pad ("letterbox") or centre-crop ("crop") to the target aspect, then resize."""
+    """Direct resize, pad ("letterbox"), or centre-crop ("crop") to target size."""
+    if mode == "direct":
+        return np.asarray(img.resize(size, Image.BILINEAR), dtype=np.uint8)
+
     target_w, target_h = size
     target_ratio = target_w / target_h
     width, height = img.size
@@ -429,6 +432,9 @@ def load_user_image(source, size=IMAGE_SIZE_PIL, mode="letterbox", margin=0.06,
     the frame. A user upload is none of those, so it must be coerced first.
 
     mode
+        ``"direct"`` resize directly to the requested width and height. This preserves
+        the original Task 2/Task 3 training contract where images were resized with
+        PIL without padding or cropping.
         ``"letterbox"`` pad to 3:4 and resize. Keeps everything, including the
         background, which the model then partly describes.
         ``"crop"`` centre-crop to 3:4. Discards the edges of the frame, which is

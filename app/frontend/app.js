@@ -736,7 +736,7 @@
             )
               ? (
                   '<div class="attr-family">' +
-                    'recommend: <b>' +
+                    'Also suitable for: <b>' +
                     esc(
                       top.recommendation_label
                     ) +
@@ -777,7 +777,7 @@
             recommendationHtml =
               (
                 '<div class="attr-family">' +
-                  "recommend: <b>" +
+                  "Also suitable for: <b>" +
                     esc(
                       top.recommendation_label
                     ) +
