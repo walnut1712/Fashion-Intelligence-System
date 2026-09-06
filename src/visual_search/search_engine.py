@@ -734,6 +734,24 @@ class SearchEngine:
         vectors = vectors.float().cpu().numpy()
 
         similarity = torch.from_numpy(vectors).to(self.device) @ self._tensor.T
+
+        # Bands are ranked against wearable rows ONLY, and the mask is applied
+        # before the top-k rather than after it.
+        #
+        # Filtering the shortlist afterwards looks equivalent and is not. The
+        # upper band of `600_google-pattern-socks.jpg` has all 120 of its nearest
+        # neighbours in Personal Care, so a post-filter finds nothing to keep and
+        # falls back to showing them - perfume bottles, returned for a photograph
+        # of socks, which is the failure this filter exists to prevent. Masking
+        # first guarantees the band ranks among garments however far down the
+        # nearest garment sits.
+        band_rows = [i for i, region in enumerate(regions)
+                     if region["name"] in BAND_NAMES]
+        if band_rows and not self._wearable.all():
+            unwearable = torch.from_numpy(~self._wearable).to(similarity.device)
+            similarity[band_rows] = similarity[band_rows].masked_fill(
+                unwearable, float("-inf"))
+
         pool = min(max(k * 12, 120), similarity.shape[1])
         scores, indices = torch.topk(similarity, k=pool, dim=1)
         scores, indices = scores.cpu().numpy(), indices.cpu().numpy()
@@ -743,12 +761,14 @@ class SearchEngine:
         for row, region in enumerate(regions):
             candidates, candidate_scores = indices[row], scores[row]
             if region["name"] in BAND_NAMES:
-                # Drop rather than merely refuse to accept: a band whose best
-                # match is a perfume should return its best *garment*, not an
-                # unusable answer flagged false.
-                keep = self._wearable[candidates]
-                if keep.any():
-                    candidates, candidate_scores = candidates[keep], candidate_scores[keep]
+                # The mask was applied to the similarity row above, so anything
+                # unwearable now scores -inf and cannot reach the shortlist. This
+                # drops the padding that leaves behind when the catalogue holds
+                # fewer wearable rows than the pool asks for.
+                keep = np.isfinite(candidate_scores) & self._wearable[candidates]
+                candidates, candidate_scores = candidates[keep], candidate_scores[keep]
+                if not len(candidates):
+                    continue
 
             positions, row_scores = self._dedupe(candidates, candidate_scores)
             positions, row_scores = positions[:k], row_scores[:k]

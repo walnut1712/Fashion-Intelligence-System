@@ -515,6 +515,7 @@ def main() -> None:
 
     csv_path = (
         project_root
+        / "A2_FashionDataset"
         / "external_data"
         / "sfs"
         / "SFS_metadata.csv"
