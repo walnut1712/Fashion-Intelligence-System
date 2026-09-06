@@ -694,6 +694,34 @@ def test_samples():
     }
 
 
+@app.get("/api/test-samples/{item_id}/image")
+def test_sample_image(
+    item_id: str,
+):
+    if task4_service is None:
+        raise HTTPException(
+            status_code=503,
+            detail=task4_error,
+        )
+
+    image_path = (
+        task4_service
+        .resolve_test_image_path(
+            item_id
+        )
+    )
+
+    if image_path is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Official test image not found",
+        )
+
+    return FileResponse(
+        str(image_path)
+    )
+
+
 # ============================================================
 # Combined analysis
 # ============================================================
