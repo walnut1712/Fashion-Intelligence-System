@@ -1659,7 +1659,7 @@
 
     var url =
       API_BASE +
-      "/api/catalogue/" +
+      "/api/test-samples/" +
       s.id +
       "/image";
 
