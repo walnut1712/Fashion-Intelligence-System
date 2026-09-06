@@ -12,7 +12,7 @@ Two ways to put colour back into a retrieval system whose metric was learned on
     colour agreement. The stored index stays 128-dimensional and the colour
     table is consulted for 100 items per query rather than all of them.
 
-Both were evaluated in ``notebooks/05_task4_visual_search.ipynb`` and both landed
+Both were evaluated in ``notebooks/05_task4_triplet_encoder.ipynb`` and both landed
 within the noise floor of the plain encoder (both@10 46.08 and 46.09 against
 45.92), which is why ``uses_reranking`` is false in the shipped manifest. They
 are kept because "we tried it and it did not clear the bar" is a result, and

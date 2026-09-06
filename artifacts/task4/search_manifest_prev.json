@@ -2,7 +2,7 @@
   "best_method": "Improved+TTA+places365",
   "index_file": "search_index_full.npy",
   "encoder_file": "task4_improved_encoder.pt",
-  "catalogue_size": 38571,
+  "catalogue_size": 38612,
   "embedding_dim": 128,
   "image_size_pil": [
     120,
@@ -67,7 +67,8 @@
       "bothfam@10": 27.67
     }
   },
-  "index_scope": "The served index covers the whole catalogue, because a customer must be able to find anything the shop stocks. The 15% product-level holdout is a property of the measurement, not of the shop, so the evaluation index excludes it and every reported metric is computed against that.",
+  "training_gallery_size": 38571,
+  "index_scope": "The served index covers all 38,612 catalogue rows, because a customer must be able to find anything the shop stocks. The 15% product-level holdout is a property of the measurement, not of the shop, so the evaluation index excludes it and every reported metric is computed against that.",
   "provenance": {
     "trained_by": "src/training/train_task4_120x160.py",
     "promoted_by": "scripts/promote_task4_encoder.py",

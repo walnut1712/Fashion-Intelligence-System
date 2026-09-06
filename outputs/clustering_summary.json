@@ -1,14 +1,15 @@
 {
-  "embeddings_from": "Improved+TTA+bgaug",
-  "n_items": 32837,
+  "embeddings_from": "Improved+TTA+places365",
+  "n_items": 38612,
   "k_chosen": 120,
   "best_silhouette_k": 30,
-  "kmeans_SD": 6998.62,
-  "kmeans_iterations": 38,
-  "mean_purity": 0.806,
+  "kmeans_SD": 8782.79,
+  "kmeans_iterations": 45,
+  "mean_purity": 0.736,
   "methods_compared": [
     "k-Means (k=120)",
-    "DBSCAN (eps=0.278)",
+    "DBSCAN (eps=0.288)",
+    "DBSCAN (eps=0.288) [noise as singletons]",
     "Agglomerative ward (k=120)"
   ]
 }

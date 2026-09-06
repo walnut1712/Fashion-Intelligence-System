@@ -106,7 +106,32 @@ def main():
     columns = list(train_gallery.columns)
     served = pd.read_csv(PROCESSED / "clean_train_metadata.csv")[columns]
     served = served.sort_values("id").reset_index(drop=True)
+
+    # Missing labels become "Unknown" rather than NaN. `clean_train_metadata.csv`
+    # leaves 14 rows without a baseColour, 72 without a usage and 7 without a
+    # productDisplayName, and every consumer of this file treats these as
+    # strings - the training pipeline already does `fillna("Unknown")` on colour
+    # for exactly this reason. Left as NaN they are floats, so a caller that
+    # slices a label for a plot title dies with `'float' object is not
+    # subscriptable` on whichever row happens to surface. Which rows surface
+    # depends on the encoder, so the failure moves when the model changes.
+    label_columns = [c for c in served.columns
+                     if c != "id" and served[c].dtype == object or served[c].isna().any()]
+    for column in label_columns:
+        if column == "id":
+            continue
+        served[column] = served[column].fillna("Unknown")
     image_dir = PROCESSED / f"images_train_{resolution}"
+
+    # `image_path` is what the clustering notebook shows thumbnails from, and it
+    # must point at the SAME pixels the index was built from. Stored relative to
+    # the project root: `clean_train_metadata.csv` carries absolute paths, which
+    # are wrong on any other machine, and the notebook's thumbnail loader
+    # swallows a bad path into a grey square rather than raising.
+    served["image_path"] = [
+        (image_dir / f"{i}.jpg").relative_to(PROJECT_ROOT).as_posix()
+        for i in served["id"]
+    ]
     missing = [i for i in served["id"] if not (image_dir / f"{i}.jpg").exists()]
     if missing:
         sys.exit(f"{len(missing)} served ids have no {resolution} image, e.g. {missing[:3]}")

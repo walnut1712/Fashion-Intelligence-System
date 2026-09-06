@@ -45,7 +45,7 @@ comparison running alongside the resolution one:
 
 ``procedural``
     the five formula families (solid, gradient, noise, blobs, blurred crop)
-    that notebook 06 used. None of them is a photograph.
+    the encoder notebook records. None of them is a photograph.
 ``places365``
     scene photographs from ``A2_FashionDataset/external_data/places365``, drawn only from the 292
     training scene CATEGORIES.
@@ -176,7 +176,7 @@ CONFIG = {
 }
 
 #: One point out of domain is worth three in domain, because the product serves
-#: photographs. Shared with notebook 06 so selection and promotion cannot drift.
+#: photographs. Shared with notebook 05 so selection and promotion cannot drift.
 DEPLOYMENT_WEIGHT = 3.0
 
 
@@ -197,7 +197,7 @@ def parse_args():
     parser.add_argument("--backgrounds", choices=("procedural", "places365", "mixed"),
                         default="mixed",
                         help="source of the training backdrops. 'procedural' is "
-                             "the five formula families notebook 06 used; "
+                             "the five procedural formula families; "
                              "'places365' is scene photographs from the training "
                              "categories; 'mixed' draws both, which is the "
                              "default because the serve path contains both")
@@ -459,7 +459,7 @@ def main():
     # The collapse guard tracks the PEAK spread seen, not the starting one. A
     # randomly initialised encoder maps every input to nearly the same point, so
     # its spread is ~0.02 and a fraction of it is a threshold nothing can fall
-    # below - the guard notebook 06 section 6 needed would never have fired.
+    # below - the guard the first collapse needed would never have fired.
     # Spread rises as the embedding organises, then collapse is a fall away from
     # that peak.
     peak_spread = embedding_spread(model, images, protocol.catalogue_pos,

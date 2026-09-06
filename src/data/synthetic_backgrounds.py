@@ -332,7 +332,7 @@ def _scaled_structure(height):
 def _border_colour_mask(image, tolerance=20):
     """Foreground where the pixel differs from the frame-edge background colour.
 
-    The same estimator notebook 06 uses to cut catalogue items off white, and the
+    The same estimator notebook 05 uses to cut catalogue items off white, and the
     numpy tier of ``src/data/user_image.py``'s segmentation ladder. Modelling the
     backdrop from the border rather than assuming white is what lets it work on a
     composite, where the backdrop is whatever the background bank supplied.

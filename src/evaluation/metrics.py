@@ -1,16 +1,16 @@
 """Task 4 retrieval evaluation - the single protocol every notebook uses.
 
-Before this module existed, notebooks ``05`` and ``06`` each carried their own
+Before this module existed, the two Task 4 notebooks each carried their own
 copy of the product-level split, the query draw and the retrieval metrics. The
 two implementations happened to agree - same holdout fraction, same 2,000
 queries, same ``rng.choice`` - but nothing enforced that, and they were free to
 drift apart on any edit. They had already diverged in what they measured: ``05``
 reports graded relevance, nDCG against an achievable ideal, and R-precision,
-while ``06`` computed only P@10, colour@10 and both@10.
+while the background-augmentation pass computed only P@10, colour@10 and both@10.
 
 ``05`` additionally samples an *in-gallery* query set stratified by
 ``articleType`` (capped at 40 per class, so rare types are actually measured).
-That protocol is separate from the deployment one and ``06`` never used it.
+That protocol is separate from the deployment one, which superseded it.
 
 A note for anyone comparing the two notebooks' headline figures: the familiar
 ``both@10`` 45.92 and 43.04 are **two different encoders**, not two protocols -
