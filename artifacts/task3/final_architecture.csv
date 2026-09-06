@@ -20,6 +20,9 @@ Optimiser,"AdamW, lr 0.001, weight decay 0.0001"
 Learning rate schedule,halved after 3 epochs without validation improvement
 Regularisation,"dropout 0.5, weight decay, batch norm, early stopping"
 Class imbalance,none applied
+Confidence calibration,"temperature scaling, gender T=5.83, usage T=5.94"
 Training seed,42 (best of 3 repeated runs)
-Selection rule,highest mean macro-F1 averaged over seeds; ties within +-1.17 broken on usage macro-F1
+Selection rule,highest validation mean macro-F1; ties within +-0.67 broken on usage macro-F1
+Configuration the rule retained,base
+Configuration deployed,base
 Total parameters,"4,249,577"

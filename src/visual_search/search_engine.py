@@ -44,7 +44,7 @@ from src.data.user_image import (  # noqa: F401
 
 __all__ = ["SearchEngine", "load_user_image", "ImprovedEncoder",
            "ImprovedEncoderV2", "GeM", "CosineHead", "build_encoder", "ARCHITECTURES",
-           "NON_WEARABLE_CATEGORIES", "BAND_NAMES",
+           "NON_WEARABLE_CATEGORIES", "BAND_NAMES", "crop_floor",
            "foreground_mask", "list_images", "PREPROCESS_MODES",
            "DEFAULT_CONFIDENCE"]
 
@@ -361,11 +361,26 @@ BAND_LAYOUT = (("upper", 0.00, 0.55), ("lower", 0.45, 1.00),
 # A thin strip becomes a smear once stretched to 60x80, and smears land in
 # whichever dense cluster happens to be nearby - which is how an early version
 # matched a third of its regions to Socks, Handbags and Backpacks.
-#: Expressed as a share of the frame, not an absolute pixel count. At 60x80 this
-#: is the 48x48 it has always been; at 120x160 the same fraction is 96x96, where
-#: a fixed 2,304 pixels would have accepted crops four times thinner.
-MIN_CROP_FRACTION = (48 * 48) / (60 * 80)
+#: A crop has to survive being resized to the encoder's input without becoming a
+#: smear, so the floor is an absolute pixel count tied to THAT size - not to the
+#: uploaded frame, which is whatever the camera produced.
+#:
+#: Making it a fraction of the frame was tried and was badly wrong: proposals run
+#: on the full-resolution upload, so on a 2746x3840 photograph a 0.48 share meant
+#: 5.06 million pixels against the 2,304 intended - 2,197x stricter, and every
+#: band was rejected, leaving the whole image as the only region.
+MIN_CROP_PIXELS = 48 * 48                  # at the 60x80 encoder input
 MIN_ASPECT, MAX_ASPECT = 0.25, 4.0
+
+
+def crop_floor(size):
+    """Minimum crop area for an encoder whose input is ``size`` (w, h).
+
+    Scales with the model input, so a 120x160 encoder demands 96x96 - four times
+    the area, because it resizes crops to four times the pixels.
+    """
+    width, height = size
+    return int(round(MIN_CROP_PIXELS * (width * height) / (60 * 80)))
 
 #: Ranking is by SIMILARITY, never coherence. Ranking by coherence backfired:
 #: coherence rose 0.61 -> 0.92 while similarity actually fell, because thin
@@ -390,7 +405,8 @@ NON_WEARABLE_CATEGORIES = frozenset(
 BAND_NAMES = frozenset(name for name, _, _ in BAND_LAYOUT)
 
 
-def propose_regions(rgb, min_cover=0.10, min_component=0.03):
+def propose_regions(rgb, min_cover=0.10, min_component=0.03,
+                    min_pixels=MIN_CROP_PIXELS):
     """Whole subject, separate components, and horizontal bands of the subject."""
     from scipy import ndimage
 
@@ -438,12 +454,10 @@ def propose_regions(rgb, min_cover=0.10, min_component=0.03):
                         "cover": float(band.mean())})
 
     keep = []
-    frame_pixels = rgb.shape[0] * rgb.shape[1]
-    minimum_pixels = max(1, int(round(MIN_CROP_FRACTION * frame_pixels)))
     for region in regions:
         bx0, by0, bx1, by1 = region["bbox"]
         w, h = bx1 - bx0, by1 - by0
-        if w * h < minimum_pixels:
+        if w * h < min_pixels:
             continue
         if not (MIN_ASPECT <= w / max(h, 1) <= MAX_ASPECT):
             continue
@@ -703,7 +717,8 @@ class SearchEngine:
         with Image.open(path) as opened:
             rgb = np.asarray(_to_rgb_on_white(opened))
 
-        regions, mask, method = propose_regions(rgb)
+        regions, mask, method = propose_regions(
+            rgb, min_pixels=crop_floor(self.size))
         tiles = np.stack([crop_region(rgb, mask, r["bbox"], self.size)
                           for r in regions])
 

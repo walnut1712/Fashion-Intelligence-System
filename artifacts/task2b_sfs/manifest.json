@@ -1,0 +1,121 @@
+{
+  "task": "Task 2B - external-data season recommendation",
+  "source": "SFS_metadata.csv",
+  "raw_rows": 293105,
+  "valid_season_rows": 292700,
+  "usable_rows": 284098,
+  "usable_fraction": 0.969270397980246,
+  "num_users": 4967,
+  "num_garment_categories": 50,
+  "garment_categories": [
+    "backpack",
+    "bag",
+    "belt",
+    "blazer",
+    "blouse",
+    "boots",
+    "bra",
+    "bracelet",
+    "camisole",
+    "cardigan",
+    "clutch",
+    "coat",
+    "dress",
+    "earrings",
+    "flats",
+    "gloves",
+    "hat",
+    "heels",
+    "jacket",
+    "jeans",
+    "jumpsuit",
+    "leggings",
+    "necklace",
+    "pants",
+    "pendant",
+    "pumps",
+    "purse",
+    "ring",
+    "romper",
+    "sandals",
+    "scarf",
+    "shirt",
+    "shoes",
+    "shorts",
+    "skirt",
+    "sneakers",
+    "socks",
+    "sunglasses",
+    "suspenders",
+    "sweater",
+    "sweatshirt",
+    "swimwear",
+    "tie",
+    "tights",
+    "top",
+    "tunic",
+    "vest",
+    "wallet",
+    "watch",
+    "wedges"
+  ],
+  "season_counts": {
+    "summer": 107000,
+    "spring": 71378,
+    "fall": 70223,
+    "winter": 35497
+  },
+  "split": {
+    "method": "GroupShuffleSplit by user_name",
+    "train_rows": 186587,
+    "val_rows": 40700,
+    "test_rows": 56811,
+    "train_users": 3476,
+    "val_users": 745,
+    "test_users": 746
+  },
+  "selection_metric": "validation macro_f1",
+  "selected_model": "logreg_balanced",
+  "candidate_metrics": {
+    "logreg_unweighted": {
+      "val": {
+        "accuracy": 0.4394103194103194,
+        "macro_f1": 0.34068587803858086,
+        "weighted_f1": 0.386031157599742,
+        "balanced_accuracy": 0.3603377072784862,
+        "log_loss": 1.2179632186889648
+      }
+    },
+    "logreg_balanced": {
+      "val": {
+        "accuracy": 0.407985257985258,
+        "macro_f1": 0.358239765291159,
+        "weighted_f1": 0.38574032779853074,
+        "balanced_accuracy": 0.38951152589365123,
+        "log_loss": 1.2651134729385376
+      },
+      "test": {
+        "accuracy": 0.4173839573322068,
+        "macro_f1": 0.36891350726412375,
+        "weighted_f1": 0.39458724861180206,
+        "balanced_accuracy": 0.39972859623659895,
+        "log_loss": 1.2561171054840088
+      }
+    }
+  },
+  "test_metrics": {
+    "accuracy": 0.4173839573322068,
+    "macro_f1": 0.36891350726412375,
+    "weighted_f1": 0.39458724861180206,
+    "balanced_accuracy": 0.39972859623659895,
+    "log_loss": 1.2561171054840088
+  },
+  "majority_baseline_label": "summer",
+  "majority_baseline_test_metrics": {
+    "accuracy": 0.37043882346728624,
+    "macro_f1": 0.13515336004932182,
+    "weighted_f1": 0.2002642067372852,
+    "balanced_accuracy": 0.25
+  },
+  "important_note": "This model learns season occurrence from SFS street-fashion metadata. It is an auxiliary recommendation layer and does not replace the official Task 2A CNN trained on the assignment season labels."
+}

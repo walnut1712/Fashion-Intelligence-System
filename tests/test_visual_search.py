@@ -483,11 +483,11 @@ def test_region_proposal_rejects_degenerate_boxes():
     while the code actually demands 14,400.
     """
     from src.visual_search.search_engine import (MAX_ASPECT, MIN_ASPECT,
-                                                 MIN_CROP_FRACTION, propose_regions)
+                                                 MIN_CROP_PIXELS, propose_regions)
 
     rgb = np.full((200, 150, 3), 255, dtype=np.uint8)
     rgb[40:160, 40:110] = (30, 90, 160)
-    minimum = MIN_CROP_FRACTION * rgb.shape[0] * rgb.shape[1]
+    minimum = MIN_CROP_PIXELS
     regions, _, _ = propose_regions(rgb)
 
     # ``propose_regions`` ends with ``keep or regions[:1]``: when the filter
@@ -1017,12 +1017,21 @@ def test_mask_morphology_scales_with_the_frame():
     assert small == 1 and large == 2
 
 
-def test_region_minimum_is_a_fraction_not_a_pixel_count():
-    """At 120x160 a fixed 48x48 floor would accept crops four times thinner."""
-    from src.visual_search.search_engine import MIN_CROP_FRACTION
+def test_the_crop_floor_scales_with_the_encoder_not_the_photograph():
+    """The floor guards a crop against smearing when resized to the model input.
 
-    assert MIN_CROP_FRACTION == pytest.approx((48 * 48) / (60 * 80))
-    assert round(MIN_CROP_FRACTION * 120 * 160) == 48 * 48 * 4
+    Tying it to the uploaded frame instead was tried and was badly wrong:
+    proposals run on the full-resolution photograph, so a 0.48 share of a
+    2746x3840 upload demanded 5.06 million pixels against the 2,304 intended,
+    and every band was rejected.
+    """
+    from src.visual_search.search_engine import MIN_CROP_PIXELS, crop_floor
+
+    assert crop_floor((60, 80)) == MIN_CROP_PIXELS
+    assert crop_floor((120, 160)) == MIN_CROP_PIXELS * 4
+
+    # A large photograph must not raise the bar just by being large.
+    assert crop_floor((60, 80)) == 2304
 
 
 def test_the_two_resolution_caches_describe_the_same_gallery():
