@@ -1,0 +1,32 @@
+index,file,ground_truth_articleType,include_eval,note
+0,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,Dresses,True,
+1,25637193-carousel-block-earrings-v1.webp,Earrings,True,
+2,2b3f6ff00db7a1efae21d85cfb8995eaff2da8d8.png,,False,Pikachu - non-fashion/OOD
+3,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,Socks,True,
+4,4130636080047_004_b14.webp,,False,Multiple garments / scarf ambiguous
+5,4793e3cb1e694edeb25651fb1ae578e6.jpg,Ties,True,
+6,509.png,,False,Cartoon cat - non-fashion/OOD
+7,600_google-pattern-socks.jpg,Socks,True,
+8,83123110.webp,Earrings,True,
+9,ae9d94dee29112613a6fae774382a2d4.jpg,,False,Coat not represented clearly in Task4 taxonomy
+10,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,Dresses,True,
+11,Collier_ruban_or_vermeil_2.webp,Necklace and Chains,True,
+12,d8ff992811e561202194328c9562a843.jpg,,False,Eye-mask/object - outside taxonomy
+13,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,,False,Boot style ambiguous in available taxonomy
+14,images (1).jpg,Dresses,True,
+15,images (10).jpg,Sports Shoes,True,
+16,images (11).jpg,Handbags,True,
+17,images (2).jpg,,False,Multiple products in one image
+18,images (3).jpg,Caps,True,
+19,images (4).jpg,Necklace and Chains,True,
+20,images (5).jpg,Necklace and Chains,True,
+21,images (6).jpg,Heels,True,
+22,images (7).jpg,Ties,True,
+23,images (8).jpg,Earrings,True,
+24,images (9).jpg,Sports Shoes,True,
+25,images.jpg,,False,Full outfit / multiple garments
+26,istockphoto-1018293976-612x612.jpg,,False,Full outfit / ambiguous target
+27,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,,False,Suit not represented as articleType
+28,nike-5644799_640.jpg,Sports Shoes,True,
+29,sm_s_c_mint___short_summer__3__c13cee931ef04513be9f9862179e68fd.webp,Shirts,True,
+30,The_dress_blueblackwhitegold.jpg,Dresses,True,
