@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 SFS_CSV = (
     ROOT
+    / "A2_FashionDataset"
     / "external_data"
     / "sfs"
     / "SFS_metadata.csv"

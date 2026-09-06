@@ -96,9 +96,25 @@ def test_manifest_normalisation_stats_are_three_channel(manifest):
     assert all(s > 0 for s in manifest["channel_std"]), "a zero std would divide by zero"
 
 
-def test_manifest_image_size_matches_the_dataset(manifest):
-    assert tuple(manifest["image_size_pil"]) == (60, 80), (
-        "the catalogue is 60x80; a different size silently mis-scales every query"
+def test_manifest_image_size_matches_the_encoder(manifest):
+    """The manifest scales queries; the encoder decides what scale is correct.
+
+    This used to assert a literal 60x80. That is no longer what Task 4 runs at -
+    the encoder trains on the 120x160 re-export - and a hardcoded size would fail
+    for the right value while still passing for a genuinely wrong one, because it
+    never consulted the encoder. Compare the two instead: a query resized to
+    anything other than what the encoder was trained on is silently mis-scaled,
+    whatever that size happens to be.
+    """
+    import torch
+
+    checkpoint = torch.load(ARTIFACT_DIR / manifest["encoder_file"],
+                            map_location="cpu", weights_only=False)
+    expected = checkpoint.get("image_size_pil")
+    assert expected is not None, "checkpoint does not record image_size_pil"
+    assert tuple(manifest["image_size_pil"]) == tuple(expected), (
+        "manifest says {} but the encoder was trained at {}; every query would "
+        "be mis-scaled".format(manifest["image_size_pil"], expected)
     )
 
 

@@ -3,9 +3,12 @@
 
 Why a script and not a notebook cell
 ------------------------------------
-At 120x160 a run is roughly 10 hours on a machine with no CUDA device, which is
-longer than a notebook kernel should be trusted to stay alive. Every epoch is
-checkpointed, so ``--resume`` picks the run back up.
+A full run is longer than a notebook kernel should be trusted to stay alive.
+Every epoch is checkpointed, so ``--resume`` picks the run back up.
+
+The cost figures below were written on a machine with no CUDA device. This one
+has an RTX 3060, so read them as an upper bound rather than an estimate; the
+run prints its own wall clock at the end, which is the number to quote.
 
 Why both resolutions live here
 ------------------------------
@@ -35,11 +38,35 @@ inherit the same thing - but it also tilts slightly toward 60x80, whose features
 were learned at exactly that input scale. Use it to get an early read, not to
 report a headline.
 
+Where the backdrops come from
+-----------------------------
+``--backgrounds`` selects the training bank, and the choice is a second
+comparison running alongside the resolution one:
+
+``procedural``
+    the five formula families (solid, gradient, noise, blobs, blurred crop)
+    that notebook 06 used. None of them is a photograph.
+``places365``
+    scene photographs from ``A2_FashionDataset/external_data/places365``, drawn only from the 292
+    training scene CATEGORIES.
+``mixed`` (default)
+    both, at ``photographic_share``. The serve path contains both cases - 38% of
+    uploads reach the encoder with their backdrop intact, the rest arrive
+    segmented onto a flat field - so training on one family teaches invariance
+    to one half of what the service sees.
+
+Evaluation always reports five benchmarks, over TWO held-out background
+families: checkerboards and stripes, which no run ever trains on, and Places365
+scenes from the 73 held-out categories. A model trained on photographs that
+improves on ``photo`` while falling on ``hard`` has swapped one overfit for
+another, and only grading both makes that visible.
+
 Usage
 -----
     python -m src.training.train_task4_120x160 --resolution 60x80   --seed 42
     python -m src.training.train_task4_120x160 --resolution 120x160 --seed 42
     python -m src.training.train_task4_120x160 --resolution 120x160 --resume
+    python -m src.training.train_task4_120x160 --backgrounds procedural  # the arm to beat
 """
 
 from __future__ import annotations
@@ -62,6 +89,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.data.places365_backgrounds import (  # noqa: E402
+    load_background_bank,
+    make_mixed_bank,
+    write_split_manifest,
+)
 from src.data.synthetic_backgrounds import (  # noqa: E402
     EVAL_DEGRADATIONS,
     composite,
@@ -88,12 +120,38 @@ CONFIG = {
     "triplet_margin": 0.3,
     "aux_type_weight": 0.5,
     "aux_colour_weight": 0.5,
-    "learning_rate": 1e-3,
+    # 1e-3 is what notebook 05 used and it trains 60x80 fine, but it destabilises
+    # 120x160: measured, a from-scratch 120x160 run organises to a spread of
+    # 0.011 by epoch 5 and then falls back monotonically to 0.0016 by epoch 9,
+    # with monitor clean P@10 degrading 62.66 -> 42.46 on CLEAN frames, before
+    # any augmentation is applied. Four times the pixels reach the same global
+    # average pool, so the pooled feature is a mean over 80 positions rather than
+    # 20 and its scale differs; the same step size is too large for it. Halved
+    # for BOTH arms rather than only the one that needed it, so resolution stays
+    # the only difference between them.
+    "learning_rate": 5e-4,
     "weight_decay": 1e-4,
+    #: Triplet mining is unstable early, when the hardest positive and hardest
+    #: negative are both near the margin. Clipping bounds one bad batch.
+    "grad_clip": 1.0,
     "batches_per_epoch": 250,
     "p": 16, "k": 8,
     "bg_end": 0.6,
-    "ramp_epochs": 4,
+    "ramp_epochs": 6,
+    # Epochs trained on CLEAN catalogue frames before any backdrop or
+    # degradation is applied. Not a nicety: from-scratch training with the
+    # augmentation on from epoch 1 collapses, measured. The triplet loss sits at
+    # exactly the margin (0.3003) from epoch 2, the mean pairwise distance
+    # between embeddings falls from 0.006 to 0.001 and stays there, and the run
+    # ends at clean P@10 48.5 against the 80.2 the same architecture reaches
+    # when it is allowed to organise first. Notebook 06 section 6 recorded the
+    # same collapse and worked around it by fine-tuning an already-trained clean
+    # encoder; this does the same thing in one run, which keeps the arms
+    # comparable without importing a checkpoint trained under a different split.
+    "warmup_epochs": 12,
+    # A healthy L2-normalised embedding has a mean pairwise distance near 1.
+    # Anything below this after the warmup has collapsed, whatever the peak was.
+    "collapse_floor": 0.05,
     "scale_range": (0.55, 1.00),
     "eval_every": 2,
     "collapse_fraction": 0.15,
@@ -104,6 +162,17 @@ CONFIG = {
     # catalogue is used once, at the end, for the numbers that get reported.
     "monitor_catalogue": 8000,
     "monitor_query_stride": 4,
+    # Size of each background bank. 600 procedural frames was enough when every
+    # frame was a formula; a photograph carries far more variation, so drawing
+    # 8,000 distinct scenes costs ~100 s once and removes the risk of the encoder
+    # memorising a small bank.
+    "procedural_bank": 600,
+    "photographic_bank": 8000,
+    # Within a composited sample, how often the backdrop is a photograph rather
+    # than a procedural field. 0.70 tracks the serve path: 38% of uploads arrive
+    # with the backdrop intact (a scene), the other 62% arrive segmented onto a
+    # flat field, and the encoder has to be invariant to both.
+    "photographic_share": 0.70,
 }
 
 #: One point out of domain is worth three in domain, because the product serves
@@ -115,13 +184,27 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--resolution", choices=("60x80", "120x160"), default="120x160")
-    parser.add_argument("--epochs", type=int, default=30,
-                        help="30 is the from-scratch recipe notebook 05 used for "
-                             "the deployed encoder; 12 is the warm-started one")
+    parser.add_argument("--epochs", type=int, default=42,
+                        help="12 clean warmup epochs plus the 30-epoch augmented "
+                             "recipe notebook 05 used for the deployed encoder")
+    parser.add_argument("--warmup", type=int, default=None,
+                        help="clean epochs before augmentation ramps in "
+                             "(default 12; 0 reproduces the collapse)")
     parser.add_argument("--warm-start", type=Path, default=None,
                         help="initialise from a checkpoint instead of random. "
                              "Cheaper, but see the note in the module docstring")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--backgrounds", choices=("procedural", "places365", "mixed"),
+                        default="mixed",
+                        help="source of the training backdrops. 'procedural' is "
+                             "the five formula families notebook 06 used; "
+                             "'places365' is scene photographs from the training "
+                             "categories; 'mixed' draws both, which is the "
+                             "default because the serve path contains both")
+    parser.add_argument("--selection-benchmark", default="wildphoto",
+                        choices=("wild", "wildphoto"),
+                        help="which benchmark picks the best epoch. 'wildphoto' "
+                             "is the closest proxy to an upload this project has")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--limit-catalogue", type=int, default=None,
                         help="smaller catalogue for a smoke run")
@@ -141,30 +224,52 @@ def load_gallery(resolution):
 
 
 def build_queries(images, masks, protocol, seed=123):
-    """Clean, hard and wild renderings of the held-out items.
+    """Five renderings of the held-out items, differing by one stage each.
 
-    ``wild`` is ``hard`` plus the held-out camera degradations and the ingestion
-    path, so the three differ by exactly one stage each and a movement can be
-    attributed.
+    ``clean``
+        the catalogue frame. The academic reference.
+    ``hard``
+        composited onto checkerboards and stripes, families no training run
+        generates.
+    ``photo``
+        composited onto Places365 scenes from the 73 held-out CATEGORIES. A
+        photographic backdrop the encoder has never seen the kind of.
+    ``wild`` / ``wildphoto``
+        the two above, plus the held-out camera degradations and the ingestion
+        path. ``wildphoto`` is the closest proxy to a real upload here.
+
+    Two background families are graded rather than one because a model trained
+    on photographs must not be judged only on photographs. If it improves on
+    ``photo`` while falling on ``hard``, it swapped one overfit for another and
+    the table says so.
     """
     height, width = images.shape[1], images.shape[2]
     evaluation_backgrounds = make_eval_backgrounds(600, size=(width, height))
+    photographic_backgrounds = load_background_bank(
+        count=2000, shape=(height, width, 3), split="test", seed=seed)
     generator = np.random.default_rng(seed)
 
     clean = np.stack([np.asarray(images[p]) for p in protocol.heldout_queries])
-    # 2,000 frames is ~115 MB at 120x160 - materialising this one is affordable,
-    # unlike the 32,944-row catalogue.
-    hard = np.stack([
-        composite(np.asarray(images[p]), np.asarray(masks[p]),
-                  evaluation_backgrounds[generator.integers(len(evaluation_backgrounds))],
-                  generator)
-        for p in protocol.heldout_queries
-    ])
-    wild = np.stack([
-        simulate_ingestion(degrade(frame, generator, EVAL_DEGRADATIONS), generator)
-        for frame in hard
-    ])
-    return {"clean": clean, "hard": hard, "wild": wild}
+
+    def composite_onto(bank):
+        # 2,000 frames is ~115 MB at 120x160 - materialising this one is
+        # affordable, unlike the 32,944-row catalogue.
+        return np.stack([
+            composite(np.asarray(images[p]), np.asarray(masks[p]),
+                      bank[generator.integers(len(bank))], generator)
+            for p in protocol.heldout_queries
+        ])
+
+    def weather(frames):
+        return np.stack([
+            simulate_ingestion(degrade(frame, generator, EVAL_DEGRADATIONS), generator)
+            for frame in frames
+        ])
+
+    hard = composite_onto(evaluation_backgrounds)
+    photo = composite_onto(photographic_backgrounds)
+    return {"clean": clean, "hard": hard, "photo": photo,
+            "wild": weather(hard), "wildphoto": weather(photo)}
 
 
 @torch.no_grad()
@@ -246,11 +351,17 @@ def main():
     args = parse_args()
     if args.batches:
         CONFIG["batches_per_epoch"] = args.batches
+    if args.warmup is not None:
+        CONFIG["warmup_epochs"] = args.warmup
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     artifact_dir = PROJECT_ROOT / "artifacts" / f"task4_{args.resolution}"
     artifact_dir.mkdir(parents=True, exist_ok=True)
-    state_path = artifact_dir / f"train_state_seed{args.seed}.pt"
+    # The background source is part of the run's identity, not a detail: a
+    # procedural run and a places365 run at the same resolution and seed are two
+    # arms of a comparison and must not land on one filename.
+    tag = f"{args.backgrounds}_seed{args.seed}"
+    state_path = artifact_dir / f"train_state_{tag}.pt"
 
     images, masks, gallery = load_gallery(args.resolution)
     print(f"{args.resolution}: {len(gallery):,} items, frames {images.shape[1:]}")
@@ -272,10 +383,33 @@ def main():
     print("channel mean", np.round(mean, 4).tolist(), "std", np.round(std, 4).tolist())
 
     height, width = images.shape[1], images.shape[2]
-    backgrounds = make_backgrounds(600, shape=(height, width, 3), seed=42,
-                                   source_images=images[
-                                       np.sort(np.random.default_rng(0).choice(
-                                           protocol.catalogue_pos, 400, replace=False))])
+    procedural = make_backgrounds(CONFIG["procedural_bank"],
+                                  shape=(height, width, 3), seed=42,
+                                  source_images=images[
+                                      np.sort(np.random.default_rng(0).choice(
+                                          protocol.catalogue_pos, 400, replace=False))])
+
+    if args.backgrounds == "procedural":
+        backgrounds = procedural
+    else:
+        # Training draws only from the 292 training CATEGORIES; the 73 held-out
+        # ones are reserved for the `photo` and `wildphoto` benchmarks, so an
+        # unseen background means an unseen kind of place rather than another
+        # photograph of a place already trained on.
+        manifest = write_split_manifest()
+        print("Places365: {} train categories ({:,} images) | {} held out "
+              "({:,} images)".format(manifest["n_train_categories"],
+                                     manifest["n_train_images"],
+                                     manifest["n_test_categories"],
+                                     manifest["n_test_images"]))
+        photographic = load_background_bank(
+            count=CONFIG["photographic_bank"], shape=(height, width, 3),
+            split="train", seed=args.seed, verbose=True)
+        backgrounds = (photographic if args.backgrounds == "places365"
+                       else make_mixed_bank(procedural, photographic,
+                                            CONFIG["photographic_share"],
+                                            seed=args.seed))
+    print(f"training backdrops: {args.backgrounds}, {len(backgrounds):,} frames")
 
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
@@ -333,8 +467,11 @@ def main():
     print(f"initial embedding spread: {peak_spread:.4f}")
     started = time.time()
 
+    warmup = CONFIG["warmup_epochs"]
     for epoch in range(start_epoch, args.epochs):
-        ramp = min(1.0, (epoch + 1) / CONFIG["ramp_epochs"])
+        # Stage 1: clean frames, so the embedding organises at all. Stage 2: the
+        # backdrop and the camera ramp in over `ramp_epochs`.
+        ramp = min(1.0, max(0.0, (epoch + 1 - warmup) / CONFIG["ramp_epochs"]))
         dataset.probability = CONFIG["bg_end"] * ramp
         dataset.strength = ramp
 
@@ -353,6 +490,7 @@ def main():
                     + CONFIG["aux_type_weight"] * F.cross_entropy(type_logits, types)
                     + CONFIG["aux_colour_weight"] * F.cross_entropy(colour_logits, colours))
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), CONFIG["grad_clip"])
             optimizer.step()
             totals["triplet"] += triplet.item()
             totals["total"] += loss.item()
@@ -368,9 +506,24 @@ def main():
                   "total": totals["total"] / batches, "spread": spread}
 
         peak_spread = max(peak_spread, spread)
-        if spread < CONFIG["collapse_fraction"] * peak_spread:
+        # Two conditions, because the relative one alone missed a real collapse.
+        # A randomly initialised encoder maps everything to nearly one point, so
+        # its spread (~0.006) is a peak nothing has to beat, and 15% of it
+        # (0.0009) is a floor a fully collapsed run (0.0010) sits above. The
+        # absolute floor is what actually catches it; the relative test still
+        # catches a collapse that happens after the embedding has organised.
+        collapsed_absolute = (epoch + 1 > warmup
+                              and spread < CONFIG["collapse_floor"])
+        # The relative test is only meaningful once the embedding has actually
+        # organised. Before that every value is ~0.01 and a ratio between two
+        # such numbers is noise, so requiring the peak to have cleared the floor
+        # stops a wobble during the plateau from killing a healthy run.
+        collapsed_relative = (peak_spread > CONFIG["collapse_floor"]
+                              and spread < CONFIG["collapse_fraction"] * peak_spread)
+        if collapsed_absolute or collapsed_relative:
             print(f"COLLAPSE at epoch {epoch + 1}: spread {spread:.4f} against a "
-                  f"peak of {peak_spread:.4f}. Stopping.")
+                  f"peak of {peak_spread:.4f} and a floor of "
+                  f"{CONFIG['collapse_floor']}. Stopping.")
             break
 
         if (epoch + 1) % CONFIG["eval_every"] == 0 or epoch == args.epochs - 1:
@@ -378,7 +531,7 @@ def main():
                              monitor_subset, CONFIG["monitor_query_stride"])
             record.update({f"{b}_{m}": v for b, s in scores.items()
                            for m, v in s.items()})
-            weighted = (DEPLOYMENT_WEIGHT * scores["wild"]["both@10"]
+            weighted = (DEPLOYMENT_WEIGHT * scores[args.selection_benchmark]["both@10"]
                         + scores["clean"]["both@10"])
             if weighted > best["score"]:
                 best = {"score": weighted,
@@ -387,6 +540,7 @@ def main():
             print(f"epoch {epoch + 1:>2}/{args.epochs} triplet {record['triplet']:.4f} "
                   f"spread {spread:.3f} | monitor clean P@10 "
                   f"{scores['clean']['P@10']:.2f} wild P@10 {scores['wild']['P@10']:.2f}"
+                  f" wildphoto P@10 {scores['wildphoto']['P@10']:.2f}"
                   f"{'  <- best' if best['epoch'] == epoch + 1 else ''}", flush=True)
         else:
             print(f"epoch {epoch + 1:>2}/{args.epochs} triplet {record['triplet']:.4f} "
@@ -416,15 +570,29 @@ def main():
         "image_size_pil": [width, height],
         "resolution": args.resolution,
         "background_augmented": True, "degradation_augmented": True,
+        "background_source": args.backgrounds,
+        "photographic_share": (CONFIG["photographic_share"]
+                               if args.backgrounds == "mixed"
+                               else float(args.backgrounds == "places365")),
+        "background_split": "places365 scene categories, 292 train / 73 held out",
+        "selection_benchmark": args.selection_benchmark,
+        "warmup_epochs": CONFIG["warmup_epochs"],
+        "ramp_epochs": CONFIG["ramp_epochs"],
+        "learning_rate": CONFIG["learning_rate"],
         "seed": args.seed, "best_epoch": best["epoch"],
         "gallery": f"task4_gallery_{args.resolution}.csv",
         "trained_by": "src/training/train_task4_120x160.py",
-    }, artifact_dir / f"task4_encoder_seed{args.seed}.pt")
+    }, artifact_dir / f"task4_encoder_{tag}.pt")
 
     pd.DataFrame(history).to_csv(
-        artifact_dir / f"history_seed{args.seed}.csv", index=False)
-    with open(artifact_dir / f"summary_seed{args.seed}.json", "w") as handle:
+        artifact_dir / f"history_{tag}.csv", index=False)
+    with open(artifact_dir / f"summary_{tag}.json", "w") as handle:
         json.dump({"resolution": args.resolution, "seed": args.seed,
+                   "backgrounds": args.backgrounds,
+                   "selection_benchmark": args.selection_benchmark,
+        "warmup_epochs": CONFIG["warmup_epochs"],
+        "ramp_epochs": CONFIG["ramp_epochs"],
+        "learning_rate": CONFIG["learning_rate"],
                    "epochs": args.epochs, "best_epoch": best["epoch"],
                    "minutes": round(minutes, 1), "benchmarks": final}, handle, indent=2)
     print(f"\nwrote {artifact_dir}")

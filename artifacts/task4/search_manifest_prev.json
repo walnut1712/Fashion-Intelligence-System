@@ -1,34 +1,85 @@
 {
-  "best_method": "Improved+TTA+bgaug",
-  "index_file": "search_index_bg_augmented.npy",
+  "best_method": "Improved+TTA+places365",
+  "index_file": "search_index_full.npy",
   "encoder_file": "task4_improved_encoder.pt",
-  "catalogue_size": 32837,
+  "catalogue_size": 38571,
   "embedding_dim": 128,
   "image_size_pil": [
-    60,
-    80
+    120,
+    160
   ],
   "channel_mean": [
-    0.853080153465271,
-    0.8323108553886414,
-    0.823356568813324
+    0.8512566685676575,
+    0.8350093960762024,
+    0.8296347856521606
   ],
   "channel_std": [
-    0.25485458970069885,
-    0.26153451204299927,
-    0.2616167664527893
+    0.27379870414733887,
+    0.2840519845485687,
+    0.28780609369277954
   ],
   "use_tta": true,
   "uses_reranking": false,
   "background_augmented": true,
-  "deployment_metrics": {
-    "P@10": 0.7981999999999999,
-    "colour@10": 0.5368999999999999,
-    "both@10": 0.4276
+  "architecture": "improved",
+  "resolution": "120x160",
+  "evaluation_index_file": "search_index_eval.npy",
+  "evaluation_catalogue_size": 32944,
+  "benchmarks": {
+    "clean": {
+      "P@1": 79.7,
+      "P@10": 76.19,
+      "colour@10": 55.225,
+      "both@10": 41.975,
+      "colourfam@10": 58.184999999999995,
+      "bothfam@10": 44.295
+    },
+    "hard": {
+      "P@1": 56.15,
+      "P@10": 56.315000000000005,
+      "colour@10": 48.515,
+      "both@10": 28.845,
+      "colourfam@10": 51.910000000000004,
+      "bothfam@10": 30.855
+    },
+    "photo": {
+      "P@1": 57.550000000000004,
+      "P@10": 55.785,
+      "colour@10": 48.68,
+      "both@10": 29.404999999999998,
+      "colourfam@10": 51.925,
+      "bothfam@10": 31.3
+    },
+    "wild": {
+      "P@1": 53.2,
+      "P@10": 53.07000000000001,
+      "colour@10": 47.27,
+      "both@10": 27.33,
+      "colourfam@10": 50.495000000000005,
+      "bothfam@10": 29.095
+    },
+    "wildphoto": {
+      "P@1": 52.800000000000004,
+      "P@10": 51.61500000000001,
+      "colour@10": 45.355000000000004,
+      "both@10": 26.195,
+      "colourfam@10": 48.22,
+      "bothfam@10": 27.67
+    }
   },
-  "hard_benchmark_metrics": {
-    "P@10": 0.4966,
-    "colour@10": 0.4422,
-    "both@10": 0.248
+  "index_scope": "The served index covers the whole catalogue, because a customer must be able to find anything the shop stocks. The 15% product-level holdout is a property of the measurement, not of the shop, so the evaluation index excludes it and every reported metric is computed against that.",
+  "provenance": {
+    "trained_by": "src/training/train_task4_120x160.py",
+    "promoted_by": "scripts/promote_task4_encoder.py",
+    "source_checkpoint": "artifacts/task4_120x160/task4_encoder_mixed_seed42.pt",
+    "gallery": "task4_gallery_120x160.csv",
+    "background_source": "mixed",
+    "photographic_share": 0.7,
+    "background_split": "places365 scene categories, 292 train / 73 held out",
+    "warmup_epochs": 12,
+    "learning_rate": 0.0005,
+    "seed": 42,
+    "best_epoch": 40,
+    "benchmark_note": "`photo` and `wildphoto` composite onto Places365 scenes from the 73 HELD-OUT categories; `hard` and `wild` use checkerboards and stripes. Both families are reported because a procedurally trained encoder scores 59.50 on the first and 42.86 on the second, so one family alone cannot support a claim of background invariance."
   }
 }

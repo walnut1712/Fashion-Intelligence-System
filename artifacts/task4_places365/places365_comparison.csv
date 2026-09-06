@@ -1,5 +1,0 @@
-model,benchmark,P@10,P@1,colour@10,both@10
-current,clean,80.23,82.35,53.95,43.04
-current,places-hard,48.09,47.55,41.0,22.76
-places365,clean,79.56,82.95,54.77,43.5
-places365,places-hard,55.58,55.5,47.16,27.96
