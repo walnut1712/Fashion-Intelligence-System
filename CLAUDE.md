@@ -16,10 +16,10 @@ models can be reused outside the notebook without re-training.
 | 1 | `articleType` (92 classes) | `notebooks/02_task1_item_type.ipynb` | `artifacts/task1/task1_cnn.pt` |
 | 2 | `season` (4 classes) | `notebooks/03_task2_season_pytorch.ipynb` | `artifacts/task2/task2_season_best_pytorch.pth` |
 | 3 | `gender` (5) + `usage` (4), one multi-task CNN | `notebooks/04_task3_cnn_architectures.ipynb` | `artifacts/task3/task3_cnn_model.pt` |
-| 4 | visual search — top-K similar items | `notebooks/05_task4_visual_search.ipynb`, `06_task4_clustering.ipynb` | `artifacts/task4/` |
+| 4 | visual search — top-K similar items | `notebooks/05_task4_visual_search.ipynb`, `06_task4_background_augmentation.ipynb`, `07_task4_clustering.ipynb` | `artifacts/task4/` |
 
 `notebooks/01_eda.ipynb` produces the shared cleaned metadata every task reads.
-`notebooks/07_ultimate_judgement.ipynb` is cross-task comparison.
+`notebooks/08_ultimate_judgement.ipynb` is cross-task comparison.
 
 ## Environment
 
@@ -50,6 +50,16 @@ python -m pytest tests/ -q
 # Task 1 batch inference / submission CSV
 python predict.py --images A2_FashionDataset/FashionDataset/test/images_test \
                   --out outputs/task1_item_type_predictions.csv --submission
+
+# Task 4 at 120x160 - caches first (~13 min each), then either arm. Both arms
+# train from scratch: ~6 h at 60x80 and ~24 h at 120x160 on CPU, and --resume
+# survives a killed run. Notebook 06 section 16 reads what they write.
+python scripts/build_task4_cache.py --resolution 120x160
+python -m src.training.train_task4_120x160 --resolution 60x80   --seed 42
+python -m src.training.train_task4_120x160 --resolution 120x160 --seed 42
+
+# Rebuild the served index after promoting a Task 4 encoder
+python scripts/build_task4_outputs.py --rebuild-index
 ```
 
 `/api/health` reports per-task `loaded` + `error`; a failed checkpoint does not take the API
@@ -67,17 +77,28 @@ A2_FashionDataset/
 
 Facts that matter:
 
-- **Images are 60×80.** That resolution is the hard ceiling on every task's accuracy —
-  fine print, fabric and subtle colour simply are not representable.
+- **The assignment images are 60×80**, and for Tasks 1-3 that is still the hard ceiling on
+  accuracy — fine print, fabric and subtle colour are not representable at that size.
+- **Task 4 no longer trains at 60×80.** `A2_FashionDataset/processed/images_train_120x160/`
+  holds the training catalogue rebuilt from the high-resolution source (git LFS, on `main`
+  since PR #5). The files carry real detail rather than interpolation — 6.1× the spectral
+  energy above the 60×80 Nyquist limit that a bicubic upscale has — and cover training ids
+  only, so they do not touch the assignment's 5,829 held-out test ids.
 - `styles_train.csv` has **unquoted commas inside `productDisplayName`** (21 rows), which spill
   into `Unnamed: 10` / `Unnamed: 11`. Re-join those columns *then* drop them. Dropping them
   first silently truncates product names.
 - Splits are **grouped by product name** so near-duplicate photos of one item cannot straddle
   train/val/test, and stratified on the target(s).
-- `A2_FashionDataset/fashion-product-images-dataset.zip` (Kaggle, high-res) is the **same items
-  at 900× the pixels** — 0 new rows, but it **contains labels for the assignment's held-out test
-  ids**. Do not train on or score against those ids. Using the high-res images at all needs the
-  teacher's approval; treat it as blocked until the user says otherwise.
+- The Kaggle high-res set is the **same items at 900× the pixels** — 0 new rows, but it
+  **contains labels for the assignment's held-out test ids**. Never train on or score against
+  those ids. The 120×160 catalogue above was derived from it and is scoped to training ids;
+  going back to the raw set for anything else needs the teacher's approval again.
+- Task 4's gallery is the **38,571** rows `train_metadata_120x160_supervised.csv` flags
+  `use_for_supervised`, not all 38,612. The 41 excluded rows carry conflicting task labels.
+  Dropping them is not cosmetic: `RetrievalProtocol` shuffles *products* to pick its holdout,
+  so the reduced gallery shares only **6%** of its held-out queries with the split every
+  pre-120×160 Task 4 number was measured on. Those numbers are not a baseline for it, and
+  neither is the shipped encoder, which trained under the old split.
 
 ## Model state
 
@@ -92,8 +113,22 @@ Facts that matter:
   Threshold adjustment was evaluated and **removed** — `class_weights` in the checkpoint are ones,
   so the service takes plain argmax. Test: gender 90.08% / 77.08 macro-F1, usage 91.17% / 84.28,
   exact match 82.09%.
-- **Task 4** — `Improved+TTA+bgaug` encoder, 128-dim, 32,837-item index. Deployment P@10 0.80;
-  on the harder benchmark 0.53. Search modes are exposed via `?mode=` (`nobg` default).
+- **Task 4** — deployed: `Improved+TTA+bgaug`, 128-dim, 38,612-item served index, trained at
+  60×80. Clean P@10 80.2; on the disjoint out-of-domain bank 60.6, recorded as
+  `hard_metrics_disjoint` in the manifest. The older `hard_metrics` 52.8 was measured against
+  the encoder's own training backgrounds and is circular — do not publish it.
+  `?mode=` selects ingestion (`nobg` default); the confidence gate is advisory and is now
+  surfaced in the UI rather than discarded.
+  Augmentation models the camera and the serve path as well as the backdrop (`degrade`,
+  `simulate_ingestion`), which adds a third benchmark, `wild`, beside `clean` and `hard`.
+  `colour@10` is always reported beside `colourfam@10`, which merges lexical colour variants
+  only (`Navy Blue` → Blue): naming explains 3.04 of the 26-point gap to `P@10`, the other 23
+  are real.
+  **Not run yet**, and nothing is promoted until they are: the 120×160 candidate
+  (`artifacts/task4_120x160/`), its 60×80 counterpart, the degradation study (notebook 06
+  §12) and the colour branch (§15). `ImprovedEncoderV2` warm-starts from the clean encoder
+  carrying 97.8% of its parameters, so the colour branch is a fine-tune, not a from-scratch
+  ladder.
 
 ### Task 3 label policy (do not silently change)
 

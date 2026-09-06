@@ -140,7 +140,7 @@ def load_gallery(resolution):
     return images, masks, gallery
 
 
-def build_queries(images, masks, protocol, resolution, seed=123):
+def build_queries(images, masks, protocol, seed=123):
     """Clean, hard and wild renderings of the held-out items.
 
     ``wild`` is ``hard`` plus the held-out camera degradations and the ingestion
@@ -312,7 +312,7 @@ def main():
         start_epoch, history, best = saved["epoch"], saved["history"], saved["best"]
         print(f"resumed from epoch {start_epoch}")
 
-    queries = build_queries(images, masks, protocol, args.resolution)
+    queries = build_queries(images, masks, protocol)
     print("queries:", {k: v.shape for k, v in queries.items()})
 
     monitor_subset = np.sort(np.random.default_rng(7).choice(

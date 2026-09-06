@@ -365,7 +365,6 @@ BAND_LAYOUT = (("upper", 0.00, 0.55), ("lower", 0.45, 1.00),
 #: is the 48x48 it has always been; at 120x160 the same fraction is 96x96, where
 #: a fixed 2,304 pixels would have accepted crops four times thinner.
 MIN_CROP_FRACTION = (48 * 48) / (60 * 80)
-MIN_CROP_PIXELS = 48 * 48                  # kept: the 60x80 value, for reference
 MIN_ASPECT, MAX_ASPECT = 0.25, 4.0
 
 #: Ranking is by SIMILARITY, never coherence. Ranking by coherence backfired:

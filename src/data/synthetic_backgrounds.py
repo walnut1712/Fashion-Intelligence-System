@@ -319,15 +319,14 @@ def degrade(image, generator, families=TRAINING_DEGRADATIONS, strength=1.0,
 
 # --------------------------------------------------- serve-path simulation ----
 def _scaled_structure(height):
-    """A morphological structure that keeps its size *relative to the frame*."""
-    from scipy import ndimage
+    """A 3x3 structure, and how many times to iterate it for this frame.
 
-    factor = max(1, int(round(height / REFERENCE_HEIGHT)))
-    if factor == 1:
-        return np.ones((3, 3), dtype=bool), 1
-    # A larger frame gets the same operation at the same relative scale, done by
-    # iterating the 3x3 rather than by inventing a bigger kernel.
-    return np.ones((3, 3), dtype=bool), factor
+    Keeping the kernel and scaling the iteration count holds the operation at a
+    fixed size *relative to the frame*: a single 3x3 opening removes
+    proportionally less of a 160-tall image than of an 80-tall one, so the masks
+    would drift apart between the two resolutions.
+    """
+    return np.ones((3, 3), dtype=bool), max(1, int(round(height / REFERENCE_HEIGHT)))
 
 
 def _border_colour_mask(image, tolerance=20):

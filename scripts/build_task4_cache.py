@@ -54,7 +54,6 @@ from src.data.synthetic_backgrounds import _border_colour_mask  # noqa: E402
 
 PROCESSED = PROJECT_ROOT / "A2_FashionDataset" / "processed"
 SUPERVISED = PROCESSED / "train_metadata_120x160_supervised.csv"
-LEGACY_METADATA = PROCESSED / "clean_train_metadata.csv"
 
 #: name -> (width, height, source directory). The 60x80 entry is not legacy
 #: baggage: it is how the resolution comparison is made on one gallery.
