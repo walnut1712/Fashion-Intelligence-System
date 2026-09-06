@@ -133,6 +133,30 @@ class Task4Service:
                     return metadata_path
         return None
 
+    def resolve_test_image_path(self, item_id):
+        """Resolve an official test image only.
+
+        Kept separate from resolve_image_path() because catalogue search
+        results must continue resolving against the training catalogue.
+        """
+        item_id = str(item_id)
+
+        folder = (
+            self.project_root
+            / "A2_FashionDataset"
+            / "FashionDataset"
+            / "test"
+            / "images_test"
+        )
+
+        for extension in (".jpg", ".jpeg", ".png"):
+            path = folder / (item_id + extension)
+
+            if path.exists():
+                return path
+
+        return None
+
     def list_test_sample_ids(self):
         folder = self.project_root / "A2_FashionDataset" / "FashionDataset" / "test" / "images_test"
         if not folder.exists():
