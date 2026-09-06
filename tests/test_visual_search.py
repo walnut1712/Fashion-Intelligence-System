@@ -476,18 +476,31 @@ def test_region_proposal_always_returns_the_whole_subject_first():
 
 
 def test_region_proposal_rejects_degenerate_boxes():
-    """Thin strips become smears at 60x80 and match whatever cluster is nearby."""
+    """Thin strips become smears once resized and match whatever cluster is near.
+
+    The floor is a share of the frame, so the assertion has to be too - against
+    the old fixed 48x48 this frame would have passed anything above 2,304 px
+    while the code actually demands 14,400.
+    """
     from src.visual_search.search_engine import (MAX_ASPECT, MIN_ASPECT,
-                                                 MIN_CROP_PIXELS, propose_regions)
+                                                 MIN_CROP_FRACTION, propose_regions)
 
     rgb = np.full((200, 150, 3), 255, dtype=np.uint8)
     rgb[40:160, 40:110] = (30, 90, 160)
+    minimum = MIN_CROP_FRACTION * rgb.shape[0] * rgb.shape[1]
     regions, _, _ = propose_regions(rgb)
-    for region in regions:
-        x0, y0, x1, y1 = region["bbox"]
-        width, height = x1 - x0, y1 - y0
-        assert width * height >= MIN_CROP_PIXELS
-        assert MIN_ASPECT <= width / max(height, 1) <= MAX_ASPECT
+
+    # ``propose_regions`` ends with ``keep or regions[:1]``: when the filter
+    # rejects everything it still returns the whole-image region, because a
+    # caller that gets nothing back has no query to run. So a single region is
+    # the fallback and is exempt; the floor applies once there is a choice.
+    assert regions
+    if len(regions) > 1:
+        for region in regions:
+            x0, y0, x1, y1 = region["bbox"]
+            width, height = x1 - x0, y1 - y0
+            assert width * height >= minimum
+            assert MIN_ASPECT <= width / max(height, 1) <= MAX_ASPECT
 
 
 def test_crop_region_puts_the_subject_on_white():
