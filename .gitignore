@@ -22,6 +22,13 @@ Thumbs.db
 .train_cache/
 artifacts/task1/_superseded_*/
 
+# Local 120x160 candidate inputs and derived model artefacts
+fashion_train_120x160.zip
+artifacts/task1_120x160/
+artifacts/task2_120x160/
+artifacts/task3_120x160/
+artifacts/task4_120x160/
+
 # Claude Code: personal overrides and runtime state (shared settings.json is not ignored)
 .claude/settings.local.json
 .claude/*.lock

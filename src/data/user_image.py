@@ -43,6 +43,8 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageOps, UnidentifiedImageError
 
+from src.data.config import IMAGE_SIZE_PIL
+
 __all__ = [
     "PREPROCESS_MODES",
     "SUPPORTED_SUFFIXES",
@@ -66,7 +68,7 @@ except ImportError:  # pragma: no cover
 
 SUPPORTED_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".bmp", ".gif", ".tiff"}
 
-PREPROCESS_MODES = ("letterbox", "crop", "nobg")
+PREPROCESS_MODES = ("direct", "letterbox", "crop", "nobg")
 
 _REMBG_SESSION = None
 
@@ -387,7 +389,10 @@ def foreground_mask(array, max_side=256, min_centre=0.55, max_runs=2.5):
 
 # ------------------------------------------------------------- fit to size ----
 def _fit_to_size(img, size, background=(255, 255, 255), mode="letterbox"):
-    """Pad ("letterbox") or centre-crop ("crop") to the target aspect, then resize."""
+    """Direct resize, pad ("letterbox"), or centre-crop ("crop") to target size."""
+    if mode == "direct":
+        return np.asarray(img.resize(size, Image.BILINEAR), dtype=np.uint8)
+
     target_w, target_h = size
     target_ratio = target_w / target_h
     width, height = img.size
@@ -416,17 +421,20 @@ def _fit_to_size(img, size, background=(255, 255, 255), mode="letterbox"):
     return np.asarray(img.resize(size, Image.BILINEAR), dtype=np.uint8)
 
 
-def load_user_image(source, size=(60, 80), mode="letterbox", margin=0.06,
+def load_user_image(source, size=IMAGE_SIZE_PIL, mode="letterbox", margin=0.06,
                     background=(255, 255, 255), return_info=False):
     """Read an arbitrary image into the catalogue's format.
 
     ``source`` may be a path, raw bytes, a file-like object or a ``PIL.Image`` -
     the API services hold request bodies as bytes, the benchmark holds arrays.
 
-    The catalogue is 60x80 product shots on white, one item, filling roughly half
+    The catalogue is 120x160 product shots on white, one item, filling roughly half
     the frame. A user upload is none of those, so it must be coerced first.
 
     mode
+        ``"direct"`` resize directly to the requested width and height. This preserves
+        the original Task 2/Task 3 training contract where images were resized with
+        PIL without padding or cropping.
         ``"letterbox"`` pad to 3:4 and resize. Keeps everything, including the
         background, which the model then partly describes.
         ``"crop"`` centre-crop to 3:4. Discards the edges of the frame, which is
@@ -498,7 +506,7 @@ def load_user_image(source, size=(60, 80), mode="letterbox", margin=0.06,
     return (result, info) if return_info else result
 
 
-def looks_like_catalogue(source, size=(60, 80), aspect_tolerance=0.08,
+def looks_like_catalogue(source, size=IMAGE_SIZE_PIL, aspect_tolerance=0.08,
                          white_fraction=0.35, white_level=235,
                          small_ratio=2.0, photo_ratio=2.75):
     """Is this image already in catalogue form, or is it a photograph?
