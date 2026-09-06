@@ -37,3 +37,10 @@ artifacts/task1/graded_probabilities_*.npz
 # Only the adopted model (artifacts/task1/task1_cnn.pt) is committed; the
 # comparison itself lives in outputs/evaluation/task1_recipe_comparison.csv.
 artifacts/task1/candidate_*.pt
+
+# Hand-labelling scratch page for the 31 real uploads. 3.6 MB because it inlines
+# every photo as base64, and those photos are already tracked under
+# A2_FashionDataset/input_images/. Only its output is worth keeping —
+# A2_FashionDataset/input_images_labels.csv, which is hand-made and does belong
+# in git once the labelling pass has actually been done.
+outputs/input_images_labelling.html
