@@ -1,0 +1,53 @@
+{
+  "best_method": "Improved+TTA",
+  "evaluation_index_file": "search_index_improved_tta.npy",
+  "evaluation_catalogue_size": 32944,
+  "held_out_products": 4128,
+  "held_out_images": 5626,
+  "embedding_dim": 128,
+  "image_size_pil": [
+    120,
+    160
+  ],
+  "channel_mean": [
+    0.8512566685676575,
+    0.8350093960762024,
+    0.8296347856521606
+  ],
+  "channel_std": [
+    0.27379870414733887,
+    0.2840519845485687,
+    0.28780609369277954
+  ],
+  "fusion_colour_weight": 0.25,
+  "use_tta": true,
+  "uses_reranking": false,
+  "rerank_alpha": null,
+  "deployment_metrics": {
+    "P@1": 0.797,
+    "R@1": 0.0018,
+    "AP@1": 0.797,
+    "nDCG@1": 0.8839,
+    "P@5": 0.7746,
+    "R@5": 0.0083,
+    "AP@5": 0.7313,
+    "nDCG@5": 0.8734,
+    "P@10": 0.7619,
+    "R@10": 0.0149,
+    "AP@10": 0.7037,
+    "nDCG@10": 0.8673,
+    "P@20": 0.7468,
+    "R@20": 0.0265,
+    "AP@20": 0.678,
+    "nDCG@20": 0.8601,
+    "R-precision": 0.7482,
+    "type@10": 0.7619,
+    "colour@10": 0.5523,
+    "both@10": 0.4198,
+    "colourfam@10": 0.5818,
+    "bothfam@10": 0.443,
+    "ms_per_query": 0.0153,
+    "dim": 128.0
+  },
+  "note": "Measured by 05_task4_triplet_encoder.ipynb against a catalogue-only index. The SERVED artefacts are written by scripts/promote_task4_encoder.py and cover the whole catalogue."
+}

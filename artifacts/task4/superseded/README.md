@@ -1,6 +1,6 @@
 # Superseded method comparison
 
-The measurements behind section 5 of `notebooks/05_task4_visual_search.ipynb`.
+The measurements behind section 5 of `notebooks/05_task4_triplet_encoder.ipynb`.
 
 Four embedding methods - Classical (HSV histogram + gradient orientations),
 Task3-CNN (the multi-task classifier reused as a feature extractor), a

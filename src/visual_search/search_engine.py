@@ -1,6 +1,6 @@
 """Task 4 visual search - loadable engine for user-supplied images.
 
-Loads the artefacts produced by ``05_task4_visual_search.ipynb`` and
+Loads the artefacts produced by ``05_task4_triplet_encoder.ipynb`` and
 answers "which catalogue items look like this photo?" for images that were
 never part of the dataset.
 
@@ -51,7 +51,7 @@ __all__ = ["SearchEngine", "load_user_image", "ImprovedEncoder",
 
 # Provisional gate for "should this answer be shown as confident?".
 #
-# Measured on the two populations the system actually sees (notebook 06 §10):
+# Measured on the two populations the system actually sees (notebook 05, the real-uploads section):
 #
 #     catalogue photographs   mean top-1 similarity 0.837, coherence 0.833
 #     real user uploads       mean top-1 similarity 0.664, coherence 0.489
@@ -235,7 +235,7 @@ class ImprovedEncoderV2(nn.Module):
     def warm_start(self, state_dict, strict_shapes=True):
         """Lift a trained ``ImprovedEncoder``'s backbone into this model.
 
-        The colour-branch architecture was specified in notebook 06 as a ladder
+        The colour-branch architecture was specified as a ladder
         of three candidates x three seeds x thirty epochs *from scratch*, which
         on a CPU-only machine is days rather than a night, and that cost is why
         it was never run.
@@ -520,7 +520,7 @@ class SearchEngine:
         if len(metadata) != len(index):
             raise ValueError(
                 f"Index has {len(index)} rows but metadata has {len(metadata)}. "
-                "Re-run the final cells of 05_task4_visual_search.ipynb."
+                "Re-run the final cells of 05_task4_triplet_encoder.ipynb."
             )
 
         device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
@@ -708,7 +708,7 @@ class SearchEngine:
         guess for the whole frame.
 
         A region is kept when it is a confident match in its own right, or when
-        it is at least as close as the whole image was - the rule notebook 06
+        it is at least as close as the whole image was - the rule notebook 05
         settled on after ranking by coherence produced consistent nonsense.
         """
         from PIL import Image

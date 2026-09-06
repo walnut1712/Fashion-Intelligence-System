@@ -16,16 +16,38 @@ models can be reused outside the notebook without re-training.
 | 1 | `articleType` (92 classes) | `notebooks/02_task1_item_type.ipynb` | `artifacts/task1/task1_cnn.pt` |
 | 2 | `season` (4 classes) | `notebooks/03_task2_season_pytorch.ipynb` | `artifacts/task2/task2_season_best_pytorch.pth` |
 | 3 | `gender` (5) + `usage` (4), one multi-task CNN | `notebooks/04_task3_cnn_architectures.ipynb` | `artifacts/task3/task3_cnn_model.pt` |
-| 4 | visual search — top-K similar items | `notebooks/05_task4_visual_search.ipynb` (the encoder), `06_task4_clustering.ipynb` (clustering) | `artifacts/task4/` |
+| 4 | visual search — top-K similar items | `notebooks/05_task4_triplet_encoder.ipynb` (triplet CNN encoder), `06_task4_clustering.ipynb` (k-Means over its embeddings) | `artifacts/task4/` |
 
 `notebooks/01_eda.ipynb` produces the shared cleaned metadata every task reads.
 `notebooks/07_ultimate_judgement.ipynb` is cross-task comparison.
 
-**Task 4 holds exactly two models, deliberately.** The encoder in `05` and the clustering in
-`06`. Four earlier methods (Classical HSV+gradient histograms, the Task 3 CNN reused as a
+**Task 4 holds exactly two models, deliberately.** A **triplet CNN encoder** (`05`, the class is
+`ImprovedEncoder`: four conv blocks, 128-d projection, batch-hard triplet loss plus auxiliary
+`articleType` and `baseColour` heads) and **k-Means clustering over its embeddings** (`06`). Four earlier methods (Classical HSV+gradient histograms, the Task 3 CNN reused as a
 feature extractor, a convolutional autoencoder, a plain triplet network) were built, measured
 and removed; their scores survive as a table in `05` section 5 and as CSVs in
 `artifacts/task4/superseded/`, their checkpoints do not. Do not reintroduce them.
+
+## What to run, in order
+
+Everything below is already built and committed, so **nothing has to be re-run to use the
+project**. This is the order to rebuild Task 4 from scratch.
+
+| # | Run | Where | Cost | Needed when |
+|---|---|---|---|---|
+| 1 | `notebooks/01_eda.ipynb` | VS Code | minutes | once, and only if `processed/` is missing |
+| 2 | `python scripts/build_task4_cache.py --resolution 120x160` | terminal | 2.4 min | once; writes the image + mask caches |
+| 3 | `python -m src.training.train_task4_120x160 --backgrounds mixed --seed 42` | terminal | ~100 min (GPU) | to retrain the encoder |
+| 4 | `python scripts/promote_task4_encoder.py --encoder artifacts/task4_120x160/task4_encoder_mixed_seed42.pt` | terminal | ~2 min | after step 3, to serve the new encoder |
+| 5 | `notebooks/05_task4_triplet_encoder.ipynb` | VS Code | ~5 min | reads steps 2-4 and writes the figures |
+| 6 | `notebooks/06_task4_clustering.ipynb` | VS Code | ~5 min | **after any promotion** - it clusters whatever the manifest names |
+
+Training happens in **step 3, a script, not a notebook**: a run is ~100 minutes and is
+checkpointed every epoch so `--resume` survives a killed kernel. Notebook `05` loads what it
+produced and plots it, so the notebook itself runs in minutes.
+
+**The state right now**: steps 1-4 are done and the 120x160 Places365 encoder is promoted and
+served. **Step 6 is outstanding** - notebook `06`'s stored figures predate the promotion.
 
 ## Environment
 
@@ -254,7 +276,7 @@ Facts that matter:
   only (`Navy Blue` → Blue): naming explains 3.04 of the 26-point gap to `P@10`, the other 23
   are real.
   **Only two models remain in Task 4**, by request: this encoder and the clustering model in
-  notebook 07. The four methods notebook 05 compared against — Classical (HSV + gradient
+  notebook 06. The four methods notebook 05 compared against — Classical (HSV + gradient
   histograms), Task3-CNN reused as a feature extractor, a convolutional autoencoder and a plain
   triplet network — were removed. Their measurements survive as a table in notebook 05 §5 and as
   CSVs in `artifacts/task4/superseded/`; their checkpoints are deleted. The Classical
@@ -346,6 +368,23 @@ Facts that matter:
   prevent. Masking first guarantees a band ranks among garments however far down the nearest one
   sits. Note the filter keys on `masterCategory`, so a perfume mis-filed under `Accessories`
   still gets through; that is a catalogue labelling problem, not a retrieval one.
+
+  **A resolution mismatch is silent in this architecture, and it cost a wrong number.**
+  `ImprovedEncoder` is fully convolutional with an `AdaptiveAvgPool2d(1)`, so it accepts any
+  input size without raising. Notebook 06's cluster-stability cell hardcoded
+  `search_cache_60x80.npy` and composited at `(80, 60, 3)`; against the 120×160 encoder it ran
+  happily and embedded every frame at half the scale it was trained for, reporting **19.9%**
+  cluster stability. Driven from `MANIFEST["image_size_pil"]` instead, the same test reports
+  **58.7%** — and that is now the *harder* test, because it composites onto held-out Places365
+  scenes rather than the procedural patterns the old figure used. Any cell that loads a cache by
+  literal size is a bug waiting for the next resolution change.
+
+  **The served metadata fills missing labels with `"Unknown"`.** `clean_train_metadata.csv`
+  leaves 14 rows without a `baseColour`, 72 without a `usage` and 7 without a
+  `productDisplayName`. Left as NaN they are floats, so any consumer that slices a label for a
+  plot title dies with `'float' object is not subscriptable` — and *which* rows surface depends
+  on the encoder, so the failure moves when the model changes. `promote_task4_encoder.py` fills
+  them.
 
   **Notebook 06 (clustering) must be re-run after any promotion** — it clusters whatever
   embeddings the manifest names, so every figure in it is stale until it is.

@@ -115,7 +115,7 @@ class WildDataset(Dataset):
     Three stages, in the order a photograph acquires them: swap the backdrop,
     let a camera degrade it, then let the ingestion pipeline try to segment it.
     ``probability`` and ``strength`` are ramped by the caller rather than fixed,
-    because starting either at full strength collapsed the run that notebook 06
+    because starting either at full strength collapsed the run that notebook 05
     section 6 records.
 
     Resolution is taken from the arrays, never assumed.

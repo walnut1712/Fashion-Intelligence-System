@@ -11,7 +11,7 @@ than either looks like a white tee. A metric built on class agreement cannot see
 that difference, and a system tuned against it is being tuned toward
 classification rather than similarity.
 
-`05_task4_visual_search.ipynb` names this as the first limitation of its
+`05_task4_triplet_encoder.ipynb` names this as the first limitation of its
 evaluation and suggests a small human-judged sample. This builds that sample.
 
     python scripts/build_similarity_review.py            # make the review sheet

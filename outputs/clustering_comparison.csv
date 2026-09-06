@@ -1,4 +1,5 @@
-method,clusters,noise %,purity,ARI,NMI,silhouette,Davies-Bouldin
-k-Means (k=120),120,0.0,0.835,0.236,0.735,0.134,2.11
-DBSCAN (eps=0.278),13,90.91,0.923,0.867,0.929,0.622,0.617
-Agglomerative ward (k=120),120,0.0,0.824,0.264,0.75,0.141,2.002
+method,clusters,noise %,coverage %,scored on,purity,ARI,NMI,silhouette,Davies-Bouldin
+k-Means (k=120),120,0.0,100.0,38612,0.759,0.213,0.681,0.125,2.128
+DBSCAN (eps=0.288),17,92.59,7.41,593,0.951,0.898,0.923,0.577,0.88
+DBSCAN (eps=0.288) [noise as singletons],7424,0.0,100.0,8000,0.996,0.017,0.565,-0.008,0.34
+Agglomerative ward (k=120),120,0.0,100.0,4000,0.756,0.25,0.701,0.142,2.047

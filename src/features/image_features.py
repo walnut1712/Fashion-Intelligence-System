@@ -12,7 +12,7 @@ method was trained on - it beats the triplet encoder outright (23.56 vs 18.63),
 because a colour histogram cannot help but represent colour while a metric
 learned on ``articleType`` actively discards it.
 
-Extracted from ``notebooks/05_task4_visual_search.ipynb`` so the notebook, the
+Extracted from ``notebooks/05_task4_triplet_encoder.ipynb`` so the notebook, the
 fusion experiments and any future service share one definition.
 """
 
