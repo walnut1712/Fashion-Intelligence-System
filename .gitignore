@@ -46,3 +46,8 @@ outputs/input_images_labelling.html
 # scripts/build_task4_cache.py from data that is already tracked.
 A2_FashionDataset/processed/task4_cache_*.npy
 A2_FashionDataset/processed/task4_masks_*.npy
+
+# 120x160 candidate experiments write here. Generated: normalisation stats from
+# candidate_120x160 --smoke, encoders and run summaries from the training arms.
+# main does not track them either; promoting a candidate copies it to artifacts/task4/.
+artifacts/task*_120x160/
