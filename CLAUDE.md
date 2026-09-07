@@ -110,10 +110,12 @@ down. `POST /api/analyze` runs all four tasks on one upload.
 what the notebooks train on; `.venv` has `torch 2.13.0+cpu` and pytest. Tests only load
 checkpoints and run a forward pass, so CPU is fine, but don't train from `.venv`.
 
-**The whole suite passes — 146 tests, ~11 min.** An earlier note here claimed 5 tests in
+**Nothing in the suite fails — 146 collected, 140 pass and 6 skip, ~7.5 min** (measured on
+this machine after the task1 merge). An earlier note here claimed 5 tests in
 `tests/test_splits.py` fail wanting `processed/image_cache_task1_60x80_ids.npy`; that cache has
-since been regenerated and they pass. On a genuinely clean checkout the tests that need
-gitignored data skip rather than fail.
+since been regenerated and they pass. Every skip is a data-presence guard — the tests that need
+gitignored images or a built submission skip rather than fail, so the count varies with what is
+on disk.
 
 ## Data
 
