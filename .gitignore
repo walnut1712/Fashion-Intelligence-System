@@ -45,6 +45,14 @@ artifacts/task1/graded_probabilities_*.npz
 # comparison itself lives in outputs/evaluation/task1_recipe_comparison.csv.
 artifacts/task1/candidate_*.pt
 
+# Pair-specialist checkpoints from the confusion-pair experiment. ~1.6 MB each,
+# reproducible from the committed trainer and its fixed seed:
+#   python -m src.training.train_pair_specialist --all
+# The experiment was measured and declined, and the evidence that decides it is
+# outputs/evaluation/task1_pair_specialist_ab.csv, which is committed. No service,
+# test or notebook loads these files.
+artifacts/task1/specialist_*.pt
+
 # Generated labelling aid: 3.6 MB of base64 thumbnails, rebuilt on demand by
 # scripts/build_label_sheet.py. The labels it produces are committed; it is not.
 outputs/input_images_labelling.html
