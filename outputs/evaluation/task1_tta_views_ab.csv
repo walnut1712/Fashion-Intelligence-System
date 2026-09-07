@@ -1,0 +1,5 @@
+arm,forward_passes_per_image,accuracy,weighted_f1,macro_f1,balanced_acc,delta_weighted_f1,verdict
+flip (shipped),2,88.885,88.389,71.979,70.412,0.0,tie (inside noise floor)
+flip,2,88.885,88.389,71.979,70.412,0.0,tie (inside noise floor)
+flip_scale,6,88.594,87.943,70.877,69.418,-0.446,worse
+flip_shift_scale,10,88.539,87.874,70.574,69.343,-0.515,worse

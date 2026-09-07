@@ -722,15 +722,26 @@ def mix_batch(x, y, num_classes, recipe, generator, smoothing):
 
 # ------------------------------------------------------------------ training
 @torch.no_grad()
-def predict_split(model, x_uint8, mean, std, batch_size=512, tta=False):
+def predict_split(model, x_uint8, mean, std, batch_size=512, tta=False, views=None):
+    """Probabilities for a cached split.
+
+    ``views`` selects a wider test-time augmentation set from
+    ``item_type_classifier.TTA_VIEWS``; ``None`` keeps the two-view flip average
+    every published number was measured on, unchanged.
+    """
+    from src.models.item_type_classifier import multiview_proba
+
     model.eval()
     outputs = []
     for start in range(0, x_uint8.shape[0], batch_size):
         chunk = normalise(x_uint8[start:start + batch_size], mean, std)
-        probabilities = F.softmax(model(chunk).float(), dim=1)
-        if tta:
-            mirrored = F.softmax(model(torch.flip(chunk, dims=[3])).float(), dim=1)
-            probabilities = (probabilities + mirrored) / 2
+        if views is not None:
+            probabilities = multiview_proba(model, chunk, views=views)
+        else:
+            probabilities = F.softmax(model(chunk).float(), dim=1)
+            if tta:
+                mirrored = F.softmax(model(torch.flip(chunk, dims=[3])).float(), dim=1)
+                probabilities = (probabilities + mirrored) / 2
         outputs.append(probabilities)
     return torch.cat(outputs)
 

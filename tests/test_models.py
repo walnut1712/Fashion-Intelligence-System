@@ -209,3 +209,63 @@ def test_adjust_false_returns_raw_posteriors():
     assert not np.allclose(raw, adjusted), "adjust=False returned the adjusted matrix"
     assert np.allclose(replayed, adjusted, atol=1e-6), (
         "adjust=True is not reproducible from the raw posteriors")
+
+
+def test_flip_views_reproduce_the_shipped_two_view_average():
+    """``views="flip"`` must be the exact path every published number used.
+
+    The wider TTA sets are opt-in for this reason: the two-view flip average is
+    what ``operating_points.csv`` and every recorded accuracy were measured on,
+    so the refactor that introduced ``views`` has to leave it bit-for-bit intact.
+    """
+    import numpy as np
+    import torch
+    from PIL import Image
+
+    from src.models.item_type_classifier import predict_proba
+
+    checkpoint = {
+        "num_classes": 4, "class_names": ["a", "b", "c", "d"],
+        "channel_mean": [0.5, 0.5, 0.5], "channel_std": [0.25, 0.25, 0.25],
+        "image_size_pil": [60, 80],
+        "architecture": {"widths": [8, 16], "dropout": 0.0, "head_hidden": 16,
+                         "pool_grid": [1, 1], "pool_mode": "avg"},
+    }
+    model = build_from_checkpoint(checkpoint).eval()
+    sources = [Image.new("RGB", (60, 80), (120, 90, 60)),
+               Image.new("RGB", (60, 80), (30, 200, 10))]
+
+    with torch.no_grad():
+        legacy = predict_proba(model, checkpoint, sources, tta=True)
+        as_views = predict_proba(model, checkpoint, sources, views="flip")
+
+    assert np.allclose(legacy, as_views, atol=1e-6)
+
+
+def test_wider_views_stay_probability_distributions():
+    """Extra scales and shifts must average to a distribution, not drift off it."""
+    import numpy as np
+    import torch
+    from PIL import Image
+
+    from src.models.item_type_classifier import TTA_VIEWS, affine_view, predict_proba
+
+    checkpoint = {
+        "num_classes": 4, "class_names": ["a", "b", "c", "d"],
+        "channel_mean": [0.5, 0.5, 0.5], "channel_std": [0.25, 0.25, 0.25],
+        "image_size_pil": [60, 80],
+        "architecture": {"widths": [8, 16], "dropout": 0.0, "head_hidden": 16,
+                         "pool_grid": [1, 1], "pool_mode": "avg"},
+    }
+    model = build_from_checkpoint(checkpoint).eval()
+    sources = [Image.new("RGB", (60, 80), (120, 90, 60))]
+
+    for name in TTA_VIEWS:
+        with torch.no_grad():
+            probabilities = predict_proba(model, checkpoint, sources, views=name)
+        assert probabilities.shape == (1, 4)
+        assert np.allclose(probabilities.sum(1), 1.0, atol=1e-5), name
+
+    # The identity view must be a genuine no-op, not a resample of the tile.
+    tile = torch.rand(2, 3, 80, 60)
+    assert torch.equal(affine_view(tile), tile)
