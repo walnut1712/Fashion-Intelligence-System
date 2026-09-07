@@ -1,6 +1,6 @@
 """Clustering model for Task 4 - loadable, testable on any image.
 
-Wraps the k-Means clustering built in ``notebooks/07_task4_clustering.ipynb``
+Wraps the k-Means clustering built in ``notebooks/06_task4_clustering.ipynb``
 into something that can be pointed at a photograph:
 
     engine = ClusterEngine.load()
@@ -73,7 +73,7 @@ class ClusterEngine:
         ] if not p.exists()]
         if missing:
             raise FileNotFoundError(
-                "Missing artefacts: {}. Run notebooks/07_task4_clustering.ipynb."
+                "Missing artefacts: {}. Run notebooks/06_task4_clustering.ipynb."
                 .format(", ".join(missing))
             )
 

@@ -59,10 +59,10 @@ cleaned metadata every other notebook reads.
 02_task1_item_type.ipynb              Task 1
 03_task2_season_pytorch.ipynb         Task 2
 04_task3_cnn_architectures.ipynb      Task 3
-05_task4_visual_search.ipynb          Task 4 - method comparison and encoder selection
-06_task4_background_augmentation.ipynb Task 4 - robustness to real photographs
-07_task4_clustering.ipynb             Task 4 - structure of the embedding space
-08_ultimate_judgement.ipynb           cross-task judgement and deployment policy
+05_task4_triplet_encoder.ipynb          Task 4 - method comparison and encoder selection
+05_task4_triplet_encoder.ipynb Task 4 - robustness to real photographs
+06_task4_clustering.ipynb             Task 4 - structure of the embedding space
+07_ultimate_judgement.ipynb           cross-task judgement and deployment policy
 ```
 
 `08` reads only the artefacts the other notebooks wrote - no models are loaded - so it runs in
