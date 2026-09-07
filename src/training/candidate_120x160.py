@@ -44,18 +44,37 @@ REAL_TASK4_EMBEDDING_DIM = 128
 
 
 class CandidateDataset(Dataset):
-    def __init__(self, frame, target=None, transform=None):
+    """Rows of a split, read as images from ``source_dir``.
+
+    ``source_dir`` defaults to the 120x160 export. Pointing it at the original
+    ``images_train`` gives the same ids at 60x80, which is what makes a
+    like-for-like resolution comparison possible: one script, one split, one
+    recipe, and the image folder as the only thing that differs.
+    """
+
+    def __init__(self, frame, target=None, transform=None, source_dir=None,
+                 image_size=None):
         self.frame = frame.reset_index(drop=True)
         self.target = target
         self.transform = transform
+        self.source_dir = Path(source_dir) if source_dir else DATA_DIR
+        self.image_size = tuple(image_size) if image_size else tuple(IMAGE_SIZE_PIL)
 
     def __len__(self):
         return len(self.frame)
 
     def __getitem__(self, index):
         row = self.frame.iloc[index]
-        with Image.open(DATA_DIR / f"{int(row['id'])}.jpg") as image:
-            array = np.array(image.convert("RGB"), dtype=np.uint8, copy=True)
+        with Image.open(self.source_dir / f"{int(row['id'])}.jpg") as image:
+            image = image.convert("RGB")
+            # The 120x160 re-export is uniform, but the assignment's own images
+            # are not quite: a handful are 53x80 or 60x79 rather than 60x80, and
+            # a DataLoader cannot collate frames of different shapes. Every other
+            # entry point (load_image_array, predict.py) already resizes, so this
+            # matches them rather than inventing a second contract.
+            if image.size != self.image_size:
+                image = image.resize(self.image_size, Image.BICUBIC)
+            array = np.array(image, dtype=np.uint8, copy=True)
         tensor = torch.from_numpy(array.transpose(2, 0, 1)).float() / 255.0
         if self.transform:
             tensor = self.transform(tensor)
@@ -64,13 +83,24 @@ class CandidateDataset(Dataset):
         return tensor, row[self.target]
 
 
-def compute_train_normalization(train):
+def compute_train_normalization(train, source_dir=None, image_size=None):
+    """Channel statistics over the train split, from whichever export is used.
+
+    Recomputed per resolution rather than shared: the 60x80 originals and their
+    120x160 counterparts do not have identical channel statistics, and reusing
+    one arm's constants for the other would make preprocessing a second variable.
+    """
+    source_dir = Path(source_dir) if source_dir else DATA_DIR
+    image_size = tuple(image_size) if image_size else tuple(IMAGE_SIZE_PIL)
     total = 0
     channel_sum = np.zeros(3, dtype=np.float64)
     channel_square_sum = np.zeros(3, dtype=np.float64)
     for position, image_id in enumerate(train["id"], start=1):
-        with Image.open(DATA_DIR / f"{int(image_id)}.jpg") as image:
-            pixels = np.asarray(image.convert("RGB"), dtype=np.float32) / 255.0
+        with Image.open(source_dir / f"{int(image_id)}.jpg") as image:
+            image = image.convert("RGB")
+            if image.size != image_size:
+                image = image.resize(image_size, Image.BICUBIC)
+            pixels = np.asarray(image, dtype=np.float32) / 255.0
         flattened = pixels.reshape(-1, 3).astype(np.float64)
         channel_sum += flattened.sum(axis=0)
         channel_square_sum += np.square(flattened).sum(axis=0)

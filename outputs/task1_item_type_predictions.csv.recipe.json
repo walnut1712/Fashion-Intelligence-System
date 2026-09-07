@@ -1,0 +1,13 @@
+{
+  "models": [
+    "task1_cnn.pt",
+    "candidate_tail_sqrt_dep.pt"
+  ],
+  "tta": true,
+  "ingest": "squash",
+  "prior_correct": true,
+  "alpha": 0.5,
+  "rows": 5829,
+  "articletype_sha256": "6d086be095045d2d03a06467da37569966b6be322a734946319174b1020921ee",
+  "written": "2026-09-07T01:20:27"
+}

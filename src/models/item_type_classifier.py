@@ -313,14 +313,79 @@ def _loader(ingest):
     return lambda source, size: load_user_image(source, size=tuple(size), mode=ingest)
 
 
+# Test-time augmentation views, as (scale, shift_x, shift_y). Shifts are in
+# normalised half-width units, the convention affine_grid uses, so 0.05 is about
+# 1.5px across a 60px tile. Every geometric view is averaged with its horizontal
+# mirror, so "flip" reproduces the two-view average that has always shipped.
+#
+# MEASURED AND DECLINED - the wider sets are worse, not merely no better.
+# On validation (outputs/evaluation/task1_tta_views_ab.csv):
+#
+#     flip (shipped)     2 passes   weighted-F1 88.389
+#     flip_scale         6 passes   weighted-F1 87.943   (-0.446)
+#     flip_shift_scale  10 passes   weighted-F1 87.874   (-0.515)
+#
+# Both losses clear the +/-0.24 seed noise floor, at three and five times the
+# inference cost. Catalogue tiles are centred and tightly cropped, so rescaling
+# or shifting one moves the garment off the framing every training image shared;
+# the flip is free because training already flips. Kept as an opt-in argument so
+# the negative is reproducible, not as a default anyone should reach for.
+TTA_VIEWS = {
+    "flip": ((1.0, 0.0, 0.0),),
+    "flip_scale": ((1.0, 0.0, 0.0), (0.95, 0.0, 0.0), (1.05, 0.0, 0.0)),
+    "flip_shift_scale": ((1.0, 0.0, 0.0), (0.95, 0.0, 0.0), (1.05, 0.0, 0.0),
+                         (1.0, 0.05, 0.0), (1.0, 0.0, 0.05)),
+}
+
+
+def affine_view(tensor, scale=1.0, shift_x=0.0, shift_y=0.0):
+    """One TTA view: scale about the centre, translate, replicate the edges.
+
+    Edges replicate rather than zero-fill for the same reason ``random_affine``
+    in ``train_item_type`` does it - catalogue tiles sit on white, so a black
+    border would be a feature the model has never seen.
+    """
+    if scale == 1.0 and shift_x == 0.0 and shift_y == 0.0:
+        return tensor
+    count = tensor.shape[0]
+    theta = torch.zeros(count, 2, 3, dtype=tensor.dtype, device=tensor.device)
+    theta[:, 0, 0] = 1.0 / scale
+    theta[:, 1, 1] = 1.0 / scale
+    theta[:, 0, 2] = shift_x
+    theta[:, 1, 2] = shift_y
+    grid = F.affine_grid(theta, list(tensor.shape), align_corners=False)
+    return F.grid_sample(tensor, grid, mode="bilinear", padding_mode="border",
+                         align_corners=False)
+
+
+def multiview_proba(model, tensor, temperature=1.0, views="flip"):
+    """Mean softmax over a view set and each view's horizontal mirror."""
+    specs = TTA_VIEWS[views] if isinstance(views, str) else tuple(views)
+    total, count = None, 0
+    for scale, shift_x, shift_y in specs:
+        view = affine_view(tensor, scale, shift_x, shift_y)
+        for mirrored in (False, True):
+            candidate = torch.flip(view, dims=[3]) if mirrored else view
+            probabilities = F.softmax(
+                model(candidate).float() / temperature, dim=1)
+            total = probabilities if total is None else total + probabilities
+            count += 1
+    return total / count
+
+
 @torch.no_grad()
 def predict_proba(model, checkpoint, sources, batch_size=256, device=None, tta=False,
-                  ingest="squash", adjust=True):
+                  ingest="squash", adjust=True, views=None):
     """Softmax probabilities for an iterable of images.
 
     ``tta=True`` averages the probabilities of each image and its horizontal
     mirror. Catalogue photos are near-symmetric and training already uses
     random horizontal flips, so this is a free consistency gain at inference.
+
+    ``views`` widens that to a named set in ``TTA_VIEWS`` - small scales and
+    shifts, each averaged with its mirror. It is a separate argument rather than
+    a richer ``tta`` because every published number was measured on the two-view
+    average, and ``views=None`` keeps that path bit-for-bit unchanged.
 
     ``ingest`` selects how a source becomes a 60x80 tile. It matters far more
     than it sounds: this model was trained on cutouts against white, and on
@@ -354,11 +419,14 @@ def predict_proba(model, checkpoint, sources, batch_size=256, device=None, tta=F
             [load(s, size) for s in sources[start:start + batch_size]]
         )
         tensor = preprocess_arrays(arrays, checkpoint).to(device)
-        probabilities = F.softmax(model(tensor).float() / temperature, dim=1)
-        if tta:
-            flipped = F.softmax(
-                model(torch.flip(tensor, dims=[3])).float() / temperature, dim=1)
-            probabilities = (probabilities + flipped) / 2
+        if views is not None:
+            probabilities = multiview_proba(model, tensor, temperature, views)
+        else:
+            probabilities = F.softmax(model(tensor).float() / temperature, dim=1)
+            if tta:
+                flipped = F.softmax(
+                    model(torch.flip(tensor, dims=[3])).float() / temperature, dim=1)
+                probabilities = (probabilities + flipped) / 2
         if adjust:
             probabilities = apply_logit_adjustment(probabilities, checkpoint)
         chunks.append(probabilities.cpu().numpy())

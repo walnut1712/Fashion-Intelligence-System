@@ -11,7 +11,7 @@ import torch
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, classification_report, confusion_matrix, f1_score
 from torch.utils.data import DataLoader
 
-from src.data.config import CANDIDATE_ARTIFACT_DIRS, IMAGE_SIZE_PIL
+from src.data.config import DATA_DIR, PROJECT_ROOT
 from src.data.splits import load_or_create_splits
 from src.models.item_type_classifier import ItemTypeCNN
 from src.training.candidate_120x160 import CandidateDataset, compute_train_normalization, task1_frame_parts
@@ -46,10 +46,36 @@ class BaselineTrainTransform:
         return (image - self.mean) / self.std
 
 
-def make_model(num_classes: int):
+# Both arms of the resolution comparison, by name. The 60x80 arm reads the
+# assignment's own images; the 120x160 arm reads the higher-resolution re-export
+# of the SAME ids. Identical split, identical recipe, identical code - the image
+# folder is the only thing that differs, which is what makes the difference
+# attributable to resolution rather than to four things at once.
+RESOLUTIONS = {
+    "60x80": {
+        "source": PROJECT_ROOT / "A2_FashionDataset" / "FashionDataset" / "train" / "images_train",
+        "size": (60, 80),
+    },
+    "120x160": {
+        "source": DATA_DIR,
+        "size": (120, 160),
+    },
+}
+
+
+def make_model(num_classes: int, dropout: float = 0.4):
+    """The adopted Task 1 architecture.
+
+    ``dropout`` defaults to 0.4 - ItemTypeCNN's own default, which is what the
+    committed 120x160 checkpoint was trained with because this function did not
+    pass the argument. It is explicit now so the 60x80 arm can match that run
+    exactly; note it differs from the shipped 60x80 model's 0.2, so neither arm
+    here is directly comparable to artifacts/task1/task1_cnn.pt.
+    """
     return ItemTypeCNN(
         num_classes,
         widths=(16, 32, 64, 128),
+        dropout=dropout,
         head_hidden=384,
         pool_grid=(1, 1),
         pool_mode="avgmax",
@@ -99,9 +125,25 @@ def main():
         default="weighted_f1",
     )
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--resolution",
+        choices=tuple(RESOLUTIONS),
+        default="120x160",
+        help="which export to train on. Run BOTH arms to attribute a difference "
+             "to resolution; the committed 120x160 checkpoint is one arm already, "
+             "so `--resolution 60x80` completes the pair.",
+    )
+    parser.add_argument("--dropout", type=float, default=0.4,
+                        help="0.4 is what the committed 120x160 run used; keep it "
+                             "to stay comparable with that checkpoint")
     args = parser.parse_args()
 
     seed_everything(args.seed)
+
+    arm = RESOLUTIONS[args.resolution]
+    source_dir, image_size = arm["source"], arm["size"]
+    if not source_dir.is_dir():
+        raise SystemExit(f"image directory not found: {source_dir}")
 
     train, val, test = load_or_create_splits()
     (train, val, test), classes = task1_frame_parts(train, val, test)
@@ -112,35 +154,43 @@ def main():
     assert len(val) == 5497
     assert len(test) == 5495
 
-    artifact_dir = CANDIDATE_ARTIFACT_DIRS["task1"]
+    artifact_dir = PROJECT_ROOT / "artifacts" / f"task1_{args.resolution}"
     artifact_dir.mkdir(parents=True, exist_ok=True)
 
-    norm_path = artifact_dir / "normalization_120x160.json"
+    # Per-resolution, because the two exports do not share channel statistics.
+    norm_path = artifact_dir / f"normalization_{args.resolution}.json"
     if norm_path.exists():
         saved = json.loads(norm_path.read_text())
         mean = np.asarray(saved["mean"], dtype=np.float32)
         std = np.asarray(saved["std"], dtype=np.float32)
     else:
-        mean, std = compute_train_normalization(train)
+        mean, std = compute_train_normalization(train, source_dir=source_dir,
+                                                image_size=image_size)
         norm_path.write_text(json.dumps({
             "mean": mean.tolist(),
             "std": std.tolist(),
-            "image_size_pil": list(IMAGE_SIZE_PIL),
+            "image_size_pil": list(image_size),
         }, indent=2))
 
     use_cuda = torch.cuda.is_available()
     device = torch.device("cuda" if use_cuda else "cpu")
 
-    train_ds = CandidateDataset(train, target="label", transform=BaselineTrainTransform(mean, std))
-    val_ds = CandidateDataset(val, target="label", transform=NormalizeOnly(mean, std))
-    test_ds = CandidateDataset(test, target="label", transform=NormalizeOnly(mean, std))
+    train_ds = CandidateDataset(train, target="label", source_dir=source_dir,
+                                image_size=image_size,
+                                transform=BaselineTrainTransform(mean, std))
+    val_ds = CandidateDataset(val, target="label", source_dir=source_dir,
+                              image_size=image_size,
+                              transform=NormalizeOnly(mean, std))
+    test_ds = CandidateDataset(test, target="label", source_dir=source_dir,
+                               image_size=image_size,
+                               transform=NormalizeOnly(mean, std))
 
     loader_args = dict(batch_size=args.batch_size, num_workers=0, pin_memory=use_cuda)
     train_loader = DataLoader(train_ds, shuffle=True, **loader_args)
     val_loader = DataLoader(val_ds, shuffle=False, **loader_args)
     test_loader = DataLoader(test_ds, shuffle=False, **loader_args)
 
-    model = make_model(num_classes).to(device)
+    model = make_model(num_classes, dropout=args.dropout).to(device)
 
     # Match the old published baseline: NO inverse-frequency class weights.
     criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.05)
@@ -162,12 +212,14 @@ def main():
 
     best_score = float("-inf")
     best_epoch = None
-    best_path = artifact_dir / "task1_120x160_onecycle_best.pt"
+    best_path = artifact_dir / f"task1_{args.resolution}_onecycle_best.pt"
     history = []
 
     print("=" * 68)
-    print("TASK 1 120x160 — FAIR-COMPARISON ONECYCLE RUN")
+    print(f"TASK 1 RESOLUTION ARM: {args.resolution} — FAIR-COMPARISON ONECYCLE RUN")
     print("=" * 68)
+    print(f"Images: {source_dir}")
+    print(f"Frame:  {image_size[0]}x{image_size[1]}  | dropout {args.dropout}")
     print(f"Classes: {num_classes}")
     print(f"Train/Val/Test: {len(train)} / {len(val)} / {len(test)}")
     print(f"Device: {device}")
@@ -252,6 +304,7 @@ def main():
                 "architecture": {
                     "name": "ItemTypeCNN",
                     "widths": [16, 32, 64, 128],
+                    "dropout": args.dropout,
                     "head_hidden": 384,
                     "pool_grid": [1, 1],
                     "pool_mode": "avgmax",
@@ -260,7 +313,7 @@ def main():
                 "num_classes": num_classes,
                 "channel_mean": mean.tolist(),
                 "channel_std": std.tolist(),
-                "image_size_pil": list(IMAGE_SIZE_PIL),
+                "image_size_pil": list(image_size),
                 "config": {
                     **vars(args),
                     "class_weights": False,
@@ -282,7 +335,7 @@ def main():
     )
 
     checkpoint = torch.load(best_path, map_location=device, weights_only=False)
-    best_model = make_model(num_classes).to(device)
+    best_model = make_model(num_classes, dropout=args.dropout).to(device)
     best_model.load_state_dict(checkpoint["state_dict"])
 
     test_metrics, y_true, y_pred = evaluate(best_model, test_loader, device, criterion)
@@ -311,7 +364,7 @@ def main():
 
     print()
     print("=" * 68)
-    print("TASK 1 120x160 ONECYCLE COMPLETE")
+    print(f"TASK 1 {args.resolution} ONECYCLE COMPLETE")
     print("=" * 68)
     print(f"Best epoch: {best_epoch}")
     print(f"Selection metric: {args.select_on}")

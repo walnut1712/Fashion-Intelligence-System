@@ -18,7 +18,10 @@ Score an arbitrary folder, keeping the top-3 alternatives::
 """
 
 import argparse
+import hashlib
+import json
 import sys
+from datetime import datetime
 from pathlib import Path
 
 import numpy as np
@@ -85,6 +88,34 @@ def parse_args(argv=None):
                              "or the coarse family disagreeing with the fine label, or "
                              "the label changed by prior correction")
     return parser.parse_args(argv)
+
+
+def write_recipe_manifest(out, model_paths, labels, tta, ingest, prior_correct, alpha):
+    """Record which recipe produced a submission column, beside the column.
+
+    The submission CSV can only carry the template's five columns, so it has
+    nowhere to say whether it came from the single deployed checkpoint or from
+    the ensemble-plus-label-shift path the summary describes. Without that, the
+    two are indistinguishable on disk and the file can silently drift from the
+    documented recipe - which is exactly the ambiguity that cost an afternoon of
+    review. The digest lets a test assert the CSV and the manifest still agree
+    without re-running three minutes of inference.
+    """
+    digest = hashlib.sha256("\n".join(map(str, labels)).encode("utf-8")).hexdigest()
+    manifest = {
+        "models": [Path(p).name for p in model_paths],
+        "tta": bool(tta),
+        "ingest": ingest,
+        "prior_correct": bool(prior_correct),
+        "alpha": float(alpha) if prior_correct else None,
+        "rows": len(labels),
+        "articletype_sha256": digest,
+        "written": datetime.now().isoformat(timespec="seconds"),
+    }
+    path = out.with_suffix(out.suffix + ".recipe.json")
+    path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    print("Recipe   : {}".format(path.name))
+    return manifest
 
 
 def write_review_queue(path, ids, probabilities, class_names, baseline_labels=None):
@@ -255,6 +286,11 @@ def main(argv=None):
 
     frame.to_csv(args.out, index=False)
     print("Wrote    : {} ({} rows)".format(args.out, len(frame)))
+
+    if args.submission:
+        write_recipe_manifest(args.out, model_paths, labels, tta=tta,
+                              ingest=args.ingest, prior_correct=args.prior_correct,
+                              alpha=args.alpha)
 
     if args.review_queue:
         write_review_queue(args.review_queue, ids, probabilities, class_names,
