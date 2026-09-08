@@ -59,13 +59,15 @@ cleaned metadata every other notebook reads.
 02_task1_item_type.ipynb              Task 1
 03_task2_season_pytorch.ipynb         Task 2
 04_task3_cnn_architectures.ipynb      Task 3
-05_task4_triplet_encoder.ipynb          Task 4 - method comparison and encoder selection
-05_task4_triplet_encoder.ipynb Task 4 - robustness to real photographs
-06_task4_clustering.ipynb             Task 4 - structure of the embedding space
+05_task4_triplet_encoder.ipynb        Task 4 - the encoder, the background 2x2, and clustering
 07_ultimate_judgement.ipynb           cross-task judgement and deployment policy
 ```
 
-`08` reads only the artefacts the other notebooks wrote - no models are loaded - so it runs in
+Task 4 is one notebook. `06_task4_clustering.ipynb` was folded into `05` Part 9, so the
+clustering sits beside the encoder whose embeddings it groups rather than in a notebook of its
+own; the numbering keeps a gap where it was.
+
+`07` reads only the artefacts the other notebooks wrote - no models are loaded - so it runs in
 seconds and can be re-run any time the other numbers change.
 
 Notebook `06` reads the clean encoder produced by `05` and writes the deployed one, so run
