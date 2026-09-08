@@ -124,6 +124,10 @@ python -m uvicorn app.backend.main:app --reload      # http://127.0.0.1:8000  /d
 # through the venv or you get "No module named pytest".
 .venv/Scripts/python.exe -m pytest tests/ -q
 
+# Task 1's image cache, which tests/test_splits.py needs and notebook 02 only
+# builds as a side effect of training. 21 s. --check verifies without rebuilding.
+python scripts/build_task1_cache.py
+
 # Task 1 batch inference / submission CSV
 python predict.py --images A2_FashionDataset/FashionDataset/test/images_test \
                   --out outputs/task1_item_type_predictions.csv --submission
@@ -154,15 +158,24 @@ down. `POST /api/analyze` runs all four tasks on one upload.
 what the notebooks train on; `.venv` has `torch 2.13.0+cpu` and pytest. Tests only load
 checkpoints and run a forward pass, so CPU is fine, but don't train from `.venv`.
 
-**146 collected: 135 pass, 6 skip, 1 fail and 4 errors, ~50 s** (measured 2026-09-08).
-The five broken ones are all in `tests/test_splits.py` and all want
-`processed/image_cache_task1_60x80_ids.npy`, which is **not on disk** — `processed/` holds
-`image_cache_60x80{,_ids}.npy` but no `image_cache_task1_*` pair. This note previously claimed
-that cache had been regenerated and the tests passed; that is wrong, and the 2026-09-07 session
-recorded the same five failures. Treat the suite as **135 passing with a known Task 1 gap**, and
-do not read a green run into it. Nothing in Task 4 touches these. Every skip is a data-presence
-guard — the tests that need gitignored images or a built submission skip rather than fail, so
-the count varies with what is on disk.
+**146 collected: 140 pass, 6 skip, ~65 s** (measured 2026-09-09). Nothing fails.
+
+The five `tests/test_splits.py` failures this note used to record are fixed. They wanted
+`processed/image_cache_task1_60x80{,_ids}.npy`, which was simply not on disk: notebook `02`
+builds it as a side effect of training, so a checkout that has not run that notebook fails
+those tests with `FileNotFoundError`. `scripts/build_task1_cache.py` now builds it in **21 s**
+without a training run, and `--check` verifies an existing one by re-decoding a sample.
+
+Do not substitute Task 3's `image_cache_60x80.npy` for it. The two hold **different row
+subsets** — 38,539 rows against Task 1's 38,491, which are the rows surviving the
+`MIN_CLASS_SIZE` floor — and neither is a superset of the other.
+
+Both caches are gitignored (`A2_FashionDataset/processed/*.npy`), so a fresh clone has to build
+them. A test run additionally writes `image_cache_task1_60x80_extra{,_ids}.npy`, the 121 tiles
+`_extend_cache` decodes for the dropped-class merge; that is expected, not drift.
+
+Every skip is a data-presence guard — the tests that need gitignored images or a built
+submission skip rather than fail, so the count varies with what is on disk.
 
 ## Data
 
