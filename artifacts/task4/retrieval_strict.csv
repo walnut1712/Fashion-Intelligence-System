@@ -1,2 +1,2 @@
 Method,Dim,P@1,P@10,mAP@10,nDCG@10,R-prec,ms/query
-Improved+TTA,128,76.2,68.8,64.08,82.22,66.56,0.2
+Improved+TTA,128,76.2,68.83,64.1,82.23,66.58,0.17
