@@ -16,7 +16,7 @@ models can be reused outside the notebook without re-training.
 | 1 | `articleType` (92 classes) | `notebooks/02_task1_item_type.ipynb` | `artifacts/task1/task1_cnn.pt` |
 | 2 | `season` (4 classes) | `notebooks/03_task2_season_pytorch.ipynb` | `artifacts/task2/task2_season_best_pytorch.pth` |
 | 3 | `gender` (5) + `usage` (4), one multi-task CNN | `notebooks/04_task3_cnn_architectures.ipynb` | `artifacts/task3/task3_cnn_model.pt` |
-| 4 | visual search — top-K similar items | `notebooks/05_task4_triplet_encoder.ipynb` (triplet CNN encoder; k-Means over its embeddings is Part 9) | `artifacts/task4/` |
+| 4 | visual search — top-K similar items | `notebooks/05_task4_triplet_encoder.ipynb` (triplet CNN encoder, two background arms) | `artifacts/task4/` |
 
 `notebooks/01_eda.ipynb` produces the shared cleaned metadata every task reads.
 `notebooks/07_ultimate_judgement.ipynb` is cross-task comparison.
@@ -32,14 +32,27 @@ The two models are the **two arms of the background comparison**: the same `Impr
 **with photographic backdrops composited behind the garments**. Arms C and D of the 2x2. The
 second is deployed; the first is a control and **must never be promoted**.
 
-**k-Means is the project's only unsupervised model, and that is why Part 9 exists.** The
-encoder is a *supervised* CNN — the triplet loss needs `articleType` to know which pairs belong
-together, and the auxiliary heads are ordinary classification. Tasks 1-3 are supervised CNNs
-too. If Part 9 is ever cut, the project contains no unsupervised learning at all, which the
-user has said the unit requires. Clustering is not a rival to the encoder: it consumes the
-encoder's embeddings, cannot rank within a cluster, and loses ~5% of the exact answer at three
-probes. It earns its place as a router (a search cost that stops growing with the catalogue)
-and as an out-of-distribution signal.
+**Clustering has been removed from Task 4 entirely (2026-09-09), at the user's explicit
+request, after the trade-off below was put to them.** Do not re-add it without being asked.
+
+The trade-off, recorded so nobody has to rediscover it: the encoder is a *supervised* CNN. The
+triplet loss needs `articleType` to know which pairs belong together, and the auxiliary heads
+are ordinary classification. Tasks 1-3 are supervised CNNs too. **So the project now contains
+no unsupervised learning at all** apart from the k-Means that sits inside the Part 6b
+comparison arms, which is a baseline rather than a demonstration. The user was told this before
+deciding.
+
+What was deleted with it, in case any of it is ever wanted back (it is in git history at
+`18ae8690e`): the k sweep with elbow and silhouette, k=120 validated against labels it never
+saw (purity 0.723, ARI 0.225, NMI 0.684), k-Means against DBSCAN and agglomerative ward
+(DBSCAN refuses 91.6% of the sample as noise; scored as a router must use it, ARI 0.020), the
+router trade-off (3 probes keeps 96.9% of the exact answer for 3.2% of the catalogue, 8.3x
+faster), and cluster stability under a background swap (59.8% keep their cluster).
+
+`src/visual_search/cluster_engine.py` and its tests are retained and still pass, but **nothing
+regenerates their artefacts now** - `outputs/kmeans_centroids.npy`, `cluster_assignments.csv`
+and `cluster_summary.csv` are the committed output of a step that no longer exists. The module
+docstring says so.
 
 Four earlier methods (Classical HSV+gradient histograms, the Task 3 CNN reused as a
 feature extractor, a convolutional autoencoder, a plain triplet network) were built, measured
@@ -62,7 +75,7 @@ project**. This is the order to rebuild Task 4 from scratch.
 | 2 | `python scripts/build_task4_cache.py --resolution 120x160` | terminal | 2.4 min | once; writes the image + mask caches |
 | 3 | `python -m src.training.train_task4_120x160 --backgrounds mixed --seed 42` | terminal | ~100 min (GPU) | to retrain the encoder |
 | 4 | `python scripts/promote_task4_encoder.py --encoder artifacts/task4_120x160/task4_encoder_mixed_seed42.pt` | terminal | ~2 min | after step 3, to serve the new encoder |
-| 5 | `notebooks/05_task4_triplet_encoder.ipynb` | VS Code | ~25 min | reads steps 2-4, writes the figures, and rebuilds the clustering in Part 9 |
+| 5 | `notebooks/05_task4_triplet_encoder.ipynb` | VS Code | ~10 min | reads steps 2-4 and writes the figures. Part 8b rebuilds both encoder indexes, ~3 min of it |
 
 The background 2x2 in `05` section 10d is produced by three more commands, none of which the
 notebook re-runs:
@@ -499,11 +512,11 @@ Facts that matter:
   on the encoder, so the failure moves when the model changes. `promote_task4_encoder.py` fills
   them.
 
-  **Part 9 of notebook 05 (clustering) must be re-run after any promotion** — it clusters the
-  served index the manifest names, so its figures are stale until it is. It also writes
-  `outputs/kmeans_centroids.npy`, `cluster_assignments.csv` and `cluster_summary.csv`, which are
-  exactly the three files `ClusterEngine.load` reads; skipping it leaves the cluster engine
-  pointing at a partition of a superseded encoder's space.
+  **The cluster artefacts are frozen against a superseded encoder and nothing updates them.**
+  `outputs/kmeans_centroids.npy`, `cluster_assignments.csv` and `cluster_summary.csv` were last
+  written against the promoted 120x160 encoder; after any future promotion they are stale and
+  no notebook step will fix them, because the clustering step was removed. Either leave
+  `ClusterEngine` alone or delete it with its tests - do not half-update it.
 
   **The background 2x2 — what the catalogue's uniformity costs, and what fixes it.** Four arms,
   all scored on identical query frames (`build_queries(seed=123)`), so every difference is

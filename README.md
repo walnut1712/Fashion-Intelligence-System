@@ -9,14 +9,14 @@ four questions from a single uploaded image.
 | 1 | What type of item is this? (`articleType`, 92 classes) | `notebooks/02_task1_item_type.ipynb` | 87.1 weighted-F1 |
 | 2 | Which season is it for? (4 classes) | `notebooks/03_task2_season_pytorch.ipynb` | 67.5% accuracy |
 | 3 | Who is it for, and for what occasion? (`gender` x `usage`) | `notebooks/04_task3_cnn_architectures.ipynb` | 90.1% / 91.2% |
-| 4 | Which catalogue items look like this? (top-K retrieval) | `notebooks/05`–`07` | P@10 80.2 |
+| 4 | Which catalogue items look like this? (top-K retrieval) | `notebooks/05`-`07` | P@10 80.2 |
 
 The notebooks are the deliverable. `src/`, `app/` and `artifacts/` exist so the trained
 models can be reused and served without re-training.
 
 ## Setup
 
-Python 3.13 on a plain python.org interpreter or a virtual environment — **not Anaconda**.
+Python 3.13 on a plain python.org interpreter or a virtual environment - **not Anaconda**.
 Anaconda's MKL and PyTorch both ship `libiomp5md.dll`, and loading both crashes the kernel
 with `OMP: Error #15`. If a notebook dies on `import torch`, check the interpreter first.
 
@@ -51,7 +51,7 @@ minutes of disk-bound work the first time notebooks 02 or 05 run.
 ## Running the notebooks
 
 They are run in **VS Code**, not the Jupyter web UI, so `Path.cwd()` is the project root
-and paths are anchored on an explicit `PROJECT_DIR`. Run them in order — `01` produces the
+and paths are anchored on an explicit `PROJECT_DIR`. Run them in order - `01` produces the
 cleaned metadata every other notebook reads.
 
 ```
@@ -59,13 +59,13 @@ cleaned metadata every other notebook reads.
 02_task1_item_type.ipynb              Task 1
 03_task2_season_pytorch.ipynb         Task 2
 04_task3_cnn_architectures.ipynb      Task 3
-05_task4_triplet_encoder.ipynb        Task 4 - the encoder, the background 2x2, and clustering
+05_task4_triplet_encoder.ipynb        Task 4 - the encoder and the background comparison
 07_ultimate_judgement.ipynb           cross-task judgement and deployment policy
 ```
 
-Task 4 is one notebook. `06_task4_clustering.ipynb` was folded into `05` Part 9, so the
-clustering sits beside the encoder whose embeddings it groups rather than in a notebook of its
-own; the numbering keeps a gap where it was.
+Task 4 is one notebook holding two models: the same encoder trained on the catalogue as it
+ships, and trained again with photographic backdrops behind the garments.
+`06_task4_clustering.ipynb` was removed; the numbering keeps a gap where it was.
 
 `07` reads only the artefacts the other notebooks wrote - no models are loaded - so it runs in
 seconds and can be re-run any time the other numbers change.
@@ -92,11 +92,11 @@ process. Upload an image and all four models answer it.
 | `GET /api/catalogue/{id}/image` | a catalogue thumbnail |
 
 `?mode=` selects how an upload is coerced to 60x80: `letterbox` (pad to aspect), `crop`
-(centre crop), or `nobg` (segment the subject onto white — the default, and the only one
+(centre crop), or `nobg` (segment the subject onto white - the default, and the only one
 that survives a cluttered photograph).
 
 If the API is unreachable the frontend falls back to synthetic demo data and shows a
-banner. A plausible-looking result grid is therefore not proof the backend is up — check
+banner. A plausible-looking result grid is therefore not proof the backend is up - check
 `/api/health`.
 
 ## Batch outputs
@@ -111,8 +111,8 @@ python scripts/build_submission.py
 python scripts/build_task4_outputs.py
 ```
 
-Task 4 contributes nothing to the graded classification CSV — the assignment defines no
-submission format for retrieval — so its evidence is produced deliberately by that last
+Task 4 contributes nothing to the graded classification CSV - the assignment defines no
+submission format for retrieval - so its evidence is produced deliberately by that last
 script rather than as a side effect.
 
 ## Tests

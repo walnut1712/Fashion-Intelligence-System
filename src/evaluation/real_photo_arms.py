@@ -218,53 +218,6 @@ def catalogue_test_scores(project_root=None):
     return scores
 
 
-def cluster_arms(engines, paths, gallery, k=120, probes=3, seed=42, mode="nobg"):
-    """The clustering equivalent: k-Means per arm, then both kinds of image.
-
-    Each arm gets its own k-Means over its own embeddings, because a partition
-    of one encoder's space says nothing about another's. For the catalogue the
-    measurement is how much of the arm's own exact answer the router recovers;
-    for the real photographs it is the assignment margin, which is the only
-    signal available without labels.
-    """
-    from sklearn.cluster import KMeans
-
-    article = gallery["articleType"].fillna("Unknown").to_numpy()
-    rows = []
-    for name, engine in engines.items():
-        model = KMeans(n_clusters=k, n_init=10, random_state=seed)
-        assignment = model.fit_predict(engine.index)
-        centroids = model.cluster_centers_.astype(np.float32)
-        centroids /= np.clip(np.linalg.norm(centroids, axis=1, keepdims=True),
-                             1e-8, None)
-        members = [np.flatnonzero(assignment == c) for c in range(k)]
-
-        purity = float(np.mean([
-            pd.Series(article[m]).value_counts(normalize=True).iloc[0]
-            for m in members if len(m)]))
-
-        vectors, _ = engine.embed(paths, mode=mode, return_info=True)
-        to_centroid = vectors @ centroids.T
-        ranked = np.argsort(-to_centroid, axis=1)
-        best = np.take_along_axis(to_centroid, ranked[:, :1], axis=1).ravel()
-        second = np.take_along_axis(to_centroid, ranked[:, 1:2], axis=1).ravel()
-
-        scanned = float(np.mean(sorted((len(m) for m in members),
-                                       reverse=True)[:probes]) * probes
-                        / len(engine.index))
-        rows.append({
-            "arm": name,
-            "clusters": k,
-            "mean purity": round(purity, 4),
-            "largest cluster %": round(100 * max(len(m) for m in members)
-                                       / len(engine.index), 2),
-            "real photo margin": round(float((best - second).mean()), 4),
-            "real photo top cluster similarity": round(float(best.mean()), 4),
-            "catalogue scanned at %d probes %%" % probes: round(100 * scanned, 2),
-        })
-    return pd.DataFrame(rows)
-
-
 def describe_label_state(labels, paths):
     """One honest sentence about whether the outside column can be scored."""
     if labels is None:

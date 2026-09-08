@@ -1,8 +1,13 @@
 """Clustering model for Task 4 - loadable, testable on any image.
 
-Wraps the k-Means clustering built in ``notebooks/05_task4_triplet_encoder.ipynb``
-(Part 9)
+Wraps a k-Means clustering of the Task 4 embeddings
 into something that can be pointed at a photograph:
+
+NOTE: no notebook builds these artefacts any more. The clustering notebook was
+removed on 2026-09-09 and Task 4 now ships two encoders and no clustering, so
+``outputs/kmeans_centroids.npy`` and friends are the committed output of a
+partition that nothing regenerates. This module and its tests still pass
+against them; treat it as retained code with no live producer.
 
     engine = ClusterEngine.load()
     engine.predict("some_photo.jpg")     # which cluster, and what is in it
@@ -74,8 +79,8 @@ class ClusterEngine:
         ] if not p.exists()]
         if missing:
             raise FileNotFoundError(
-                "Missing artefacts: {}. Run Part 9 of "
-                "notebooks/05_task4_triplet_encoder.ipynb."
+                "Missing artefacts: {}. No notebook rebuilds these; "
+                "they are committed artefacts of a removed clustering step."
                 .format(", ".join(missing))
             )
 
