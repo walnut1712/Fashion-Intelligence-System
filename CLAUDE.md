@@ -26,7 +26,12 @@ models can be reused outside the notebook without re-training.
 `articleType` and `baseColour` heads) and **k-Means clustering over its embeddings** (`06`). Four earlier methods (Classical HSV+gradient histograms, the Task 3 CNN reused as a
 feature extractor, a convolutional autoencoder, a plain triplet network) were built, measured
 and removed; their scores survive as a table in `05` section 5 and as CSVs in
-`artifacts/task4/superseded/`, their checkpoints do not. Do not reintroduce them.
+`artifacts/task4/superseded/`, their checkpoints do not. Do not reintroduce them **as
+retrieval methods**. One narrow exception is now deliberate: the Classical descriptor
+(`classical_features`, 128-bin HSV + 108-bin gradient) is the substrate for the unsupervised
+arm of the background 2x2 in `05` section 10d, because clustering the encoder's own embeddings
+cannot say whether the learned representation is what earns the result. It is not re-entered in
+the `05` section 5 retrieval table.
 
 ## What to run, in order
 
@@ -41,6 +46,15 @@ project**. This is the order to rebuild Task 4 from scratch.
 | 4 | `python scripts/promote_task4_encoder.py --encoder artifacts/task4_120x160/task4_encoder_mixed_seed42.pt` | terminal | ~2 min | after step 3, to serve the new encoder |
 | 5 | `notebooks/05_task4_triplet_encoder.ipynb` | VS Code | ~5 min | reads steps 2-4 and writes the figures |
 | 6 | `notebooks/06_task4_clustering.ipynb` | VS Code | ~5 min | **after any promotion** - it clusters whatever the manifest names |
+
+The background 2x2 in `05` section 10d is produced by three more commands, none of which the
+notebook re-runs:
+
+| Run | Cost | Produces |
+|---|---|---|
+| `python -m src.training.train_task4_120x160 --backgrounds none --seed 42` | 78 min | arm C, the catalogue-only control |
+| `python scripts/compare_task4_background_arms.py` | 3 min | `outputs/evaluation/task4_background_arms{,_significance}.csv` |
+| `python scripts/eval_task4_classical_clustering.py [--views N]` | 20 min | `outputs/evaluation/task4_classical_clustering_arms_v{N}.csv` |
 
 Training happens in **step 3, a script, not a notebook**: a run is ~100 minutes and is
 checkpointed every epoch so `--resume` survives a killed kernel. Notebook `05` loads what it
@@ -110,12 +124,15 @@ down. `POST /api/analyze` runs all four tasks on one upload.
 what the notebooks train on; `.venv` has `torch 2.13.0+cpu` and pytest. Tests only load
 checkpoints and run a forward pass, so CPU is fine, but don't train from `.venv`.
 
-**Nothing in the suite fails — 146 collected, 140 pass and 6 skip, ~7.5 min** (measured on
-this machine after the task1 merge). An earlier note here claimed 5 tests in
-`tests/test_splits.py` fail wanting `processed/image_cache_task1_60x80_ids.npy`; that cache has
-since been regenerated and they pass. Every skip is a data-presence guard — the tests that need
-gitignored images or a built submission skip rather than fail, so the count varies with what is
-on disk.
+**146 collected: 135 pass, 6 skip, 1 fail and 4 errors, ~50 s** (measured 2026-09-08).
+The five broken ones are all in `tests/test_splits.py` and all want
+`processed/image_cache_task1_60x80_ids.npy`, which is **not on disk** — `processed/` holds
+`image_cache_60x80{,_ids}.npy` but no `image_cache_task1_*` pair. This note previously claimed
+that cache had been regenerated and the tests passed; that is wrong, and the 2026-09-07 session
+recorded the same five failures. Treat the suite as **135 passing with a known Task 1 gap**, and
+do not read a green run into it. Nothing in Task 4 touches these. Every skip is a data-presence
+guard — the tests that need gitignored images or a built submission skip rather than fail, so
+the count varies with what is on disk.
 
 ## Data
 
@@ -467,6 +484,54 @@ Facts that matter:
 
   **Notebook 06 (clustering) must be re-run after any promotion** — it clusters whatever
   embeddings the manifest names, so every figure in it is stale until it is.
+
+  **The background 2x2 — what the catalogue's uniformity costs, and what fixes it.** Four arms,
+  all scored on identical query frames (`build_queries(seed=123)`), so every difference is
+  paired. Model family crossed with data treatment; P@10, exact search in every cell:
+
+  | benchmark | A classical/catalogue | B classical/augmented | C encoder/catalogue | D encoder/augmented |
+  |---|---|---|---|---|
+  | clean | 69.31 | 35.74 | **81.64** | 76.19 |
+  | hard | 16.39 | 28.56 | 9.10 | **56.32** |
+  | photo | 10.17 | 20.93 | 11.84 | **55.78** |
+  | wild | 13.17 | 18.79 | 9.21 | **53.07** |
+  | wildphoto | 8.58 | 13.13 | 6.36 | **51.62** |
+
+  **Arm C is the best model in the project on clean catalogue images and near the worst on a
+  photograph** — 81.64 clean against the deployed encoder's 76.19, and 11.84 on `photo`. The
+  catalogue's uniformity does not merely fail to generalise; it yields a model that beats the
+  deployed one on the academic metric and is useless on an upload. Do not quote a clean-only
+  P@10 as a headline for this task without the out-of-domain column beside it.
+
+  **The intervention's price is measured, not assumed.** D − C on `both@10`, paired over 2,000
+  queries: clean **−5.62** [−6.63, −4.65], hard **+26.03**, photo **+24.17**, wild +23.78,
+  wildphoto +23.47 — every one significant. About a 4.3:1 trade, and the first measurement that
+  justifies `DEPLOYMENT_WEIGHT = 3.0` in the epoch-selection rule, which was already valuing
+  out-of-domain at 3:1 on no evidence.
+
+  **The same intervention has opposite value in the two families, which is the finding.**
+  Classical: −33.57 clean for +10.76 photo, a 0.32:1 trade. Encoder: −5.45 clean for +43.94
+  photo, 8.06:1. So the improvement is not "augment the data" — it is *augment the data and hold
+  a representation that can absorb it*. Averaging a hand-built histogram over backdrops buys
+  invariance by destroying the signal, because in a composite the garment is a minority of the
+  pixels. Arm B is not a failed experiment; it is the control that makes the encoder's number
+  mean something.
+
+  **Clustering is not the bottleneck, and this is the measurement that shows it.** Exact search
+  and k-Means routing (k=120, 3 probes, ~5% of the catalogue scanned) differ by at most 1.15
+  points on any cell — one hair outside the ±1.10 floor — while the arms differ by tens.
+  Notebook 06's k-Means over the *encoder's* embeddings is an index layer, not a competing
+  model, and cannot make this attribution; that is why the 2x2's clustering arm runs on an
+  independent representation.
+
+  **A detail worth keeping**: on `hard` and `wild`, arm C scores *below* arm A (9.10 vs 16.39,
+  9.21 vs 13.17). A network trained only on clean frames is more background-brittle than a
+  hand-built histogram — given the capacity to lean on the white field, it leaned harder.
+
+  One seed per arm; the intervals are paired query-sampling error, not seed variance, which is
+  still unmeasured for retrieval. **Arm C is a control and must never be promoted** —
+  `promote_task4_encoder.py` would serve it happily. Its checkpoint records
+  `background_augmented: False`, which is the only thing on disk that distinguishes it.
 
   **Never built**: `ImprovedEncoderV2` (GeM pooling, CosFace head, block-2 colour branch) is
   implemented and unit-tested in `src/visual_search/search_engine.py` but has never been
