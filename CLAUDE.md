@@ -517,6 +517,14 @@ Facts that matter:
   pixels. Arm B is not a failed experiment; it is the control that makes the encoder's number
   mean something.
 
+  **Arm B's trade curve is monotone, with no sweet spot** — averaging N composited views into
+  each catalogue descriptor gives P@10 clean/photo of 69.31/10.17 (N=0), 49.73/14.49 (N=1),
+  35.74/20.93 (N=3). Every view spent on robustness is taken out of in-domain discrimination,
+  in both directions, so no setting of N buys both. That is what it looks like when a
+  representation is entangled with its backdrop rather than merely uncalibrated for it. Arm A
+  also reproduced to the digit across the two runs, which is a free determinism check on the
+  descriptor path.
+
   **Clustering is not the bottleneck, and this is the measurement that shows it.** Exact search
   and k-Means routing (k=120, 3 probes, ~5% of the catalogue scanned) differ by at most 1.15
   points on any cell — one hair outside the ±1.10 floor — while the arms differ by tens.
