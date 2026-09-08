@@ -194,13 +194,16 @@ def parse_args():
                         help="initialise from a checkpoint instead of random. "
                              "Cheaper, but see the note in the module docstring")
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--backgrounds", choices=("procedural", "places365", "mixed"),
+    parser.add_argument("--backgrounds",
+                        choices=("none", "procedural", "places365", "mixed"),
                         default="mixed",
                         help="source of the training backdrops. 'procedural' is "
                              "the five procedural formula families; "
                              "'places365' is scene photographs from the training "
                              "categories; 'mixed' draws both, which is the "
-                             "default because the serve path contains both")
+                             "default because the serve path contains both. "
+                             "'none' is the catalogue-only control arm - the "
+                             "images exactly as the assignment ships them")
     parser.add_argument("--selection-benchmark", default="wildphoto",
                         choices=("wild", "wildphoto"),
                         help="which benchmark picks the best epoch. 'wildphoto' "
@@ -353,6 +356,14 @@ def main():
         CONFIG["batches_per_epoch"] = args.batches
     if args.warmup is not None:
         CONFIG["warmup_epochs"] = args.warmup
+    # The catalogue-only control arm. Every training frame is a centred garment
+    # on white, which is what the dataset actually contains; the point of the
+    # arm is to measure what that costs on an upload. Holding the warmup at the
+    # full run length keeps `ramp` at 0 for every epoch, and both the backdrop
+    # probability and the camera degradation are driven off `ramp`, so this
+    # needs no separate code path - only that it cannot be overridden silently.
+    if args.backgrounds == "none":
+        CONFIG["warmup_epochs"] = args.epochs
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     artifact_dir = PROJECT_ROOT / "artifacts" / f"task4_{args.resolution}"
@@ -389,7 +400,10 @@ def main():
                                       np.sort(np.random.default_rng(0).choice(
                                           protocol.catalogue_pos, 400, replace=False))])
 
-    if args.backgrounds == "procedural":
+    if args.backgrounds in ("procedural", "none"):
+        # 'none' never composites, but WildDataset still wants a bank to hold.
+        # The procedural one is already built, so this skips the 36,500-scene
+        # load for a run that will not draw from it.
         backgrounds = procedural
     else:
         # Training draws only from the 292 training CATEGORIES; the 73 held-out
@@ -409,7 +423,11 @@ def main():
                        else make_mixed_bank(procedural, photographic,
                                             CONFIG["photographic_share"],
                                             seed=args.seed))
-    print(f"training backdrops: {args.backgrounds}, {len(backgrounds):,} frames")
+    if args.backgrounds == "none":
+        print(f"training backdrops: NONE - {args.epochs} clean epochs, "
+              "no backdrop and no camera degradation at any point")
+    else:
+        print(f"training backdrops: {args.backgrounds}, {len(backgrounds):,} frames")
 
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
@@ -569,7 +587,8 @@ def main():
         "channel_mean": list(map(float, mean)), "channel_std": list(map(float, std)),
         "image_size_pil": [width, height],
         "resolution": args.resolution,
-        "background_augmented": True, "degradation_augmented": True,
+        "background_augmented": args.backgrounds != "none",
+        "degradation_augmented": args.backgrounds != "none",
         "background_source": args.backgrounds,
         "photographic_share": (CONFIG["photographic_share"]
                                if args.backgrounds == "mixed"

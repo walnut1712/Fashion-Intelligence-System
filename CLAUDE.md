@@ -16,17 +16,53 @@ models can be reused outside the notebook without re-training.
 | 1 | `articleType` (92 classes) | `notebooks/02_task1_item_type.ipynb` | `artifacts/task1/task1_cnn.pt` |
 | 2 | `season` (4 classes) | `notebooks/03_task2_season_pytorch.ipynb` | `artifacts/task2/task2_season_best_pytorch.pth` |
 | 3 | `gender` (5) + `usage` (4), one multi-task CNN | `notebooks/04_task3_cnn_architectures.ipynb` | `artifacts/task3/task3_cnn_model.pt` |
-| 4 | visual search — top-K similar items | `notebooks/05_task4_triplet_encoder.ipynb` (triplet CNN encoder), `06_task4_clustering.ipynb` (k-Means over its embeddings) | `artifacts/task4/` |
+| 4 | visual search — top-K similar items | `notebooks/05_task4_triplet_encoder.ipynb` (triplet CNN encoder, two background arms) | `artifacts/task4/` |
 
 `notebooks/01_eda.ipynb` produces the shared cleaned metadata every task reads.
 `notebooks/07_ultimate_judgement.ipynb` is cross-task comparison.
 
-**Task 4 holds exactly two models, deliberately.** A **triplet CNN encoder** (`05`, the class is
-`ImprovedEncoder`: four conv blocks, 128-d projection, batch-hard triplet loss plus auxiliary
-`articleType` and `baseColour` heads) and **k-Means clustering over its embeddings** (`06`). Four earlier methods (Classical HSV+gradient histograms, the Task 3 CNN reused as a
+**Task 4 is one notebook and two models.** `06_task4_clustering.ipynb` was folded into `05`
+as Part 9 and then Part 9 itself was removed, both on 2026-09-09 at the user's request, so
+there is no clustering in Task 4 at all - see the note further down before re-adding any. The
+notebook numbering keeps a gap where `06` was; `07` was not renamed.
+
+The two models are the **two arms of the background comparison**: the same `ImprovedEncoder`
+(four conv blocks, 128-d projection, batch-hard triplet loss plus auxiliary `articleType` and
+`baseColour` heads) trained on the catalogue **as it ships**, against the same network trained
+**with photographic backdrops composited behind the garments**. Arms C and D of the 2x2. The
+second is deployed; the first is a control and **must never be promoted**.
+
+**Clustering has been removed from Task 4 entirely (2026-09-09), at the user's explicit
+request, after the trade-off below was put to them.** Do not re-add it without being asked.
+
+The trade-off, recorded so nobody has to rediscover it: the encoder is a *supervised* CNN. The
+triplet loss needs `articleType` to know which pairs belong together, and the auxiliary heads
+are ordinary classification. Tasks 1-3 are supervised CNNs too. **So the project now contains
+no unsupervised learning at all** apart from the k-Means that sits inside the Part 6b
+comparison arms, which is a baseline rather than a demonstration. The user was told this before
+deciding.
+
+What was deleted with it, in case any of it is ever wanted back (it is in git history at
+`18ae8690e`): the k sweep with elbow and silhouette, k=120 validated against labels it never
+saw (purity 0.723, ARI 0.225, NMI 0.684), k-Means against DBSCAN and agglomerative ward
+(DBSCAN refuses 91.6% of the sample as noise; scored as a router must use it, ARI 0.020), the
+router trade-off (3 probes keeps 96.9% of the exact answer for 3.2% of the catalogue, 8.3x
+faster), and cluster stability under a background swap (59.8% keep their cluster).
+
+`src/visual_search/cluster_engine.py` and its tests are retained and still pass, but **nothing
+regenerates their artefacts now** - `outputs/kmeans_centroids.npy`, `cluster_assignments.csv`
+and `cluster_summary.csv` are the committed output of a step that no longer exists. The module
+docstring says so.
+
+Four earlier methods (Classical HSV+gradient histograms, the Task 3 CNN reused as a
 feature extractor, a convolutional autoencoder, a plain triplet network) were built, measured
 and removed; their scores survive as a table in `05` section 5 and as CSVs in
-`artifacts/task4/superseded/`, their checkpoints do not. Do not reintroduce them.
+`artifacts/task4/superseded/`, their checkpoints do not. Do not reintroduce them **as
+retrieval methods**. One narrow exception is now deliberate: the Classical descriptor
+(`classical_features`, 128-bin HSV + 108-bin gradient) is the substrate for the unsupervised
+arm of the background 2x2 in `05` section 10d, because clustering the encoder's own embeddings
+cannot say whether the learned representation is what earns the result. It is not re-entered in
+the `05` section 5 retrieval table.
 
 ## What to run, in order
 
@@ -39,15 +75,23 @@ project**. This is the order to rebuild Task 4 from scratch.
 | 2 | `python scripts/build_task4_cache.py --resolution 120x160` | terminal | 2.4 min | once; writes the image + mask caches |
 | 3 | `python -m src.training.train_task4_120x160 --backgrounds mixed --seed 42` | terminal | ~100 min (GPU) | to retrain the encoder |
 | 4 | `python scripts/promote_task4_encoder.py --encoder artifacts/task4_120x160/task4_encoder_mixed_seed42.pt` | terminal | ~2 min | after step 3, to serve the new encoder |
-| 5 | `notebooks/05_task4_triplet_encoder.ipynb` | VS Code | ~5 min | reads steps 2-4 and writes the figures |
-| 6 | `notebooks/06_task4_clustering.ipynb` | VS Code | ~5 min | **after any promotion** - it clusters whatever the manifest names |
+| 5 | `notebooks/05_task4_triplet_encoder.ipynb` | VS Code | ~10 min | reads steps 2-4 and writes the figures. Part 8b rebuilds both encoder indexes, ~3 min of it |
+
+The background 2x2 in `05` section 10d is produced by three more commands, none of which the
+notebook re-runs:
+
+| Run | Cost | Produces |
+|---|---|---|
+| `python -m src.training.train_task4_120x160 --backgrounds none --seed 42` | 78 min | arm C, the catalogue-only control |
+| `python scripts/compare_task4_background_arms.py` | 3 min | `outputs/evaluation/task4_background_arms{,_significance}.csv` |
+| `python scripts/eval_task4_classical_clustering.py [--views N]` | 20 min | `outputs/evaluation/task4_classical_clustering_arms_v{N}.csv` |
 
 Training happens in **step 3, a script, not a notebook**: a run is ~100 minutes and is
 checkpointed every epoch so `--resume` survives a killed kernel. Notebook `05` loads what it
 produced and plots it, so the notebook itself runs in minutes.
 
-**The state right now**: steps 1-4 are done and the 120x160 Places365 encoder is promoted and
-served. **Step 6 is outstanding** - notebook `06`'s stored figures predate the promotion.
+**The state right now**: steps 1-5 are done. Both the encoder and the clustering were re-run
+against the promoted 120x160 encoder, and notebook `05` stores output for every cell.
 
 ## Environment
 
@@ -80,6 +124,10 @@ python -m uvicorn app.backend.main:app --reload      # http://127.0.0.1:8000  /d
 # through the venv or you get "No module named pytest".
 .venv/Scripts/python.exe -m pytest tests/ -q
 
+# Task 1's image cache, which tests/test_splits.py needs and notebook 02 only
+# builds as a side effect of training. 21 s. --check verifies without rebuilding.
+python scripts/build_task1_cache.py
+
 # Task 1 batch inference / submission CSV
 python predict.py --images A2_FashionDataset/FashionDataset/test/images_test \
                   --out outputs/task1_item_type_predictions.csv --submission
@@ -110,12 +158,24 @@ down. `POST /api/analyze` runs all four tasks on one upload.
 what the notebooks train on; `.venv` has `torch 2.13.0+cpu` and pytest. Tests only load
 checkpoints and run a forward pass, so CPU is fine, but don't train from `.venv`.
 
-**Nothing in the suite fails — 146 collected, 140 pass and 6 skip, ~7.5 min** (measured on
-this machine after the task1 merge). An earlier note here claimed 5 tests in
-`tests/test_splits.py` fail wanting `processed/image_cache_task1_60x80_ids.npy`; that cache has
-since been regenerated and they pass. Every skip is a data-presence guard — the tests that need
-gitignored images or a built submission skip rather than fail, so the count varies with what is
-on disk.
+**146 collected: 140 pass, 6 skip, ~65 s** (measured 2026-09-09). Nothing fails.
+
+The five `tests/test_splits.py` failures this note used to record are fixed. They wanted
+`processed/image_cache_task1_60x80{,_ids}.npy`, which was simply not on disk: notebook `02`
+builds it as a side effect of training, so a checkout that has not run that notebook fails
+those tests with `FileNotFoundError`. `scripts/build_task1_cache.py` now builds it in **21 s**
+without a training run, and `--check` verifies an existing one by re-decoding a sample.
+
+Do not substitute Task 3's `image_cache_60x80.npy` for it. The two hold **different row
+subsets** — 38,539 rows against Task 1's 38,491, which are the rows surviving the
+`MIN_CLASS_SIZE` floor — and neither is a superset of the other.
+
+Both caches are gitignored (`A2_FashionDataset/processed/*.npy`), so a fresh clone has to build
+them. A test run additionally writes `image_cache_task1_60x80_extra{,_ids}.npy`, the 121 tiles
+`_extend_cache` decodes for the dropped-class merge; that is expected, not drift.
+
+Every skip is a data-presence guard — the tests that need gitignored images or a built
+submission skip rather than fail, so the count varies with what is on disk.
 
 ## Data
 
@@ -465,8 +525,67 @@ Facts that matter:
   on the encoder, so the failure moves when the model changes. `promote_task4_encoder.py` fills
   them.
 
-  **Notebook 06 (clustering) must be re-run after any promotion** — it clusters whatever
-  embeddings the manifest names, so every figure in it is stale until it is.
+  **The cluster artefacts are frozen against a superseded encoder and nothing updates them.**
+  `outputs/kmeans_centroids.npy`, `cluster_assignments.csv` and `cluster_summary.csv` were last
+  written against the promoted 120x160 encoder; after any future promotion they are stale and
+  no notebook step will fix them, because the clustering step was removed. Either leave
+  `ClusterEngine` alone or delete it with its tests - do not half-update it.
+
+  **The background 2x2 — what the catalogue's uniformity costs, and what fixes it.** Four arms,
+  all scored on identical query frames (`build_queries(seed=123)`), so every difference is
+  paired. Model family crossed with data treatment; P@10, exact search in every cell:
+
+  | benchmark | A classical/catalogue | B classical/augmented | C encoder/catalogue | D encoder/augmented |
+  |---|---|---|---|---|
+  | clean | 69.31 | 35.74 | **81.64** | 76.19 |
+  | hard | 16.39 | 28.56 | 9.10 | **56.32** |
+  | photo | 10.17 | 20.93 | 11.84 | **55.78** |
+  | wild | 13.17 | 18.79 | 9.21 | **53.07** |
+  | wildphoto | 8.58 | 13.13 | 6.36 | **51.62** |
+
+  **Arm C is the best model in the project on clean catalogue images and near the worst on a
+  photograph** — 81.64 clean against the deployed encoder's 76.19, and 11.84 on `photo`. The
+  catalogue's uniformity does not merely fail to generalise; it yields a model that beats the
+  deployed one on the academic metric and is useless on an upload. Do not quote a clean-only
+  P@10 as a headline for this task without the out-of-domain column beside it.
+
+  **The intervention's price is measured, not assumed.** D − C on `both@10`, paired over 2,000
+  queries: clean **−5.62** [−6.63, −4.65], hard **+26.03**, photo **+24.17**, wild +23.78,
+  wildphoto +23.47 — every one significant. About a 4.3:1 trade, and the first measurement that
+  justifies `DEPLOYMENT_WEIGHT = 3.0` in the epoch-selection rule, which was already valuing
+  out-of-domain at 3:1 on no evidence.
+
+  **The same intervention has opposite value in the two families, which is the finding.**
+  Classical: −33.57 clean for +10.76 photo, a 0.32:1 trade. Encoder: −5.45 clean for +43.94
+  photo, 8.06:1. So the improvement is not "augment the data" — it is *augment the data and hold
+  a representation that can absorb it*. Averaging a hand-built histogram over backdrops buys
+  invariance by destroying the signal, because in a composite the garment is a minority of the
+  pixels. Arm B is not a failed experiment; it is the control that makes the encoder's number
+  mean something.
+
+  **Arm B's trade curve is monotone, with no sweet spot** — averaging N composited views into
+  each catalogue descriptor gives P@10 clean/photo of 69.31/10.17 (N=0), 49.73/14.49 (N=1),
+  35.74/20.93 (N=3). Every view spent on robustness is taken out of in-domain discrimination,
+  in both directions, so no setting of N buys both. That is what it looks like when a
+  representation is entangled with its backdrop rather than merely uncalibrated for it. Arm A
+  also reproduced to the digit across the two runs, which is a free determinism check on the
+  descriptor path.
+
+  **Clustering is not the bottleneck, and this is the measurement that shows it.** Exact search
+  and k-Means routing (k=120, 3 probes, ~5% of the catalogue scanned) differ by at most 1.15
+  points on any cell — one hair outside the ±1.10 floor — while the arms differ by tens.
+  Notebook 06's k-Means over the *encoder's* embeddings is an index layer, not a competing
+  model, and cannot make this attribution; that is why the 2x2's clustering arm runs on an
+  independent representation.
+
+  **A detail worth keeping**: on `hard` and `wild`, arm C scores *below* arm A (9.10 vs 16.39,
+  9.21 vs 13.17). A network trained only on clean frames is more background-brittle than a
+  hand-built histogram — given the capacity to lean on the white field, it leaned harder.
+
+  One seed per arm; the intervals are paired query-sampling error, not seed variance, which is
+  still unmeasured for retrieval. **Arm C is a control and must never be promoted** —
+  `promote_task4_encoder.py` would serve it happily. Its checkpoint records
+  `background_augmented: False`, which is the only thing on disk that distinguishes it.
 
   **Never built**: `ImprovedEncoderV2` (GeM pooling, CosFace head, block-2 colour branch) is
   implemented and unit-tested in `src/visual_search/search_engine.py` but has never been

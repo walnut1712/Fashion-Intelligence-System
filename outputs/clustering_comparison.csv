@@ -1,5 +1,5 @@
-method,clusters,noise %,coverage %,scored on,purity,ARI,NMI,silhouette,Davies-Bouldin
-k-Means (k=120),120,0.0,100.0,38612,0.759,0.213,0.681,0.125,2.128
-DBSCAN (eps=0.288),17,92.59,7.41,593,0.951,0.898,0.923,0.577,0.88
-DBSCAN (eps=0.288) [noise as singletons],7424,0.0,100.0,8000,0.996,0.017,0.565,-0.008,0.34
-Agglomerative ward (k=120),120,0.0,100.0,4000,0.756,0.25,0.701,0.142,2.047
+method,clusters,coverage %,purity,ARI,NMI,note
+k-Means (k=120),120,100.0,0.715,0.208,0.683,
+Agglomerative ward (k=120),120,100.0,0.716,0.237,0.694,
+DBSCAN (eps=0.288),24,8.3,0.981,0.011,0.151,scored only on what it kept
+DBSCAN [noise as singletons],7356,100.0,1.0,0.02,0.566,the honest deployment view

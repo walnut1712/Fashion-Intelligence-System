@@ -34,11 +34,11 @@
     "nDCG@5": 0.8734,
     "P@10": 0.7619,
     "R@10": 0.0149,
-    "AP@10": 0.7037,
+    "AP@10": 0.7038,
     "nDCG@10": 0.8673,
     "P@20": 0.7468,
     "R@20": 0.0265,
-    "AP@20": 0.678,
+    "AP@20": 0.6781,
     "nDCG@20": 0.8601,
     "R-precision": 0.7482,
     "type@10": 0.7619,
@@ -46,7 +46,7 @@
     "both@10": 0.4198,
     "colourfam@10": 0.5818,
     "bothfam@10": 0.443,
-    "ms_per_query": 0.0153,
+    "ms_per_query": 0.0074,
     "dim": 128.0
   },
   "note": "Measured by 05_task4_triplet_encoder.ipynb against a catalogue-only index. The SERVED artefacts are written by scripts/promote_task4_encoder.py and cover the whole catalogue."
