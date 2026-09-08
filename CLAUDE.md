@@ -22,9 +22,9 @@ models can be reused outside the notebook without re-training.
 `notebooks/07_ultimate_judgement.ipynb` is cross-task comparison.
 
 **Task 4 is one notebook and two models.** `06_task4_clustering.ipynb` was folded into `05`
-Part 9 and deleted (2026-09-09, at the user's request) — the clustering sits beside the encoder
-whose embeddings it groups. The notebook numbering keeps a gap where it was; `07` was not
-renamed.
+as Part 9 and then Part 9 itself was removed, both on 2026-09-09 at the user's request, so
+there is no clustering in Task 4 at all - see the note further down before re-adding any. The
+notebook numbering keeps a gap where `06` was; `07` was not renamed.
 
 The two models are the **two arms of the background comparison**: the same `ImprovedEncoder`
 (four conv blocks, 128-d projection, batch-hard triplet loss plus auxiliary `articleType` and
