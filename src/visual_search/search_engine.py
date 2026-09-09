@@ -30,7 +30,7 @@ import torch.nn.functional as F
 
 # Ingestion lives in src/data/user_image.py so Task 1 serving, Task 4 retrieval
 # and the offline benchmark all coerce an upload the same way. Re-exported here
-# because callers (cluster_engine, task4_service) import these names from this
+# because callers (task4_service) import these names from this
 # module, and because they are part of this module's published __all__.
 from src.data.user_image import (  # noqa: F401
     PREPROCESS_MODES,
@@ -320,8 +320,8 @@ def build_encoder(checkpoint):
 
     Task 3 already stores its architecture in the checkpoint and rebuilds from
     that, so changing the notebook cannot orphan a trained model. Task 4 did
-    not, and ``SearchEngine.load`` and ``ClusterEngine.load`` disagreed about
-    ``widths`` as a result. This is the one place that decision now lives.
+    not, and two separate loaders disagreed about ``widths`` as a result. This
+    is the one place that decision now lives.
     """
     name = checkpoint.get("architecture", "improved")
     if name not in ARCHITECTURES:

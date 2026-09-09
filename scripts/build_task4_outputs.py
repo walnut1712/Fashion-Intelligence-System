@@ -14,13 +14,7 @@ reader can check. This walks all 5,829 test images and writes:
 
     outputs/task4_test_retrieval.csv    top-K neighbours per image, with the
                                         confidence signals the API now returns
-    outputs/task4_test_clusters.csv     one row per image: nearest cluster, its
-                                        dominant articleType, and the margin
     outputs/task4_test_summary.json     counts, confidence rates, timings
-
-The clustering pass is skipped with a warning rather than failing when the
-cluster artefacts are missing or stale, because retrieval is the deliverable and
-clustering is the extra.
 
 ``--rebuild-index`` regenerates the two search indexes from the encoder the
 manifest names. It exists because nothing did: the manifest claims this script
@@ -73,8 +67,6 @@ def parse_args():
                         help="images per search call")
     parser.add_argument("--limit", type=int, default=None,
                         help="only process the first N images (for a smoke test)")
-    parser.add_argument("--no-clusters", action="store_true",
-                        help="skip the cluster assignment pass")
     parser.add_argument("--rebuild-index", action="store_true",
                         help="re-embed the catalogue and rewrite both search "
                              "indexes from the encoder the manifest names, then exit")
@@ -235,40 +227,6 @@ def main():
     print("  confident: {:.1%} | mean top-1 similarity {:.3f} | {:.1f} ms/image".format(
         summary["confident_share"], summary["mean_top1_similarity"],
         summary["ms_per_image"]))
-
-    # -- clustering ----------------------------------------------------
-    if not args.no_clusters:
-        try:
-            from src.visual_search.cluster_engine import ClusterEngine
-
-            clusters = ClusterEngine.load()
-            rows = []
-            for path in paths:
-                prediction = clusters.predict(path, mode=args.mode)
-                best = prediction.get("best", {})
-                rows.append({
-                    "test_id": path.stem,
-                    "cluster": best.get("cluster"),
-                    "dominant_type": best.get("dominant_type"),
-                    "purity": best.get("purity"),
-                    "distance": best.get("distance"),
-                    # Margin to the runner-up cluster. Small means the item sits
-                    # between two clusters and the assignment is a coin toss -
-                    # web photos average 0.055 against 0.160 for catalogue shots.
-                    "margin": prediction.get("margin"),
-                    "confident": prediction.get("confident"),
-                })
-            cluster_df = pd.DataFrame(rows)
-            cluster_path = args.out / "task4_test_clusters.csv"
-            cluster_df.to_csv(cluster_path, index=False)
-            print("Wrote {} ({:,} rows)".format(cluster_path.name, len(cluster_df)))
-            summary["cluster_confident_share"] = round(
-                float(cluster_df["confident"].mean()), 4)
-        except Exception as error:                       # noqa: BLE001
-            # Clustering is the extra, not the deliverable. A stale centroid file
-            # must not cost us the retrieval output.
-            print("Skipped clustering: {}: {}".format(type(error).__name__, error))
-            summary["cluster_error"] = "{}: {}".format(type(error).__name__, error)
 
     summary_path = args.out / "task4_test_summary.json"
     summary_path.write_text(json.dumps(summary, indent=2) + "\n")
