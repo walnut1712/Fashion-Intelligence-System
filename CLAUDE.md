@@ -19,7 +19,28 @@ models can be reused outside the notebook without re-training.
 | 4 | visual search — top-K similar items | `notebooks/05_task4_triplet_encoder.ipynb` (triplet CNN encoder, two background arms) | `artifacts/task4/` |
 
 `notebooks/01_eda.ipynb` produces the shared cleaned metadata every task reads.
-`notebooks/07_ultimate_judgement.ipynb` is cross-task comparison.
+`notebooks/07_ultimate_judgement.ipynb` is cross-task comparison. Rewritten and
+**executed for the first time on 2026-09-09** (22 cells, 8 code, execution counts 1-8, no
+errors). It recomputes nothing - every figure is read from an artefact one of the four task
+notebooks or a script in `scripts/` already wrote, so it cannot disagree with them and it runs
+in seconds. Three things in it are worth knowing before editing any task:
+
+- **Task 1 has its own version of Task 4's arm C vs arm D**, and nothing had connected the two.
+  The `webphoto` recipe in `src/training/train_item_type.py` is the same `ItemTypeCNN` trained
+  with background randomisation. Against the shipped checkpoint it costs 2.79 points of clean
+  accuracy (`squash`) and buys 22.28 averaged over the mild/moderate/severe corruptions - an
+  8.0:1 trade against Task 4's 8.1:1. Under `nobg` it costs nothing at all and still gains
+  20.38. Two tasks, two architectures, two corruption families, same conclusion.
+  `candidate_webphoto.pt` is **not in the repo**; the rows survive in
+  `outputs/evaluation/task1_ood_results.csv`.
+- **The two tasks then made opposite deployment decisions from that same evidence, and both are
+  right.** Task 1's deliverable is 5,829 catalogue tiles, so in-domain cost is real and
+  out-of-domain gain buys nothing graded. Task 4's deliverable is a search box that accepts an
+  upload. Do not "fix" the inconsistency.
+- **"Resolution is the ceiling" is retired.** It was the closing recommendation of the old
+  version of `07` and it is contradicted by three measurements (Task 3 within +/-0.2, Task 1
+  +0.39 with the CI straddling zero, Task 4 tied on 3 of 5 benchmarks). The lever is the
+  training distribution. Task 4's colour metrics are the only measured resolution win.
 
 **Task 4 is one notebook and two models.** `06_task4_clustering.ipynb` was folded into `05`
 as Part 9 and then Part 9 itself was removed, both on 2026-09-09 at the user's request, so
@@ -49,10 +70,17 @@ saw (purity 0.723, ARI 0.225, NMI 0.684), k-Means against DBSCAN and agglomerati
 router trade-off (3 probes keeps 96.9% of the exact answer for 3.2% of the catalogue, 8.3x
 faster), and cluster stability under a background swap (59.8% keep their cluster).
 
-`src/visual_search/cluster_engine.py` and its tests are retained and still pass, but **nothing
-regenerates their artefacts now** - `outputs/kmeans_centroids.npy`, `cluster_assignments.csv`
-and `cluster_summary.csv` are the committed output of a step that no longer exists. The module
-docstring says so.
+**The clustering code and artefacts were deleted on 2026-09-09**, completing the removal the
+notebook change started. Gone: `src/visual_search/cluster_engine.py`, the clustering pass and
+`--no-clusters` flag in `scripts/build_task4_outputs.py`, and eleven output files
+(`kmeans_centroids.npy`, `cluster_assignments.csv`, `cluster_summary.csv`, `kmeans_k_sweep.csv`,
+`cluster_k_choice.csv`, `cluster_model.json`, `cluster_domain_comparison.csv`,
+`cluster_search_tradeoff.csv`, `clustering_comparison.csv`, `clustering_summary.json`,
+`task4_test_clusters.csv`). All recoverable from git.
+
+An earlier note here claimed the module's tests still passed. **There were none** - the only
+mentions of `ClusterEngine` in `tests/` were two comments. The suite is 140 pass / 6 skip both
+before and after the deletion, which is what confirmed it.
 
 Four earlier methods (Classical HSV+gradient histograms, the Task 3 CNN reused as a
 feature extractor, a convolutional autoencoder, a plain triplet network) were built, measured
@@ -85,6 +113,7 @@ notebook re-runs:
 | `python -m src.training.train_task4_120x160 --backgrounds none --seed 42` | 78 min | arm C, the catalogue-only control |
 | `python scripts/compare_task4_background_arms.py` | 3 min | `outputs/evaluation/task4_background_arms{,_significance}.csv` |
 | `python scripts/eval_task4_classical_clustering.py [--views N]` | 20 min | `outputs/evaluation/task4_classical_clustering_arms_v{N}.csv` |
+| `python scripts/eval_task4_real_photos.py` | 3 min | `outputs/evaluation/task4_real_photo_arms{,_per_image}.csv` - both encoders on the 23 labelled real photographs. Notebook 07 reads it |
 
 Training happens in **step 3, a script, not a notebook**: a run is ~100 minutes and is
 checkpointed every epoch so `--resume` survives a killed kernel. Notebook `05` loads what it
@@ -127,6 +156,14 @@ python -m uvicorn app.backend.main:app --reload      # http://127.0.0.1:8000  /d
 # Task 1's image cache, which tests/test_splits.py needs and notebook 02 only
 # builds as a side effect of training. 21 s. --check verifies without rebuilding.
 python scripts/build_task1_cache.py
+
+# Contact sheet for hand-labelling the 31 real-world photographs. Renders every
+# photo with Task 1's top-5 as a SPELLING hint only - the template is left blank
+# on purpose, because rubber-stamping the model's own guesses would turn Task 4's
+# real-photo P@10 into a measure of agreement with Task 1. `none` marks a photo
+# that is not one catalogue garment (stickers, flat-lays) and excludes it.
+python scripts/make_label_contact_sheet.py            # renders outputs/label_contact_sheet.png
+python scripts/make_label_contact_sheet.py --check    # validates a filled-in template
 
 # Task 1 batch inference / submission CSV
 python predict.py --images A2_FashionDataset/FashionDataset/test/images_test \
@@ -296,8 +333,10 @@ Facts that matter:
   byte. `predict.py --submission` now writes a `.recipe.json` sidecar recording models, alpha and a
   digest of the column, and `tests/test_submission.py` asserts the two still agree. **Do not apply
   the prior correction on the serving path** — uploads are not the graded population.
-  `outputs/task1_item_type_predictions_prior_corrected.csv` is a stale artefact of a superseded run
-  (1,024 rows disagree with what ships) and is referenced by nothing; delete it rather than trust it.
+  `outputs/task1_item_type_predictions_prior_corrected.csv` was a stale artefact of a superseded
+  run (1,024 rows disagreed with what ships); **deleted on 2026-09-09**. Two files still name it
+  in prose - `scripts/build_submission.py`'s usage example and `tests/test_submission.py`'s
+  docstring - but neither reads it.
 
   **Error structure — the ceiling is label convention, not the model.** Family (`subCategory`)
   accuracy is **96.97%** against 88.29% at `articleType`, and **73.2%** of test error mass is
@@ -461,6 +500,33 @@ Facts that matter:
   | wild | 53.20 | 53.07 | 47.27 | 27.33 |
   | wildphoto | 52.80 | 51.62 | 45.36 | 26.20 |
 
+  **The label sheet is filled in (2026-09-09) and the composited benchmark turns out to be an
+  optimistic proxy.** `A2_FashionDataset/input_images_labels.csv` now carries 23 scorable rows;
+  8 are marked `none` - two stickers, a set of sleep masks with no catalogue class, a six-item
+  flat-lay, and four street-style shots where two garments are co-equal. On those 23:
+
+  | encoder | P@1 | P@10 | vs its composited `photo` P@10 |
+  |---|---|---|---|
+  | arm D, deployed | 26.09 | **23.04** | 55.78 |
+  | arm C, control | 8.70 | 8.70 | 11.84 |
+
+  The direction survives - the augmented encoder is 2.6x the control on real photographs, as it
+  is 4.7x on composites - but **the absolute level does not**: 23.04 against the 55.78 the
+  `photo` benchmark reports for the same encoder. Compositing a catalogue cutout onto a
+  Places365 scene is easier than a real upload, so `photo` and `wildphoto` should be read as
+  upper bounds, not estimates. Quote 23.04 whenever a real-world number is wanted.
+
+  Three caveats travel with that row, and all three belong beside it: **n=23**, so the sampling
+  error is roughly +/-10 points; **the labels were produced by a vision model, not a human**,
+  and are unverified (they agree with Task 1's own top-1 on only 5 of 23, so they are at least
+  not circular); and 1 of the 31 defeats ingestion entirely and falls back to a centre crop.
+
+  `EXCLUDED_ARTICLE_TYPES` in `src/evaluation/real_photo_arms.py` is the single definition of
+  the `none` marker, imported by `scripts/make_label_contact_sheet.py`. It exists because
+  `real_photo_labels` originally kept every non-empty `articleType`: the 8 excluded rows would
+  have been scored against a class no catalogue item has, counted as misses, and quietly cost
+  about a quarter of the reported P@10 while claiming `labelled = 31`.
+
   Two control arms were trained to establish the claims below and then **deleted**, because the
   project keeps one encoder. Their measurements are recorded here and nowhere else.
 
@@ -524,12 +590,6 @@ Facts that matter:
   plot title dies with `'float' object is not subscriptable` — and *which* rows surface depends
   on the encoder, so the failure moves when the model changes. `promote_task4_encoder.py` fills
   them.
-
-  **The cluster artefacts are frozen against a superseded encoder and nothing updates them.**
-  `outputs/kmeans_centroids.npy`, `cluster_assignments.csv` and `cluster_summary.csv` were last
-  written against the promoted 120x160 encoder; after any future promotion they are stale and
-  no notebook step will fix them, because the clustering step was removed. Either leave
-  `ClusterEngine` alone or delete it with its tests - do not half-update it.
 
   **The background 2x2 — what the catalogue's uniformity costs, and what fixes it.** Four arms,
   all scored on identical query frames (`build_queries(seed=123)`), so every difference is

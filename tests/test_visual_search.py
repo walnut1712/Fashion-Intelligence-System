@@ -82,7 +82,7 @@ def manifest():
 
 # ----------------------------------------------------------- manifest ----
 def test_manifest_carries_every_key_the_loaders_read(manifest):
-    """SearchEngine.load and ClusterEngine.load read these with no default.
+    """SearchEngine.load reads these with no default.
 
     A missing key is not a soft failure - it raises at uvicorn startup.
     """
