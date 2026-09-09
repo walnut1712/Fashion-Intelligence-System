@@ -249,17 +249,24 @@ Facts that matter:
   | 120×160 @ upscaled 60×80 | 85.65 | 85.23 | 62.77 | **−3.97** [−5.13, −2.83], P(better) **0%** |
   | 60×80 shipped + flip TTA | 89.75 | 89.20 | 71.48 | — |
 
-  So the apparent +1.8 gap is a split artefact — on common ground it collapses to **+0.4 with a CI
-  straddling zero, and it is 0.9 *worse* on macro-F1**. A tie, not a win, and not a bad model.
-  What rules it out is deployment: **no graded id has a 120×160 version** (the export covers train
-  ids 1163–51999; the graded set is 52003–60000), so serving means upscaling, which costs ~4
-  points with P(better) = 0%. A definitive resolution needs a matched retrain on one split, not another eval —
-  `train_task1_120x160.py --resolution 60x80` now trains exactly that arm (same script, split,
-  recipe and dropout 0.4), so only the one missing run is needed, not both.
+  How to read that table, since the headline and the middle row measure different things. The
+  **89.68** quoted above is this model on `splits_120x160.csv`, which is the shared partition
+  Task 3 also uses, so it is the right number for comparing Task 1 against the other tasks. The
+  rows above compare the two *checkpoints* on ground neither trained on, and there the 120×160
+  model is a **tie** rather than a win: +0.39 with the CI straddling zero, and 0.9 worse on
+  macro-F1.
 
-  The final service and batch inference path both load this checkpoint. The graded images are
-  resized to the final input contract at inference time; do not substitute the historical
+  **The serving cost is real and is accepted.** No graded id has a 120×160 version (the export
+  covers train ids 1163–51999; the graded set is 52003–60000, verified: 5,829 files, zero
+  overlap), so `predict.py` upscales every graded image to the checkpoint's input contract. That
+  is the −3.97 row, at P(better) = 0%. The team has chosen the 120×160 checkpoint as Task 1's
+  final model with that cost known; do not revert it, and do not substitute the historical
   checkpoint or the blocked high-resolution labelled zip.
+
+  What would remove the cost rather than accept it is 120×160 versions of the graded ids, which
+  needs the teacher's approval for the Kaggle zip. A matched retrain settles the resolution
+  question separately: `train_task1_120x160.py --resolution 60x80` trains exactly that arm (same
+  script, split, recipe and dropout 0.4), so one run is needed, not both.
 - **The assignment's own images are not perfectly uniform.** 17 of 38,612 train images and 6 of
   5,829 graded images are not 60×80 — 60×77, 60×76, 60×75, 60×60, 53×80. Every path that reads
   them resizes (`load_image_array`, `predict.py`, and now `CandidateDataset`), so this is
