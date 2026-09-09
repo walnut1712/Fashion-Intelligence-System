@@ -46,7 +46,7 @@ class Task1Service:
         self.model_path = (
             Path(model_path)
             if model_path
-            else self.project_root / "artifacts" / "task1" / "task1_cnn.pt"
+            else self.project_root / "artifacts" / "task1_120x160" / "task1_120x160_onecycle_best.pt"
         )
 
         if not self.model_path.exists():
@@ -136,7 +136,7 @@ class Task1Service:
 
         Returns ``(mode, which)`` for backward compatibility with the existing
         API response shape. ``which`` is always ``"catalogue"`` because the
-        repository currently ships only ``task1_cnn.pt``.
+        repository currently ships one final catalogue checkpoint.
 
         Auto routing:
         - catalogue-like image -> squash

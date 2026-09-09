@@ -6,7 +6,7 @@ four questions from a single uploaded image.
 
 | Task | Question | Notebook | Headline |
 |---|---|---|---|
-| 1 | What type of item is this? (`articleType`, 92 classes) | `notebooks/02_task1_item_type.ipynb` | 87.1 weighted-F1 |
+| 1 | What type of item is this? (`articleType`, 92 classes) | `notebooks/02_task1_item_type.ipynb` | 90.23% accuracy / 89.68 weighted-F1 |
 | 2 | Which season is it for? (4 classes) | `notebooks/03_task2_season_pytorch.ipynb` | 67.5% accuracy |
 | 3 | Who is it for, and for what occasion? (`gender` x `usage`) | `notebooks/04_task3_cnn_architectures.ipynb` | 90.1% / 91.2% |
 | 4 | Which catalogue items look like this? (top-K retrieval) | `notebooks/05`–`07` | P@10 80.2 |

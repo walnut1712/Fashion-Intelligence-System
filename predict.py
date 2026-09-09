@@ -38,7 +38,7 @@ from src.models.item_type_classifier import (  # noqa: E402
     predict_proba,
 )
 
-DEFAULT_MODEL = PROJECT_ROOT / "artifacts" / "task1" / "task1_cnn.pt"
+DEFAULT_MODEL = PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_120x160_onecycle_best.pt"
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
 
 
@@ -67,7 +67,7 @@ def parse_args(argv=None):
                         help="force horizontal-flip test-time augmentation on")
     parser.add_argument("--ingest", default="squash",
                         choices=["squash", "letterbox", "crop", "nobg"],
-                        help="how a photo becomes a 60x80 tile. 'squash' resizes "
+                        help="how a photo becomes a 120x160 tile. 'squash' resizes "
                              "and lets the aspect ratio distort, which is what the "
                              "published metrics used; the others coerce an upload "
                              "towards catalogue framing first")

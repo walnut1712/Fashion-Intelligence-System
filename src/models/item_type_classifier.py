@@ -93,16 +93,15 @@ class ConvBlock(nn.Module):
 
 
 class ItemTypeCNN(nn.Module):
-    """Small CNN trained from scratch on 60x80 catalogue photos.
+    """Small CNN trained from scratch on catalogue photos.
 
     ``pool_grid`` and ``pool_mode`` control how the final feature map is
     reduced before the classifier head:
 
     * ``pool_grid=(1, 1)``, ``pool_mode="avg"`` - plain global average pool.
     * ``pool_grid=(1, 1)``, ``pool_mode="avgmax"`` - global pool, concatenating
-      average- and max-pooled features. **This is what ships.** The random
-      hyper-parameter search sampled it and it won; ``best_config.json`` records
-      it, and so does ``task1_cnn.pt["architecture"]``.
+    average- and max-pooled features. **This is what ships.** The final
+    ``artifacts/task1_120x160/task1_120x160_onecycle_best.pt`` records it.
     * ``pool_grid=(2, 1)``, ``pool_mode="avgmax"`` - keeps one vertical division
       of the feature map. Supported, and used by some earlier checkpoints, but
       not adopted.
@@ -201,7 +200,7 @@ def build_from_checkpoint(checkpoint):
     return ItemTypeCNN(
         int(checkpoint["num_classes"]),
         widths=tuple(architecture["widths"]),
-        dropout=float(architecture["dropout"]),
+        dropout=float(architecture.get("dropout", 0.4)),
         head_hidden=int(architecture["head_hidden"]),
         pool_grid=(1, 1) if legacy else tuple(pool_grid),
         pool_mode="avg" if legacy else architecture.get("pool_mode", "avg"),
@@ -299,8 +298,9 @@ def apply_logit_adjustment(probabilities, checkpoint):
 def _loader(ingest):
     """The decode function for an ingestion mode.
 
-    ``"squash"`` is ``load_image_array`` - resize to 60x80 and let the aspect
-    ratio distort - which is what every Task 1 number to date was measured with.
+    ``"squash"`` is ``load_image_array`` - resize to the checkpoint's target
+    size and let the aspect ratio distort. The final Task 1 checkpoint uses
+    120x160; earlier benchmark runs used 60x80.
     The other modes come from ``src.data.user_image`` and coerce a photograph
     towards catalogue framing first. Imported lazily so this module keeps working
     if the data package is unavailable and only "squash" is asked for.
@@ -315,7 +315,7 @@ def _loader(ingest):
 
 # Test-time augmentation views, as (scale, shift_x, shift_y). Shifts are in
 # normalised half-width units, the convention affine_grid uses, so 0.05 is about
-# 1.5px across a 60px tile. Every geometric view is averaged with its horizontal
+# 1.5px across the historical 60px tile. Every geometric view is averaged with its horizontal
 # mirror, so "flip" reproduces the two-view average that has always shipped.
 #
 # MEASURED AND DECLINED - the wider sets are worse, not merely no better.
@@ -387,8 +387,8 @@ def predict_proba(model, checkpoint, sources, batch_size=256, device=None, tta=F
     a richer ``tta`` because every published number was measured on the two-view
     average, and ``views=None`` keeps that path bit-for-bit unchanged.
 
-    ``ingest`` selects how a source becomes a 60x80 tile. It matters far more
-    than it sounds: this model was trained on cutouts against white, and on
+    ``ingest`` selects how a source becomes the checkpoint's target tile. It matters
+    far more than it sounds: this model was trained on cutouts against white, and on
     held-out rows composited onto a textured background its accuracy falls from
     87.92 to 25.80.
 

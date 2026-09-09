@@ -70,7 +70,8 @@ def make_model(num_classes: int, dropout: float = 0.4):
     committed 120x160 checkpoint was trained with because this function did not
     pass the argument. It is explicit now so the 60x80 arm can match that run
     exactly; note it differs from the shipped 60x80 model's 0.2, so neither arm
-    here is directly comparable to artifacts/task1/task1_cnn.pt.
+    here is directly comparable to the legacy 60x80 checkpoint in
+    artifacts/task1/task1_cnn.pt.
     """
     return ItemTypeCNN(
         num_classes,

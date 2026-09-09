@@ -24,8 +24,8 @@ Fashion-Intelligence-System/
 │   └── models/
 │       └── item_type_classifier.py   # Task 1 architecture — REQUIRED by the backend
 ├── artifacts/
-│   ├── task1/
-│   │   └── task1_cnn.pt
+│   ├── task1_120x160/
+│   │   └── task1_120x160_onecycle_best.pt
 │   ├── task2/
 │   │   └── task2_season_best_pytorch.pth
 │   ├── task3/
@@ -40,7 +40,7 @@ Fashion-Intelligence-System/
 The code automatically expects:
 
 ```text
-artifacts/task1/task1_cnn.pt
+artifacts/task1_120x160/task1_120x160_onecycle_best.pt
 ```
 
 `app/backend/services/task1_service.py` does **not** define the Task 1 network

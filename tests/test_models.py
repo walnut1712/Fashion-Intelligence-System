@@ -25,7 +25,7 @@ from src.models.item_type_classifier import (  # noqa: E402
     load_item_type_model,
 )
 
-CHECKPOINT_PATH = PROJECT_ROOT / "artifacts" / "task1" / "task1_cnn.pt"
+CHECKPOINT_PATH = PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_120x160_onecycle_best.pt"
 LABEL_CLASSES_PATH = PROJECT_ROOT / "artifacts" / "task1" / "label_classes.json"
 
 
@@ -109,7 +109,7 @@ def test_shipped_checkpoint_matches_what_the_docs_claim():
     """
     import torch
 
-    path = PROJECT_ROOT / "artifacts" / "task1" / "task1_cnn.pt"
+    path = PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_120x160_onecycle_best.pt"
     if not path.exists():
         pytest.skip("deployed checkpoint not present")
     checkpoint = torch.load(path, map_location="cpu", weights_only=False)
@@ -131,7 +131,7 @@ def test_recorded_config_does_not_contradict_the_architecture():
     """
     import torch
 
-    path = PROJECT_ROOT / "artifacts" / "task1" / "task1_cnn.pt"
+    path = PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_120x160_onecycle_best.pt"
     if not path.exists():
         pytest.skip("deployed checkpoint not present")
     checkpoint = torch.load(path, map_location="cpu", weights_only=False)
