@@ -255,10 +255,26 @@ Facts that matter:
   straddling zero, and it is 0.9 *worse* on macro-F1**. A tie, not a win, and not a bad model.
   What rules it out is deployment: **no graded id has a 120×160 version** (the export covers train
   ids 1163–51999; the graded set is 52003–60000), so serving means upscaling, which costs ~4
-  points with P(better) = 0%. Keep it as a measured tie; promoting it would lose ~4 points on the
-  deliverable. A definitive resolution needs a matched retrain on one split, not another eval —
+  points with P(better) = 0%. A definitive resolution needs a matched retrain on one split, not another eval —
   `train_task1_120x160.py --resolution 60x80` now trains exactly that arm (same script, split,
   recipe and dropout 0.4), so only the one missing run is needed, not both.
+
+  **This checkpoint IS now the served one, deliberately, and the switch is half-finished.**
+  `20c95aade` (2026-09-09) repointed `app/backend/services/task1_service.py` and `predict.py` at
+  `artifacts/task1_120x160/task1_120x160_onecycle_best.pt`. The team intends Task 1 to run at
+  120×160 and will supply the missing piece later. **Do not revert it as a bug** - an earlier
+  version of this note said the model "must never be promoted", which reads as exactly that
+  instruction, and it has already nearly caused a revert once.
+
+  What is still outstanding, so the state is not mistaken for finished: the graded images exist
+  **only** at 60×80 (verified - 5,829 files, ids 52003–60000, and the 120×160 export shares zero
+  ids with them), while the served checkpoint declares `image_size_pil=[120, 160]`. Until graded
+  ids exist at 120×160, `predict.py` upscales every one of them, which is the −3.97 row in the
+  table above. **A submission generated in this intermediate state is worth about 4 weighted-F1
+  points less than one from `task1_cnn.pt`**, so check which checkpoint produced
+  `outputs/task1_item_type_predictions.csv` before relying on it. The Kaggle high-res zip is the
+  obvious source for those ids and is blocked pending the teacher's approval, since it carries
+  labels for the held-out test set.
 - **The assignment's own images are not perfectly uniform.** 17 of 38,612 train images and 6 of
   5,829 graded images are not 60×80 — 60×77, 60×76, 60×75, 60×60, 53×80. Every path that reads
   them resizes (`load_image_array`, `predict.py`, and now `CandidateDataset`), so this is
