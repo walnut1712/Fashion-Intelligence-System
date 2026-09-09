@@ -242,6 +242,16 @@ def _live_metrics():
             task1_service.model_card()
         )
 
+    if task2_service is not None:
+        tasks.append(
+            task2_service.model_card()
+        )
+
+    if task3_service is not None:
+        tasks.append(
+            task3_service.model_card()
+        )
+
     if task4_service is not None:
         tasks.append(
             task4_service.model_card()

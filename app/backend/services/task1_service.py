@@ -87,11 +87,9 @@ class Task1Service:
         """Return the published Task 1 metrics stored in the checkpoint."""
         metrics = self.test_metrics
 
-        accuracy = float(metrics.get("accuracy", 0.0))
-        weighted_f1 = float(metrics.get("weighted_f1", 0.0))
-        macro_f1 = float(metrics.get("macro_f1", 0.0))
-        top3 = float(metrics.get("top3_acc", 0.0))
-        top5 = float(metrics.get("top5_acc", 0.0))
+        accuracy = float(metrics.get("accuracy", 0.0)) * 100
+        weighted_f1 = float(metrics.get("weighted_f1", 0.0)) * 100
+        macro_f1 = float(metrics.get("macro_f1", 0.0)) * 100
 
         return {
             "id": "Task 1",
@@ -99,14 +97,10 @@ class Task1Service:
             "headline": round(accuracy, 1),
             "headlineLabel": "top-1 accuracy",
             "detail": (
-                "Top-3 <b>{:.1f}%</b> &middot; "
-                "top-5 <b>{:.1f}%</b> &middot; "
-                "weighted F1 <b>{:.1f}</b> over {} classes."
-            ).format(top3, top5, weighted_f1, self.num_classes),
+                "Weighted F1 <b>{:.1f}</b> &middot; macro F1 <b>{:.1f}</b> over {} classes."
+            ).format(weighted_f1, macro_f1, self.num_classes),
             "flag": "ok" if weighted_f1 >= 75 else "warn",
-            "flagText": "Held-out test split, run {}".format(
-                self.run_id or "unknown"
-            ),
+            "flagText": "Held-out test split, final 120x160 checkpoint",
             "note": (
                 "Macro F1 is <b>{:.1f}</b>: the long tail of rare "
                 "item types is much weaker than the headline suggests."

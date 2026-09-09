@@ -177,7 +177,7 @@ class Task4Service:
         background-augmented encoder.
         """
         manifest = self.manifest or {}
-        clean = manifest.get("clean_metrics", {})
+        clean = manifest.get("benchmarks", {}).get("clean", {})
 
         # Prefer the disjoint-bank measurement. ``hard_metrics`` was measured
         # against the background families the encoder trains on, which is a model
@@ -185,12 +185,16 @@ class Task4Service:
         # provenance note - yet those were the numbers this card published (52.8
         # where the disjoint measurement is 60.6). Fall back only when no disjoint
         # figure has been recorded.
-        hard = manifest.get("hard_metrics_disjoint") or manifest.get("hard_metrics", {})
-        hard_is_disjoint = bool(manifest.get("hard_metrics_disjoint"))
+        hard = manifest.get("benchmarks", {}).get("photo", {})
+        hard_is_disjoint = bool(hard)
 
-        clean_p10 = float(clean.get("P@10", 0.0)) * 100
-        clean_colour = float(clean.get("colour@10", 0.0)) * 100
-        hard_p10 = float(hard.get("P@10", 0.0)) * 100
+        def as_percent(value):
+            value = float(value or 0.0)
+            return value * 100 if abs(value) <= 1 else value
+
+        clean_p10 = as_percent(clean.get("P@10"))
+        clean_colour = as_percent(clean.get("colour@10"))
+        hard_p10 = as_percent(hard.get("P@10"))
 
         # The reported metrics come from the EVALUATION index, which excludes the
         # held-out products so the queries are unseen. The served index covers the

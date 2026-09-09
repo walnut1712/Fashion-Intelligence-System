@@ -841,6 +841,29 @@ class Task2Service:
 
         self.model.eval()
 
+        metrics_path = self.artifact_dir / "task2_season_metrics.json"
+        self.test_metrics = {}
+        if metrics_path.exists():
+            with open(metrics_path, "r", encoding="utf-8") as file:
+                self.test_metrics = json.load(file)
+
+    def model_card(self):
+        metrics = self.test_metrics.get("test", {})
+        return {
+            "id": "Task 2",
+            "name": "Season",
+            "headline": round(float(metrics.get("accuracy", 0.0)) * 100, 1),
+            "headlineLabel": "top-1 accuracy",
+            "detail": "Macro F1 <b>{:.1f}</b> · balanced accuracy <b>{:.1f}</b> across {} seasons.".format(
+                float(metrics.get("macro_f1", 0.0)) * 100,
+                float(metrics.get("balanced_accuracy", 0.0)) * 100,
+                self.num_classes,
+            ),
+            "flag": "warn",
+            "flagText": "Held-out test split",
+            "note": "Season is weakly determined by appearance alone.",
+        }
+
 
     # ========================================================
     # PREPROCESS

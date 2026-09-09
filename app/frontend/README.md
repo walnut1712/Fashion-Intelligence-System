@@ -61,7 +61,7 @@ are the distribution the models were trained on — white-background product
 cutouts — and item type will typically come back above 90%. The unlabelled
 `test/images_test` folder is mostly on-model lifestyle photography and sits a long
 way off that distribution (`unlabelled_distribution_shift_tvd: 44.6` in
-`artifacts/task1/task1_summary.json`), so low, split confidences there are the
+the final 120x160 Task 1 checkpoint), so low, split confidences there are the
 honest output, not a serving fault.
 
 ## API contract
@@ -90,8 +90,8 @@ never advertise a stale run.
     "task1": { "loaded": true, "classes": 92, "device": "cpu", "error": null },
     "task2": { "loaded": true, "classes": 4, "device": "cpu", "error": null },
     "task3": { "loaded": true, "classes": { "gender": 5, "usage": 4 }, "device": "cpu", "error": null },
-    "task4": { "loaded": true, "catalogue_size": 32837, "embedding_dim": 128,
-               "method": "Improved+TTA+bgaug", "device": "cpu", "error": null }
+    "task4": { "loaded": true, "catalogue_size": 38612, "embedding_dim": 128,
+           "method": "Improved+TTA+places365", "device": "cpu", "error": null }
   }
 }
 ```

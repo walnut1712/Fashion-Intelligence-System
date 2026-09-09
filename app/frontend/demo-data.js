@@ -11,7 +11,7 @@
 window.FI = window.FI || {};
 
 /* ------------------------------------------------- label vocabularies ---
-   artifacts/task1/label_classes.json, artifacts/task2/task2_season_class_mapping.json,
+  artifacts/task1_120x160/task1_120x160_onecycle_best.pt, artifacts/task2/task2_season_class_mapping.json,
    artifacts/task3/label_classes.json                                        */
 FI.meta = {
   itemType: [
@@ -39,23 +39,21 @@ FI.meta = {
 };
 
 /* --------------------------------------------------------- model card ---
-   task1_summary.json · task2_season_metrics.json · task3_summary.json ·
-   task4_summary.json + search_manifest.json                                */
+  final Task 1 checkpoint · task2_season_metrics.json · task3_cnn_model.pt ·
+  task4 search_manifest.json                                                */
 FI.metrics = {
   source: "artifacts/task{1,2,3,4}/*.json",
   tasks: [
     {
       id: "Task 1",
       name: "Item type",
-      headline: 87.6,
+      headline: 90.2,
       headlineLabel: "top-1 accuracy",
-      detail: "Top-3 <b>97.5%</b> · top-5 <b>98.8%</b> · weighted F1 <b>87.1</b> over 92 classes. " +
+      detail: "Weighted F1 <b>89.7</b> · macro F1 <b>73.1</b> · balanced accuracy <b>72.8</b> over 92 classes. " +
               "Majority-class baseline is <b>17.6%</b>.",
       flag: "ok",
-      flagText: "Held-out test split, run 20260830_215803",
-      note: "Macro F1 is <b>73.1</b>: the long tail of rare item types is much weaker than the " +
-            "headline suggests. A classical feature pipeline reaches only 56.2 weighted F1 on " +
-            "the same split."
+      flagText: "Held-out test split, final 120x160 checkpoint",
+      note: "The final Task 1 model uses the genuine 120x160 catalogue export."
     },
     {
       id: "Task 2",
@@ -71,24 +69,23 @@ FI.metrics = {
     {
       id: "Task 3",
       name: "Gender &amp; occasion",
-      headline: 89.3,
+      headline: 90.3,
       headlineLabel: "gender accuracy",
-      detail: "Occasion accuracy <b>91.1%</b> · exact match on both heads <b>81.3%</b> · " +
-              "cross-validated macro F1 <b>80.5 ± 1.1</b>.",
+      detail: "Occasion accuracy <b>90.2%</b> · exact match on both heads <b>81.6%</b>.",
       flag: "good",
-      flagText: "Strong and stable across folds",
-      note: "Multi-task CNN pruned to 80% sparsity with no measurable loss, 2.7M parameters."
+      flagText: "Held-out test split, stable 60x80 model",
+      note: "Task 3 remains the teammate-owned 60x80 multi-task CNN."
     },
     {
       id: "Task 4",
       name: "Visual search",
-      headline: 81.2,
+      headline: 76.2,
       headlineLabel: "precision@10",
-      detail: "mAP@10 <b>76.7</b> · nDCG@10 <b>89.6</b> · R-precision <b>80.3</b> on 2,000 held-out " +
-              "queries against a 32,837-item catalogue. Random baseline is <b>5.9%</b>.",
+            detail: "mAP@10 <b>70.4</b> · nDCG@10 <b>86.7</b> · R-precision <b>74.8</b> on 2,000 held-out " +
+              "queries against a 38,612-item catalogue. Random baseline is <b>5.9%</b>.",
       flag: "good",
       flagText: "0.01 ms per query — comfortably real-time",
-      note: "Same-colour agreement is lower at 56.3%; the embedding favours silhouette over colour."
+      note: "The promoted 120x160 encoder uses background augmentation and test-time flip averaging."
     }
   ]
 };

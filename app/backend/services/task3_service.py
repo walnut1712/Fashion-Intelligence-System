@@ -190,6 +190,22 @@ class Task3Service:
                                           for t in self.TARGETS)
               if self.is_calibrated else "off")
 
+    def model_card(self):
+        gender = self.test_metrics.get("gender", {})
+        usage = self.test_metrics.get("usage", {})
+        return {
+            "id": "Task 3",
+            "name": "Gender & occasion",
+            "headline": round(float(gender.get("accuracy", 0.0)), 1),
+            "headlineLabel": "gender accuracy",
+            "detail": "Occasion accuracy <b>{:.1f}%</b> · exact match is reported in the checkpoint.".format(
+                float(usage.get("accuracy", 0.0)),
+            ),
+            "flag": "ok",
+            "flagText": "Held-out test split",
+            "note": "The deployed Task 3 model uses the 60x80 input pipeline.",
+        }
+
     def _load_checkpoint(self):
         try:
             return torch.load(self.model_path, map_location=self.device, weights_only=False)

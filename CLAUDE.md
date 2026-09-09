@@ -13,7 +13,7 @@ models can be reused outside the notebook without re-training.
 
 | Task | Question | Notebook | Artifacts |
 |---|---|---|---|
-| 1 | `articleType` (92 classes) | `notebooks/02_task1_item_type.ipynb` | `artifacts/task1/task1_cnn.pt` |
+| 1 | `articleType` (92 classes) | `notebooks/02_task1_item_type.ipynb` | `artifacts/task1_120x160/task1_120x160_onecycle_best.pt` |
 | 2 | `season` (4 classes) | `notebooks/03_task2_season_pytorch.ipynb` | `artifacts/task2/task2_season_best_pytorch.pth` |
 | 3 | `gender` (5) + `usage` (4), one multi-task CNN | `notebooks/04_task3_cnn_architectures.ipynb` | `artifacts/task3/task3_cnn_model.pt` |
 | 4 | visual search — top-K similar items | `notebooks/05_task4_triplet_encoder.ipynb` (triplet CNN encoder, two background arms) | `artifacts/task4/` |
@@ -229,7 +229,7 @@ A2_FashionDataset/
 
 Facts that matter:
 
-- **Tasks 1-3 use 60×80; Task 4 uses 120×160.** `processed/images_train_120x160/` holds the same
+- **Task 1 final uses 120×160; Tasks 2-3 use 60×80; Task 4 uses 120×160.** `processed/images_train_120x160/` holds the same
   38,612 train ids at 120×160 — genuinely higher resolution, not upscaled (downsizing them back
   reproduces the 60×80 originals to MAE ≈ 1/255; they carry ~36% more high-frequency energy than
   a bicubic upscale). No held-out test id appears in that folder.
@@ -237,13 +237,11 @@ Facts that matter:
   test scores landed within ±0.2 of the 60×80 model on every metric, at four times the compute.
   Task 3 has since been returned to 60×80 on that evidence. Do not assume more pixels will move
   the other tasks either without measuring it.
-- **Task 1's 120×160 checkpoint is a sound model that ties the shipped one, and still cannot be
-  promoted.** `artifacts/task1_120x160/task1_120x160_onecycle_best.pt` records 89.68 weighted-F1
-  against the shipped 87.87, but the two were scored on **different partitions** — it uses
-  `splits_120x160.csv`, and 70.5% of its test set is in the shipped model's training data (scoring
-  `task1_cnn.pt` there returns a fictitious 96.65%). Neither model can be scored on the other's
-  split, so the comparison was made on the rows **neither trained on** (3,248 of them; the fully
-  clean test-only intersection is 884 and agrees):
+- **Task 1's final model is the 120×160 checkpoint.** `artifacts/task1_120x160/task1_120x160_onecycle_best.pt`
+  is the submitted and deployed model, with test accuracy **90.23%**, weighted-F1 **89.68%**,
+  macro-F1 **73.11%**, and balanced accuracy **72.84%**. Earlier 60×80 results remain historical
+  development and ablation evidence. The resolution comparison was measured on rows neither
+  model trained on (3,248 of them; the fully clean test-only intersection is 884 and agrees):
 
   | arm | acc | weighted-F1 | macro-F1 | vs shipped (paired bootstrap) |
   |---|---|---|---|---|
@@ -259,22 +257,9 @@ Facts that matter:
   `train_task1_120x160.py --resolution 60x80` now trains exactly that arm (same script, split,
   recipe and dropout 0.4), so only the one missing run is needed, not both.
 
-  **This checkpoint IS now the served one, deliberately, and the switch is half-finished.**
-  `20c95aade` (2026-09-09) repointed `app/backend/services/task1_service.py` and `predict.py` at
-  `artifacts/task1_120x160/task1_120x160_onecycle_best.pt`. The team intends Task 1 to run at
-  120×160 and will supply the missing piece later. **Do not revert it as a bug** - an earlier
-  version of this note said the model "must never be promoted", which reads as exactly that
-  instruction, and it has already nearly caused a revert once.
-
-  What is still outstanding, so the state is not mistaken for finished: the graded images exist
-  **only** at 60×80 (verified - 5,829 files, ids 52003–60000, and the 120×160 export shares zero
-  ids with them), while the served checkpoint declares `image_size_pil=[120, 160]`. Until graded
-  ids exist at 120×160, `predict.py` upscales every one of them, which is the −3.97 row in the
-  table above. **A submission generated in this intermediate state is worth about 4 weighted-F1
-  points less than one from `task1_cnn.pt`**, so check which checkpoint produced
-  `outputs/task1_item_type_predictions.csv` before relying on it. The Kaggle high-res zip is the
-  obvious source for those ids and is blocked pending the teacher's approval, since it carries
-  labels for the held-out test set.
+  The final service and batch inference path both load this checkpoint. The graded images are
+  resized to the final input contract at inference time; do not substitute the historical
+  checkpoint or the blocked high-resolution labelled zip.
 - **The assignment's own images are not perfectly uniform.** 17 of 38,612 train images and 6 of
   5,829 graded images are not 60×80 — 60×77, 60×76, 60×75, 60×60, 53×80. Every path that reads
   them resizes (`load_image_array`, `predict.py`, and now `CandidateDataset`), so this is
@@ -335,20 +320,17 @@ Facts that matter:
 
 ## Model state
 
-- **Task 1** — `CNN_baseline_augnone` (run `20260902_215643`), 92 classes after dropping 32 rare
-  ones; TTA + logit adjustment (tau 0.4) deployed. Test weighted-F1 **87.87**, macro-F1 **73.70**,
-  accuracy 88.40, top-3 97.65. The earlier `CNN_weights_none_full` (87.13 / 73.09) is superseded
-  and kept as `superseded_task1_cnn_20260830_215803.pt`.
-  Summary: `artifacts/task1/task1_summary.json`.
+- **Task 1** — final `ItemTypeCNN` at 120×160, 92 classes after dropping 32 rare ones;
+  horizontal-flip augmentation only, CrossEntropyLoss with label smoothing 0.05 and no
+  inverse-frequency class weights, AdamW + OneCycleLR for 40 epochs. Test accuracy **90.23%**,
+  weighted-F1 **89.68%**, macro-F1 **73.11%**, balanced accuracy **72.84%**. Checkpoint:
+  `artifacts/task1_120x160/task1_120x160_onecycle_best.pt`.
 
-  **The submission is not the served model.** `outputs/task1_item_type_predictions.csv` soft-votes
-  `task1_cnn.pt` with `candidate_tail_sqrt_dep.pt` and applies a half-strength
-  Saerens–Latinne–Decaestecker label-shift correction (alpha 0.5), gated on `graded_prior.json` —
-  test 88.22 / 76.44, deployment-prior weighted-F1 85.71 against the served model's 84.75. That is
-  correct and verified: re-running the documented recipe reproduces the shipped column byte for
-  byte. `predict.py --submission` now writes a `.recipe.json` sidecar recording models, alpha and a
-  digest of the column, and `tests/test_submission.py` asserts the two still agree. **Do not apply
-  the prior correction on the serving path** — uploads are not the graded population.
+  The old `task1_cnn.pt` results remain historical 60×80 development and OOD evidence. They are
+  not the service or submission model.
+
+  The old ensemble-plus-label-shift submission recipe is historical 60×80 evidence only. It is
+  not the current final-model report or serving path; do not apply its prior correction to uploads.
   `outputs/task1_item_type_predictions_prior_corrected.csv` was a stale artefact of a superseded
   run (1,024 rows disagreed with what ships); **deleted on 2026-09-09**. Two files still name it
   in prose - `scripts/build_submission.py`'s usage example and `tests/test_submission.py`'s
