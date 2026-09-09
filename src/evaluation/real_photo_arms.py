@@ -62,6 +62,13 @@ ARMS = {
 
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".bmp", ".gif"}
 
+# Written in the label sheet's ``articleType`` for a photograph that is not one
+# catalogue garment - a sticker, a six-item flat-lay, an outfit where two
+# garments are co-equal. It is a deliberate exclusion, not an unfilled row, and
+# it must never reach the scorer: no catalogue item has articleType "none", so
+# such a row would match nothing and silently count as a miss.
+EXCLUDED_ARTICLE_TYPES = {"none", "n/a"}
+
 
 def real_photo_paths(project_root=None):
     """The 31 real uploads, sorted so the row order is stable across runs."""
@@ -76,9 +83,14 @@ def real_photo_paths(project_root=None):
 def real_photo_labels(project_root=None):
     """The hand-label sheet, or None when it carries no usable rows.
 
-    Returns None rather than an empty frame when every ``articleType`` is blank,
-    so a caller can say "unlabelled" once instead of every consumer testing the
-    column itself.
+    Returns None rather than an empty frame when no row carries a scorable
+    ``articleType``, so a caller can say "unlabelled" once instead of every
+    consumer testing the column itself.
+
+    Rows marked with an ``EXCLUDED_ARTICLE_TYPES`` value are dropped here rather
+    than downstream. They are photographs a human decided are not one catalogue
+    garment, so they are outside what P@10 can mean; left in, they would be
+    compared against a class that does not exist and scored as misses.
     """
     root = Path(project_root or PROJECT_ROOT)
     path = root / "A2_FashionDataset" / "input_images_labels.csv"
@@ -88,7 +100,8 @@ def real_photo_labels(project_root=None):
     if "articleType" not in labels.columns:
         return None
     labels["articleType"] = labels["articleType"].fillna("").astype(str).str.strip()
-    usable = labels[labels["articleType"] != ""]
+    scorable = ~labels["articleType"].str.lower().isin(EXCLUDED_ARTICLE_TYPES)
+    usable = labels[(labels["articleType"] != "") & scorable]
     return usable if len(usable) else None
 
 
@@ -225,5 +238,7 @@ def describe_label_state(labels, paths):
                 "P@10 cannot be computed on the %d real photographs. The columns "
                 "below need no labels; fill the sheet in and this cell adds "
                 "P@1/P@10 by itself." % len(paths))
-    return ("%d of %d real photographs are labelled, so P@1 and P@10 below are "
-            "measured on those." % (len(labels), len(paths)))
+    return ("%d of %d real photographs carry a catalogue articleType, so P@1 and "
+            "P@10 below are measured on those. The rest are marked %s: not one "
+            "catalogue garment, and excluded rather than counted as misses."
+            % (len(labels), len(paths), "/".join(sorted(EXCLUDED_ARTICLE_TYPES))))

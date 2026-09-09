@@ -46,7 +46,7 @@
     "both@10": 0.4198,
     "colourfam@10": 0.5818,
     "bothfam@10": 0.443,
-    "ms_per_query": 0.0074,
+    "ms_per_query": 0.0195,
     "dim": 128.0
   },
   "note": "Measured by 05_task4_triplet_encoder.ipynb against a catalogue-only index. The SERVED artefacts are written by scripts/promote_task4_encoder.py and cover the whole catalogue."
