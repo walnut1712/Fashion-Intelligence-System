@@ -1,0 +1,37 @@
+{
+  "task": 2,
+  "primary_metric": "macro_f1",
+  "best_epoch": 8,
+  "baseline_clean": {
+    "accuracy": 0.664488017429194,
+    "weighted_f1": 0.6560457696270797,
+    "macro_f1": 0.6306095318276945,
+    "balanced_accuracy": 0.6689314038920691,
+    "loss": 0.803322519122184
+  },
+  "baseline_heldout_places365": {
+    "accuracy": 0.36891793754538854,
+    "weighted_f1": 0.37254802698544104,
+    "macro_f1": 0.3125787162252877,
+    "balanced_accuracy": 0.33605194097442537,
+    "loss": 1.3884427972223568
+  },
+  "adapted_clean": {
+    "accuracy": 0.5994916485112564,
+    "weighted_f1": 0.5930157479818812,
+    "macro_f1": 0.5955750760342144,
+    "balanced_accuracy": 0.6709672642502673,
+    "loss": 0.8310499302614694
+  },
+  "adapted_heldout_places365": {
+    "accuracy": 0.439360929557008,
+    "weighted_f1": 0.4305808584398644,
+    "macro_f1": 0.40245273387513214,
+    "balanced_accuracy": 0.49459200144297394,
+    "loss": 1.1596775000122772
+  },
+  "delta_clean": -0.03503445579348008,
+  "delta_heldout_places365": 0.08987401764984443,
+  "training_minutes": 8.828985738754273,
+  "checkpoint": "C:\\Users\\Moonie\\Fashion-Intelligence-System\\artifacts\\task2_bgaug\\task2_bgadapt_best.pth"
+}

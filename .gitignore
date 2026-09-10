@@ -68,3 +68,5 @@ A2_FashionDataset/processed/task4_masks_*.npy
 artifacts/task*_120x160/
 
 /artifacts/task1_bgaug/task1_bgadapt_best.pt
+
+/artifacts/task2_bgaug/task2_bgadapt_best.pth
