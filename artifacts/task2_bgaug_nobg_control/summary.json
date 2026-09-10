@@ -1,0 +1,37 @@
+{
+  "task": 2,
+  "primary_metric": "macro_f1",
+  "best_epoch": 2,
+  "baseline_clean": {
+    "accuracy": 0.664488017429194,
+    "weighted_f1": 0.6560457696270797,
+    "macro_f1": 0.6306095318276945,
+    "balanced_accuracy": 0.6689314038920691,
+    "loss": 0.8033225077322159
+  },
+  "baseline_heldout_places365": {
+    "accuracy": 0.36891793754538854,
+    "weighted_f1": 0.37254802698544104,
+    "macro_f1": 0.3125787162252877,
+    "balanced_accuracy": 0.33605194097442537,
+    "loss": 1.3884428068139087
+  },
+  "adapted_clean": {
+    "accuracy": 0.6697530864197531,
+    "weighted_f1": 0.6729893284014005,
+    "macro_f1": 0.6390567307030592,
+    "balanced_accuracy": 0.7035238711273312,
+    "loss": 0.7631352232961819
+  },
+  "adapted_heldout_places365": {
+    "accuracy": 0.37037037037037035,
+    "weighted_f1": 0.3580137866390415,
+    "macro_f1": 0.30408914963383715,
+    "balanced_accuracy": 0.3407119387008479,
+    "loss": 1.380584121435538
+  },
+  "delta_clean": 0.008447198875364714,
+  "delta_heldout_places365": -0.00848956659145056,
+  "training_minutes": 5.4183715383211775,
+  "checkpoint": "C:\\Users\\LEGION\\Documents\\jupyter_notebook\\Fashion-Intelligence-System\\artifacts\\task2_bgaug_nobg_control\\task2_bgadapt_best.pth"
+}

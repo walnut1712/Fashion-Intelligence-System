@@ -1,14 +1,22 @@
-"""Paired comparison of the catalogue-only and background-augmented encoders.
+"""Paired comparison of the Task 4 background arms.
 
-Arms C and D of the Task 4 2x2 - the same architecture, split, recipe, seed and
-learning rate, differing in one thing: whether any training frame ever left the
-white catalogue background. Arm C is ``--backgrounds none``, arm D is the
-deployed ``mixed`` encoder.
+One architecture, three training distributions - the same split, recipe, seed
+and learning rate throughout, differing only in what the network was shown:
 
-Both are scored on the query frames ``build_queries(seed=123)`` produces, which
-is the same call the training script makes, so the comparison is paired per
-query and ``RetrievalProtocol.compare`` can put a bootstrap interval on each
-difference rather than leaving two column of numbers side by side.
+    C  ``--backgrounds none``        the catalogue exactly as it ships
+    P  ``--backgrounds procedural``  composited onto formulae only
+    D  ``--backgrounds mixed``       composited onto 70% Places365 scenes
+
+C and D are required. **P is optional**, because the project keeps one encoder
+and its checkpoint is routinely deleted after measuring; when it is absent the
+script scores the other two and says so, rather than failing.
+
+Every arm is scored on the query frames ``build_queries(seed=123)`` produces,
+which is the same call the training script makes, so the comparison is paired
+per query and ``RetrievalProtocol.compare`` can put a bootstrap interval on each
+difference rather than leaving columns of numbers side by side. Each augmented
+arm is contrasted against C, the control, and the ``contrast`` column of the
+significance table says which pair a row describes.
 
     python scripts/compare_task4_background_arms.py
 
@@ -21,6 +29,7 @@ from __future__ import annotations
 import argparse
 import sys
 import time
+from itertools import product
 from pathlib import Path
 
 import numpy as np
@@ -42,6 +51,15 @@ from src.visual_search.search_engine import build_encoder  # noqa: E402
 BENCHMARKS = ("clean", "hard", "photo", "wild", "wildphoto")
 REPORTED = ("P@1", "P@10", "colour@10", "colourfam@10", "both@10", "bothfam@10")
 METRICS = ("both@10", "type@10", "colour@10")
+
+CONTROL = "C_encoder_clean"
+# label -> (checkpoint filename, required). Arm P is optional: see the module
+# docstring. Ordered control first so the printed table reads C, P, D.
+ARMS = {
+    "C_encoder_clean": ("task4_encoder_none_seed42.pt", True),
+    "P_encoder_procedural": ("task4_encoder_procedural_seed42.pt", False),
+    "D_encoder_bgaug": ("task4_encoder_mixed_seed42.pt", True),
+}
 
 
 def score_encoder(path, images, protocol, queries, device):
@@ -75,11 +93,15 @@ def main():
     started = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     artifacts = PROJECT_ROOT / "artifacts" / f"task4_{args.resolution}"
-    arms = {"C_encoder_clean": artifacts / "task4_encoder_none_seed42.pt",
-            "D_encoder_bgaug": artifacts / "task4_encoder_mixed_seed42.pt"}
-    for label, path in arms.items():
-        if not path.exists():
+    arms = {}
+    for label, (filename, required) in ARMS.items():
+        path = artifacts / filename
+        if path.exists():
+            arms[label] = path
+        elif required:
             sys.exit(f"{label}: {path} is missing - train that arm first")
+        else:
+            print(f"{label}: {filename} not on disk, skipping this arm")
 
     images, masks, gallery = load_gallery(args.resolution)
     protocol = RetrievalProtocol(gallery=gallery)
@@ -100,26 +122,29 @@ def main():
             for name, summary in summaries.items()]
     table = pd.DataFrame(rows)
 
-    # D minus C: what the background augmentation bought, per benchmark, paired
-    # on the query. A positive difference means the augmented arm is ahead.
+    # Each augmented arm minus the control, per benchmark, paired on the query.
+    # A positive difference means the augmented arm is ahead. `contrast` names
+    # the pair, so a consumer must say which comparison it wants rather than
+    # assuming the file holds only one.
     differences = []
-    for name in BENCHMARKS:
-        for metric in METRICS:
-            # paired_bootstrap returns b - a, so C goes first for D minus C.
-            stats = protocol.compare(scored["C_encoder_clean"][name],
-                                     scored["D_encoder_bgaug"][name],
-                                     metric=metric, n_resamples=args.resamples)
-            differences.append({
-                "benchmark": name, "metric": metric,
-                "D_bgaug": round(float(scored["D_encoder_bgaug"][name][metric]) * 100, 2),
-                "C_clean": round(float(scored["C_encoder_clean"][name][metric]) * 100, 2),
-                "delta": round(stats["delta"] * 100, 2),
-                "ci_low": round(stats["ci_low"] * 100, 2),
-                "ci_high": round(stats["ci_high"] * 100, 2),
-                "p_value": round(stats["p_value"], 4),
-                "significant": stats["significant"],
-                "n_queries": stats["n_queries"],
-            })
+    augmented = [label for label in arms if label != CONTROL]
+    for arm, name, metric in product(augmented, BENCHMARKS, METRICS):
+        contrast = "%s_minus_%s" % (arm.split("_")[0], CONTROL.split("_")[0])
+        # paired_bootstrap returns b - a, so the control goes first.
+        stats = protocol.compare(scored[CONTROL][name], scored[arm][name],
+                                 metric=metric, n_resamples=args.resamples)
+        differences.append({
+            "contrast": contrast, "arm": arm, "control": CONTROL,
+            "benchmark": name, "metric": metric,
+            "arm_score": round(float(scored[arm][name][metric]) * 100, 2),
+            "control_score": round(float(scored[CONTROL][name][metric]) * 100, 2),
+            "delta": round(stats["delta"] * 100, 2),
+            "ci_low": round(stats["ci_low"] * 100, 2),
+            "ci_high": round(stats["ci_high"] * 100, 2),
+            "p_value": round(stats["p_value"], 4),
+            "significant": stats["significant"],
+            "n_queries": stats["n_queries"],
+        })
     significance = pd.DataFrame(differences)
 
     out_dir = PROJECT_ROOT / "outputs" / "evaluation"
@@ -130,7 +155,7 @@ def main():
     print("\nP@10 and both@10 by arm\n")
     print(table.pivot_table(index="benchmark", columns="arm",
                             values=["P@10", "both@10"]).reindex(BENCHMARKS).to_string())
-    print("\nD (augmented) minus C (catalogue only), paired, 95% interval\n")
+    print("\nEach augmented arm minus C (catalogue only), paired, 95% interval\n")
     print(significance[significance.metric == "both@10"].to_string(index=False))
     print("\nwrote {} in {:.1f} min".format(out_dir, (time.time() - started) / 60))
 

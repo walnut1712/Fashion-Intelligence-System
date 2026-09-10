@@ -344,6 +344,7 @@ def train_adaptation(
     val_bank_size: int,
     test_bank_size: int,
     seed: int,
+    tag: str = "",
 ):
     seed_all(seed)
     device = get_device()
@@ -372,7 +373,7 @@ def train_adaptation(
         target_size = (120, 160)
         task2_tf = False
         flip = True
-        out_dir = project / "artifacts" / "task1_bgaug"
+        out_dir = project / "artifacts" / ("task1_bgaug" + tag)
         output_name = "task1_bgadapt_best.pt"
         optimiser = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
 
@@ -398,7 +399,7 @@ def train_adaptation(
         target_size = (60, 80)
         task2_tf = True
         flip = False
-        out_dir = project / "artifacts" / "task2_bgaug"
+        out_dir = project / "artifacts" / ("task2_bgaug" + tag)
         output_name = "task2_bgadapt_best.pth"
         optimiser = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-4)
 
@@ -598,7 +599,7 @@ def train_adaptation(
         rows.append({"model": model_name, "domain": domain, **result})
     comparison = pd.DataFrame(rows)
     comparison.to_csv(
-        eval_dir / f"task{task}_bgadapt_comparison.csv",
+        eval_dir / f"task{task}_bgadapt_comparison{tag}.csv",
         index=False,
     )
 
@@ -709,7 +710,7 @@ def train_adaptation(
     print(f"Adapted  OOD   {primary}: {adapted_bg_test[primary]:.4f}")
     print(f"Delta OOD              : {delta_bg:+.4f}")
     print(f"Checkpoint: {save_path}")
-    print(f"Comparison: {eval_dir / f'task{task}_bgadapt_comparison.csv'}")
+    print(f"Comparison: {eval_dir / f'task{task}_bgadapt_comparison{tag}.csv'}")
     print("\nDo NOT overwrite the production checkpoint until the clean/OOD trade-off is reviewed.")
 
 
@@ -723,6 +724,19 @@ def main():
     parser.add_argument("--val-bank-size", type=int, default=400)
     parser.add_argument("--test-bank-size", type=int, default=800)
     parser.add_argument("--seed", type=int, default=SEED)
+    parser.add_argument(
+        "--tag",
+        default="",
+        help="Suffix for the output directory and comparison CSV. Empty by "
+             "default, so a normal run writes exactly where it always did. Use "
+             "it for the control run below, which must not overwrite the real "
+             "one: `--p-bg 0 --tag _nobg_control`. That control matters because "
+             "the adapted arm receives --epochs more gradient steps than the "
+             "baseline it is compared against, so a clean-side gain may be the "
+             "extra training rather than the backdrops. Measured for Task 3, 8 "
+             "clean epochs alone moved clean +0.015 and out-of-domain +0.002, "
+             "which flipped its clean delta from +0.008 to -0.007.",
+    )
     parser.add_argument(
         "--lr",
         type=float,
@@ -747,6 +761,7 @@ def main():
         val_bank_size=args.val_bank_size,
         test_bank_size=args.test_bank_size,
         seed=args.seed,
+        tag=args.tag,
     )
 
 

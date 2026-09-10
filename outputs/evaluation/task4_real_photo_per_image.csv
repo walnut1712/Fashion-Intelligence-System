@@ -1,32 +1,32 @@
-file,top10 overlap,same top-1
-1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,0.0,False
-25637193-carousel-block-earrings-v1.webp,0.1,False
-2b3f6ff00db7a1efae21d85cfb8995eaff2da8d8.png,0.1,False
-3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,0.0,False
-4130636080047_004_b14.webp,0.0,False
-4793e3cb1e694edeb25651fb1ae578e6.jpg,0.0,False
-509.png,0.1,False
-600_google-pattern-socks.jpg,0.0,False
-83123110.webp,0.0,False
-ae9d94dee29112613a6fae774382a2d4.jpg,0.0,False
-Afternoon_ensemble_MET_63.212a-b_CP4.jpg,0.0,False
-Collier_ruban_or_vermeil_2.webp,0.0,False
-d8ff992811e561202194328c9562a843.jpg,0.0,False
-giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,0.5,True
-images (1).jpg,0.0,False
-images (10).jpg,0.0,False
-images (11).jpg,0.1,False
-images (2).jpg,0.0,False
-images (3).jpg,0.0,False
-images (4).jpg,0.0,False
-images (5).jpg,0.6,False
-images (6).jpg,0.0,False
-images (7).jpg,0.1,False
-images (8).jpg,0.2,False
-images (9).jpg,0.0,False
-images.jpg,0.0,False
-istockphoto-1018293976-612x612.jpg,0.0,False
-mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,0.0,False
-nike-5644799_640.jpg,0.2,False
-sm_s_c_mint___short_summer__3__c13cee931ef04513be9f9862179e68fd.webp,0.0,False
-The_dress_blueblackwhitegold.jpg,0.0,False
+file,"top10 overlap, P  procedural backdrops","same top-1, P  procedural backdrops","top10 overlap, D  mixed backdrops (deployed)","same top-1, D  mixed backdrops (deployed)"
+1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,0.0,False,0.0,False
+25637193-carousel-block-earrings-v1.webp,0.1,False,0.1,False
+2b3f6ff00db7a1efae21d85cfb8995eaff2da8d8.png,0.1,False,0.1,False
+3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,0.0,False,0.0,False
+4130636080047_004_b14.webp,0.0,False,0.0,False
+4793e3cb1e694edeb25651fb1ae578e6.jpg,0.0,False,0.0,False
+509.png,0.3,False,0.1,False
+600_google-pattern-socks.jpg,0.0,False,0.0,False
+83123110.webp,0.2,False,0.1,False
+ae9d94dee29112613a6fae774382a2d4.jpg,0.0,False,0.0,False
+Afternoon_ensemble_MET_63.212a-b_CP4.jpg,0.0,False,0.0,False
+Collier_ruban_or_vermeil_2.webp,0.1,False,0.1,False
+d8ff992811e561202194328c9562a843.jpg,0.0,False,0.0,False
+giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,0.2,False,0.2,True
+images (1).jpg,0.0,False,0.0,False
+images (10).jpg,0.1,False,0.0,False
+images (11).jpg,0.2,False,0.1,False
+images (2).jpg,0.0,False,0.0,False
+images (3).jpg,0.0,False,0.0,False
+images (4).jpg,0.0,False,0.0,False
+images (5).jpg,0.4,True,0.6,False
+images (6).jpg,0.0,False,0.0,False
+images (7).jpg,0.0,False,0.1,False
+images (8).jpg,0.2,False,0.2,False
+images (9).jpg,0.1,False,0.0,False
+images.jpg,0.0,False,0.0,False
+istockphoto-1018293976-612x612.jpg,0.0,False,0.0,False
+mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,0.0,False,0.0,False
+nike-5644799_640.jpg,0.1,False,0.0,False
+sm_s_c_mint___short_summer__3__c13cee931ef04513be9f9862179e68fd.webp,0.2,True,0.0,False
+The_dress_blueblackwhitegold.jpg,0.0,False,0.0,False

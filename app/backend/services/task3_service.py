@@ -33,7 +33,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from PIL import UnidentifiedImageError
 
-from src.data.user_image import load_user_image
+from src.data.user_image import load_user_image, looks_like_catalogue
 
 
 def choose_device():
@@ -118,7 +118,13 @@ class EarlyBranchCNN(nn.Module):
 class Task3Service:
     TARGETS = ("gender", "usage")
 
-    def __init__(self, model_path=None):
+    #: Ingestion modes this service accepts. "auto" routes per image - see
+    #: `route`. Default is "auto" so an upload gets `nobg` and a catalogue tile
+    #: keeps the `letterbox` this service has always used.
+    INGEST_MODES = ("auto", "letterbox", "squash", "crop", "nobg")
+    DEFAULT_INGEST = "auto"
+
+    def __init__(self, model_path=None, ingest=None):
         self.device = choose_device()
         self.project_root = Path(__file__).resolve().parents[3]
         self.model_path = Path(model_path) if model_path else (
@@ -127,6 +133,11 @@ class Task3Service:
             raise FileNotFoundError(
                 "Task 3 model not found: {}. Run notebooks/04_task3_gender_usage.ipynb"
                 .format(self.model_path))
+
+        if ingest is not None and ingest not in self.INGEST_MODES:
+            raise ValueError("ingest must be one of %s, got %r"
+                             % (sorted(self.INGEST_MODES), ingest))
+        self.ingest = ingest or self.DEFAULT_INGEST
 
         checkpoint = self._load_checkpoint()
         self.model_name = checkpoint.get("model_name", "early-branch CNN")
@@ -212,10 +223,43 @@ class Task3Service:
         except TypeError:
             return torch.load(self.model_path, map_location=self.device)
 
-    def preprocess(self, image_bytes):
+    def route(self, image_bytes, ingest=None):
+        """Choose preprocessing for one image: catalogue tile or photograph?
+
+        These want opposite handling and the gap is large in both directions.
+        Measured by `scripts/eval_task3_ood.py` on 1,476 held-out rows, gender
+        accuracy:
+
+            clean catalogue tile   letterbox 90.11   nobg 79.20   (-10.9 nobg)
+            mild shift             letterbox 36.86   nobg 65.85   (+29.0 nobg)
+
+        so no single mode can be the default. `nobg` re-crops tight to the
+        subject, which rescues a photograph and damages a tile that was already
+        framed the way training framed it. Task 1 reached the same conclusion
+        independently (-11.4 / +27.9), which is why `looks_like_catalogue` is
+        shared rather than reimplemented here.
+
+        `letterbox` is kept for the catalogue branch rather than `squash`
+        because it is what this service has always used, and the two are
+        indistinguishable on tiles - clean scores 90.11 either way. That keeps
+        the graded submission bit-for-bit unchanged: build_submission.py feeds
+        60x80 catalogue tiles, which route to `letterbox`.
+        """
+        mode = ingest or self.ingest
+        if mode not in self.INGEST_MODES:
+            raise ValueError("ingest must be one of %s, got %r"
+                             % (sorted(self.INGEST_MODES), mode))
+        if mode == "auto":
+            mode = ("letterbox"
+                    if looks_like_catalogue(image_bytes, self.image_size)
+                    else "nobg")
+        return mode
+
+    def preprocess(self, image_bytes, ingest=None):
         """Match the training pipeline: RGB on white, resized, normalised."""
         try:
-            image = load_user_image(image_bytes, size=self.image_size, mode="letterbox")
+            image = load_user_image(image_bytes, size=self.image_size,
+                                    mode=self.route(image_bytes, ingest))
         except (UnidentifiedImageError, OSError):
             raise ValueError("Cannot decode uploaded image")
 
@@ -224,9 +268,9 @@ class Task3Service:
         return torch.from_numpy(array).float().unsqueeze(0).to(self.device)
 
     @torch.no_grad()
-    def predict(self, image_bytes, top_k=4):
+    def predict(self, image_bytes, top_k=4, ingest=None):
         """Ranked labels with probabilities, for each attribute."""
-        logits = self.model(self.preprocess(image_bytes))
+        logits = self.model(self.preprocess(image_bytes, ingest))
         output = {}
         for target in self.TARGETS:
             names = self.class_names[target]

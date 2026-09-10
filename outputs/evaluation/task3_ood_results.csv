@@ -1,0 +1,17 @@
+checkpoint,ingest,severity,rows,gender_accuracy,gender_macro_f1,gender_confidence,usage_accuracy,usage_macro_f1,usage_confidence,exact_match
+task3_cnn_model.pt,squash,clean,1476,90.11,75.74,90.25,90.04,82.7,91.25,81.3
+task3_cnn_model.pt,letterbox,clean,1476,90.11,75.74,90.25,90.04,82.7,91.25,81.3
+task3_cnn_model.pt,crop,clean,1476,90.11,75.74,90.25,90.04,82.7,91.25,81.3
+task3_cnn_model.pt,nobg,clean,1476,79.2,46.52,82.75,82.52,66.42,86.52,65.24
+task3_cnn_model.pt,squash,mild,1476,33.06,20.05,48.24,73.44,25.8,75.96,24.05
+task3_cnn_model.pt,letterbox,mild,1476,36.86,22.03,48.53,64.02,24.05,73.15,23.51
+task3_cnn_model.pt,crop,mild,1476,33.74,20.36,48.7,73.71,26.73,76.8,24.53
+task3_cnn_model.pt,nobg,mild,1476,65.85,33.09,71.18,76.76,37.0,87.59,48.98
+task3_cnn_model.pt,squash,moderate,1476,30.89,19.38,45.84,72.56,24.5,71.64,22.97
+task3_cnn_model.pt,letterbox,moderate,1476,32.59,17.91,49.61,67.07,25.05,73.11,21.95
+task3_cnn_model.pt,crop,moderate,1476,32.99,20.14,47.06,72.29,24.33,72.79,23.78
+task3_cnn_model.pt,nobg,moderate,1476,60.37,31.51,67.99,74.25,30.52,85.3,43.77
+task3_cnn_model.pt,squash,severe,1476,28.39,16.3,44.16,71.14,25.26,71.6,20.87
+task3_cnn_model.pt,letterbox,severe,1476,33.81,17.84,50.12,70.87,25.59,79.97,23.44
+task3_cnn_model.pt,crop,severe,1476,28.73,17.47,45.09,69.04,24.34,71.82,19.38
+task3_cnn_model.pt,nobg,severe,1476,45.33,22.88,61.71,73.1,28.76,84.46,33.54

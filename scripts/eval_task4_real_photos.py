@@ -49,16 +49,19 @@ def main():
     images = np.load(CACHE_X, mmap_mode="r")
 
     engines = {}
-    for arm_name, arm_file in rpa.ARMS.items():
+    for arm_name, (arm_file, backgrounds, required) in rpa.ARMS.items():
         checkpoint = TRAINED_DIR / arm_file
         if not checkpoint.exists():
             print("missing {} - train it with:".format(arm_file))
             print("    python -m src.training.train_task4_120x160 "
-                  "--backgrounds {} --seed 42".format(
-                      "none" if "none" in arm_file else "mixed"))
-            return 1
+                  "--backgrounds {} --seed 42".format(backgrounds))
+            if required:
+                return 1
+            # Arm P is optional by design; see rpa.ARMS.
+            print("    optional arm, continuing without it")
+            continue
         engines[arm_name] = rpa.build_engine(checkpoint, gallery, images)
-        print("{:<20s} index {}  background_augmented={}".format(
+        print("{:<30s} index {}  background_augmented={}".format(
             arm_name, engines[arm_name].index.shape,
             engines[arm_name].manifest["background_augmented"]))
 

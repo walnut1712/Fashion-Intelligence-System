@@ -1,0 +1,26 @@
+arm,benchmark,rows,gender_accuracy,gender_macro_f1,usage_accuracy,usage_macro_f1,exact_match,mean_macro_f1
+baseline (deployed),clean,2000,89.7,74.64,89.8,81.2,80.65,77.92
+baseline (deployed),hard,2000,41.75,24.4,71.7,27.4,29.7,25.9
+baseline (deployed),photo,2000,52.5,22.07,74.3,25.14,38.7,23.61
+baseline (deployed),wild,2000,46.75,24.63,71.35,29.67,33.35,27.15
+baseline (deployed),wildphoto,2000,51.7,21.57,73.1,26.06,37.6,23.81
+control 8ep lr1e-4,clean,2000,89.95,76.35,90.25,82.61,81.2,79.48
+control 8ep lr1e-4,hard,2000,45.7,25.92,71.3,27.58,32.2,26.75
+control 8ep lr1e-4,photo,2000,54.9,21.92,74.3,24.87,40.3,23.4
+control 8ep lr1e-4,wild,2000,48.1,25.08,71.2,34.05,34.25,29.56
+control 8ep lr1e-4,wildphoto,2000,53.6,21.61,71.6,27.95,38.2,24.78
+bg arm lr1e-4,clean,2000,89.0,75.28,89.5,81.29,79.6,78.28
+bg arm lr1e-4,hard,2000,67.95,33.95,80.2,48.97,53.3,41.46
+bg arm lr1e-4,photo,2000,65.6,29.21,79.85,45.84,51.0,37.53
+bg arm lr1e-4,wild,2000,64.9,33.33,78.5,46.39,49.65,39.86
+bg arm lr1e-4,wildphoto,2000,62.3,26.89,77.25,39.43,47.3,33.16
+control 8ep lr3e-4,clean,2000,89.8,76.0,90.65,83.18,81.4,79.59
+control 8ep lr3e-4,hard,2000,45.65,27.65,69.1,27.06,31.65,27.35
+control 8ep lr3e-4,photo,2000,53.65,22.2,74.6,25.62,39.65,23.91
+control 8ep lr3e-4,wild,2000,48.15,25.38,70.55,31.98,34.45,28.68
+control 8ep lr3e-4,wildphoto,2000,52.65,22.44,73.0,27.62,38.3,25.03
+bg arm lr3e-4,clean,2000,89.8,74.99,90.25,82.54,80.95,78.77
+bg arm lr3e-4,hard,2000,73.4,41.64,82.35,59.52,59.55,50.58
+bg arm lr3e-4,photo,2000,70.0,37.48,81.05,54.54,56.1,46.01
+bg arm lr3e-4,wild,2000,67.65,33.93,80.15,52.83,53.85,43.38
+bg arm lr3e-4,wildphoto,2000,65.95,34.23,79.35,48.58,52.05,41.41

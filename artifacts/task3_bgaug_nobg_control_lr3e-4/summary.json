@@ -1,0 +1,73 @@
+{
+  "task": 3,
+  "primary_metric": "mean_macro_f1",
+  "best_epoch": 4,
+  "baseline_clean": {
+    "gender": {
+      "accuracy": 0.8978367569532812,
+      "weighted_f1": 0.8966890178213603,
+      "macro_f1": 0.7522152973801136,
+      "balanced_accuracy": 0.7432712686962898
+    },
+    "usage": {
+      "accuracy": 0.9003817487729504,
+      "weighted_f1": 0.8969720146372963,
+      "macro_f1": 0.8185825212508178,
+      "balanced_accuracy": 0.7989145926026404
+    },
+    "mean_macro_f1": 0.7853989093154656,
+    "exact_match": 0.8093073986547901
+  },
+  "baseline_heldout_places365": {
+    "gender": {
+      "accuracy": 0.5644428285766224,
+      "weighted_f1": 0.5239146065322576,
+      "macro_f1": 0.24571496594924075,
+      "balanced_accuracy": 0.2582325956259518
+    },
+    "usage": {
+      "accuracy": 0.748045809852754,
+      "weighted_f1": 0.6805967467129703,
+      "macro_f1": 0.2691044397029632,
+      "balanced_accuracy": 0.2740391218084889
+    },
+    "mean_macro_f1": 0.257409702826102,
+    "exact_match": 0.4075622614070169
+  },
+  "adapted_clean": {
+    "gender": {
+      "accuracy": 0.9031085257225959,
+      "weighted_f1": 0.9019526646139786,
+      "macro_f1": 0.7756786290963605,
+      "balanced_accuracy": 0.7810015268081758
+    },
+    "usage": {
+      "accuracy": 0.9040174513724777,
+      "weighted_f1": 0.902764230227892,
+      "macro_f1": 0.8281980906826396,
+      "balanced_accuracy": 0.8243980976605725
+    },
+    "mean_macro_f1": 0.8019383598895,
+    "exact_match": 0.8169423741137974
+  },
+  "adapted_heldout_places365": {
+    "gender": {
+      "accuracy": 0.5626249772768588,
+      "weighted_f1": 0.5142174402030956,
+      "macro_f1": 0.2442116753151565,
+      "balanced_accuracy": 0.2592380408451732
+    },
+    "usage": {
+      "accuracy": 0.747500454462825,
+      "weighted_f1": 0.6824928898654413,
+      "macro_f1": 0.27282759840356813,
+      "balanced_accuracy": 0.27795251476601174
+    },
+    "mean_macro_f1": 0.2585196368593623,
+    "exact_match": 0.41083439374659153
+  },
+  "delta_clean_mean_macro_f1": 0.016539450574034387,
+  "delta_ood_mean_macro_f1": 0.001109934033260318,
+  "training_minutes": 4.980509225527445,
+  "checkpoint": "C:\\Users\\LEGION\\Documents\\jupyter_notebook\\Fashion-Intelligence-System\\artifacts\\task3_bgaug_nobg_control_lr3e-4\\task3_bgadapt_best.pt"
+}

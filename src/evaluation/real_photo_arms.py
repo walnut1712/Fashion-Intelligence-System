@@ -53,11 +53,19 @@ import torch
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
-#: The two encoders of the background comparison. Arm C is the catalogue-only
-#: control and is deliberately NOT the served checkpoint - see CLAUDE.md.
+#: The arms of the background comparison, named exactly as notebook 05 Part 6b
+#: names them so one vocabulary covers the whole task. Value is
+#: (checkpoint filename, --backgrounds value, required).
+#:
+#: The control arm C is deliberately NOT the served checkpoint - see CLAUDE.md.
+#: Arm P is optional: the project keeps one encoder, so its checkpoint is
+#: routinely deleted after measuring, and a caller must cope with its absence
+#: rather than fail. The first entry is the control that agreement is measured
+#: against, so keep it first.
 ARMS = {
-    "white only": "task4_encoder_none_seed42.pt",
-    "white + backgrounds": "task4_encoder_mixed_seed42.pt",
+    "C  catalogue only": ("task4_encoder_none_seed42.pt", "none", True),
+    "P  procedural backdrops": ("task4_encoder_procedural_seed42.pt", "procedural", False),
+    "D  mixed backdrops (deployed)": ("task4_encoder_mixed_seed42.pt", "mixed", True),
 }
 
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".bmp", ".gif"}
@@ -151,18 +159,40 @@ def build_engine(checkpoint_path, gallery, images, device=None, batch_size=256):
                         encoder, device)
 
 
-def _retrieve(engine, paths, k, mode):
-    """Top-k positions and similarities for a list of image paths."""
-    vectors, infos = engine.embed(paths, mode=mode, return_info=True)
+def _ingest_once(engine, paths, mode):
+    """Ingest each photograph exactly once, for every arm to share.
+
+    This must NOT be done per arm. ``nobg`` falls back to ``cv2.grabCut``
+    whenever ``rembg`` is absent, and grabCut seeds its GMM from OpenCV's
+    process-global RNG, so segmenting the same photograph twice gives two
+    different cutouts. Ingesting inside the arm loop therefore hands each arm a
+    different picture and the comparison silently stops being paired - adding a
+    third arm was enough to move the deployed arm's real-photo P@1 by four
+    points, which is how this was found. One ingestion, shared, removes it.
+
+    The absolute scores still depend on grabCut's RNG; only the comparison
+    between arms is repaired here. Installing ``rembg`` is what would fix that.
+    """
+    from src.data.user_image import load_user_image
+
+    loaded = [load_user_image(path, engine.size, mode=mode, return_info=True)
+              for path in paths]
+    arrays = np.stack([array for array, _ in loaded])
+    declined = [bool(info.get("fell_back", False)) for _, info in loaded]
+    return arrays, declined
+
+
+def _retrieve(engine, arrays, k):
+    """Top-k positions and similarities for frames that are already ingested."""
+    vectors = engine.embed_arrays(arrays)
     similarity = vectors @ engine.index.T
     order = np.argsort(-similarity, axis=1)[:, :k]
     scores = np.take_along_axis(similarity, order, axis=1)
-    declined = [bool(info.get("fell_back", False)) for info in infos]
-    return order, scores, declined
+    return order, scores
 
 
 def score_arms(engines, paths, k=10, mode="nobg", labels=None, reference=None):
-    """Both arms on one set of photographs, plus what they agree on.
+    """Every arm on one set of photographs, plus what they agree on.
 
     ``reference`` is an optional list of catalogue-style image paths scored the
     same way, so the similarity drop on real uploads is readable against an
@@ -171,8 +201,19 @@ def score_arms(engines, paths, k=10, mode="nobg", labels=None, reference=None):
     names = list(engines)
     retrieved, rows = {}, []
 
+    # One ingestion for every arm - see _ingest_once. If the arms disagreed on
+    # input size a single ingestion could not serve them, so say so rather than
+    # feeding one of them the wrong shape.
+    sizes = {tuple(engines[name].size) for name in names}
+    if len(sizes) != 1:
+        raise ValueError("arms disagree on input size %s, so they cannot share "
+                         "one ingestion" % sorted(sizes))
+    frames, declined = _ingest_once(engines[names[0]], paths, mode)
+    reference_frames = (_ingest_once(engines[names[0]], reference, mode)[0]
+                        if reference else None)
+
     for name in names:
-        order, scores, declined = _retrieve(engines[name], paths, k, mode)
+        order, scores = _retrieve(engines[name], frames, k)
         retrieved[name] = order
         row = {
             "arm": name,
@@ -181,8 +222,8 @@ def score_arms(engines, paths, k=10, mode="nobg", labels=None, reference=None):
             "top%d similarity" % k: round(float(scores.mean()), 4),
             "ingestion declined": int(sum(declined)),
         }
-        if reference:
-            _, ref_scores, _ = _retrieve(engines[name], reference, k, mode)
+        if reference_frames is not None:
+            _, ref_scores = _retrieve(engines[name], reference_frames, k)
             row["top1 on catalogue photos"] = round(float(ref_scores[:, 0].mean()), 4)
             row["similarity drop"] = round(
                 float(ref_scores[:, 0].mean() - scores[:, 0].mean()), 4)
@@ -191,17 +232,26 @@ def score_arms(engines, paths, k=10, mode="nobg", labels=None, reference=None):
     summary = pd.DataFrame(rows)
 
     # Agreement needs no labels, and is the measurement that answers "did the
-    # training data change the answer" directly.
-    if len(names) == 2:
-        a, b = retrieved[names[0]], retrieved[names[1]]
-        overlap = np.array([len(set(x) & set(y)) / k for x, y in zip(a, b)])
-        summary["top%d overlap with other arm" % k] = round(float(overlap.mean()), 4)
-        summary["same top-1 as other arm"] = round(float((a[:, 0] == b[:, 0]).mean()), 4)
-
+    # training data change the answer" directly. Every arm is compared against
+    # the first, which is the catalogue-only control, so the column reads as
+    # "how far did this training distribution move the answer". The control's
+    # own row is left blank rather than filled with a trivial 1.0.
     per_photo = pd.DataFrame({"file": [p.name for p in paths]})
-    if len(names) == 2:
-        per_photo["top10 overlap"] = overlap
-        per_photo["same top-1"] = a[:, 0] == b[:, 0]
+    if len(names) >= 2:
+        control = retrieved[names[0]]
+        for position, name in enumerate(names):
+            if position == 0:
+                continue
+            other = retrieved[name]
+            overlap = np.array([len(set(x) & set(y)) / k
+                                for x, y in zip(control, other)])
+            same_top1 = control[:, 0] == other[:, 0]
+            summary.loc[position, "top%d overlap with control" % k] = round(
+                float(overlap.mean()), 4)
+            summary.loc[position, "same top-1 as control"] = round(
+                float(same_top1.mean()), 4)
+            per_photo["top%d overlap, %s" % (k, name)] = overlap
+            per_photo["same top-1, %s" % name] = same_top1
 
     if labels is not None:
         types = engines[names[0]].metadata["articleType"].to_numpy()
@@ -225,8 +275,9 @@ def catalogue_test_scores(project_root=None):
     if not path.exists():
         return None
     scores = pd.read_csv(path)
-    rename = {"C_encoder_clean": "white only",
-              "D_encoder_bgaug": "white + backgrounds"}
+    rename = {"C_encoder_clean": "C  catalogue only",
+              "P_encoder_procedural": "P  procedural backdrops",
+              "D_encoder_bgaug": "D  mixed backdrops (deployed)"}
     scores["arm"] = scores["arm"].map(rename).fillna(scores["arm"])
     return scores
 

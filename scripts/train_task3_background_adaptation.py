@@ -253,9 +253,35 @@ def flatten_result(model_name, domain, result):
     }
 
 
+def parse_args():
+    """Flags only; every default is the value this script was committed with,
+    so a bare `python scripts/train_task3_background_adaptation.py` reproduces
+    the committed run exactly.
+
+    They exist for one reason: the adapted arm gets `--epochs` more gradient
+    steps than the baseline it is compared against, so a clean-side gain may be
+    the extra training rather than the backdrops. `--p-bg 0 --tag _nobg_control`
+    is that control - same schedule, no compositing - and `--tag` keeps it from
+    overwriting the real run. Measured for Task 3 at lr 3e-4: 8 clean epochs
+    alone move clean +1.55 and out-of-domain -0.33, so the clean delta against a
+    zero-epoch baseline is not attributable to backgrounds.
+    """
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--epochs", type=int, default=8)
+    parser.add_argument("--lr", type=float, default=1e-4)
+    parser.add_argument("--p-bg", type=float, default=0.70)
+    parser.add_argument("--seed", type=int, default=SEED)
+    parser.add_argument("--tag", default="",
+                        help="suffix for the output directory and CSV")
+    return parser.parse_args()
+
+
 def main():
+    args = parse_args()
     project = resolve_project_root()
-    seed_all(SEED)
+    seed_all(args.seed)
 
     device = get_device()
     baseline_path = find_checkpoint(project)
@@ -320,7 +346,7 @@ def main():
     )
     print("Targets: gender + usage")
     print("Primary selection metric: mean macro-F1")
-    print("Epochs: 8 | lr=0.0001 | p_bg=0.70")
+    print("Epochs: %d | lr=%g | p_bg=%.2f" % (args.epochs, args.lr, args.p_bg))
     print(
         "Training background mix: "
         "70% Places365 + 30% procedural"
@@ -369,8 +395,8 @@ def main():
         train,
         **common,
         backgrounds=train_bgs,
-        p_bg=0.70,
-        seed=SEED,
+        p_bg=args.p_bg,
+        seed=args.seed,
         deterministic=False,
     )
 
@@ -493,7 +519,7 @@ def main():
 
     optimiser = torch.optim.AdamW(
         model.parameters(),
-        lr=1e-4,
+        lr=args.lr,
         weight_decay=1e-4,
     )
 
@@ -515,7 +541,7 @@ def main():
 
     started = time.time()
 
-    for epoch in range(1, 9):
+    for epoch in range(1, args.epochs + 1):
         t0 = time.time()
         model.train()
 
@@ -638,7 +664,7 @@ def main():
         history.append(row)
 
         print(
-            f"Epoch {epoch:02d}/8 | "
+            f"Epoch {epoch:02d}/{args.epochs} | "
             f"train meanMF1={train_mean:.4f} | "
             f"clean-val={clean_val['mean_macro_f1']:.4f} | "
             f"bg-val={bg_val['mean_macro_f1']:.4f} | "
@@ -659,8 +685,10 @@ def main():
         model, bg_test_loader, device
     )
 
+    # --tag keeps a control run from overwriting the real one; empty by default,
+    # so the committed paths are unchanged.
     out_dir = (
-        project / "artifacts" / "task3_bgaug"
+        project / "artifacts" / ("task3_bgaug" + args.tag)
     )
     eval_dir = (
         project / "outputs" / "evaluation"
@@ -696,7 +724,7 @@ def main():
     ])
 
     comparison.to_csv(
-        eval_dir / "task3_bgadapt_comparison.csv",
+        eval_dir / ("task3_bgadapt_comparison" + args.tag + ".csv"),
         index=False,
     )
 
@@ -892,7 +920,7 @@ def main():
     print("\nCheckpoint:", save_path)
     print(
         "Comparison:",
-        eval_dir / "task3_bgadapt_comparison.csv",
+        eval_dir / ("task3_bgadapt_comparison" + args.tag + ".csv"),
     )
     print(
         "\nDO NOT overwrite production Task 3 "

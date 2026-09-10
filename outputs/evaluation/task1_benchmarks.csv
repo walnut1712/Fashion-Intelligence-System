@@ -1,0 +1,16 @@
+arm,benchmark,rows,accuracy,weighted_f1,macro_f1,balanced_accuracy
+baseline (deployed),clean,2000,90.85,90.35,74.48,76.02
+baseline (deployed),hard,2000,14.8,15.65,4.98,6.32
+baseline (deployed),photo,2000,12.85,12.54,3.01,4.04
+baseline (deployed),wild,2000,14.35,15.36,4.05,4.95
+baseline (deployed),wildphoto,2000,10.9,11.67,2.85,3.55
+"control 8ep, no bg",clean,2000,90.5,89.88,72.97,74.3
+"control 8ep, no bg",hard,2000,13.6,15.52,5.21,5.87
+"control 8ep, no bg",photo,2000,12.55,13.09,3.07,4.49
+"control 8ep, no bg",wild,2000,14.0,15.46,3.9,4.84
+"control 8ep, no bg",wildphoto,2000,10.15,11.25,3.04,3.76
+bg arm,clean,2000,89.45,88.54,69.73,69.93
+bg arm,hard,2000,62.35,59.67,25.43,25.31
+bg arm,photo,2000,53.85,50.21,18.81,17.82
+bg arm,wild,2000,42.55,41.81,15.43,16.65
+bg arm,wildphoto,2000,36.55,35.03,10.88,10.93

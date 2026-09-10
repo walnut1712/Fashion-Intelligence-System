@@ -50,7 +50,8 @@ notebook numbering keeps a gap where `06` was; `07` was not renamed.
 The two models are the **two arms of the background comparison**: the same `ImprovedEncoder`
 (four conv blocks, 128-d projection, batch-hard triplet loss plus auxiliary `articleType` and
 `baseColour` heads) trained on the catalogue **as it ships**, against the same network trained
-**with photographic backdrops composited behind the garments**. Arms C and D of the 2x2. The
+**with photographic backdrops composited behind the garments**. Arms C and D of the background
+grid in `05` Part 6b, whose third arm P is a table rather than a checkpoint. The
 second is deployed; the first is a control and **must never be promoted**.
 
 **Clustering has been removed from Task 4 entirely (2026-09-09), at the user's explicit
@@ -59,9 +60,9 @@ request, after the trade-off below was put to them.** Do not re-add it without b
 The trade-off, recorded so nobody has to rediscover it: the encoder is a *supervised* CNN. The
 triplet loss needs `articleType` to know which pairs belong together, and the auxiliary heads
 are ordinary classification. Tasks 1-3 are supervised CNNs too. **So the project now contains
-no unsupervised learning at all** apart from the k-Means that sits inside the Part 6b
-comparison arms, which is a baseline rather than a demonstration. The user was told this before
-deciding.
+no unsupervised learning at all**. The last of it was the k-Means inside the Part 6b
+classical arms, and those were removed on 2026-09-10 (see the Task 4 entry). The user was told
+this before deciding, both times.
 
 What was deleted with it, in case any of it is ever wanted back (it is in git history at
 `18ae8690e`): the k sweep with elbow and silhouette, k=120 validated against labels it never
@@ -86,11 +87,12 @@ Four earlier methods (Classical HSV+gradient histograms, the Task 3 CNN reused a
 feature extractor, a convolutional autoencoder, a plain triplet network) were built, measured
 and removed; their scores survive as a table in `05` section 5 and as CSVs in
 `artifacts/task4/superseded/`, their checkpoints do not. Do not reintroduce them **as
-retrieval methods**. One narrow exception is now deliberate: the Classical descriptor
-(`classical_features`, 128-bin HSV + 108-bin gradient) is the substrate for the unsupervised
-arm of the background 2x2 in `05` section 10d, because clustering the encoder's own embeddings
-cannot say whether the learned representation is what earns the result. It is not re-entered in
-the `05` section 5 retrieval table.
+retrieval methods**. `classical_features` was briefly readmitted as the substrate for the
+unsupervised arms of the background grid in `05` Part 6b; **those arms were removed on
+2026-09-10** and it is now scored nowhere. Its 128-bin HSV block survives as `colour_histogram`
+and *is* still scored, as the `Colour histogram` baseline in the `05` Part 5 method table
+(P@10 28.67 against the encoder's 76.19). Notebook 05 cell 24 explains the hand-written rule
+and points at that baseline.
 
 ## What to run, in order
 
@@ -105,14 +107,15 @@ project**. This is the order to rebuild Task 4 from scratch.
 | 4 | `python scripts/promote_task4_encoder.py --encoder artifacts/task4_120x160/task4_encoder_mixed_seed42.pt` | terminal | ~2 min | after step 3, to serve the new encoder |
 | 5 | `notebooks/05_task4_visual_search.ipynb` | VS Code | ~10 min | reads steps 2-4 and writes the figures. Part 8b rebuilds both encoder indexes, ~3 min of it |
 
-The background 2x2 in `05` section 10d is produced by three more commands, none of which the
+The background grid in `05` Part 6b is produced by these commands, none of which the
 notebook re-runs:
 
 | Run | Cost | Produces |
 |---|---|---|
 | `python -m src.training.train_task4_120x160 --backgrounds none --seed 42` | 78 min | arm C, the catalogue-only control |
+| `python -m src.training.train_task4_120x160 --backgrounds procedural --seed 42` | 104 min | arm P. **Only needed for an interval** - the run's scores are already in `outputs/task4_resolution_comparison.csv`, and the checkpoint is deleted, not in git |
 | `python scripts/compare_task4_background_arms.py` | 3 min | `outputs/evaluation/task4_background_arms{,_significance}.csv` |
-| `python scripts/eval_task4_classical_clustering.py [--views N]` | 20 min | `outputs/evaluation/task4_classical_clustering_arms_v{N}.csv` |
+| `python scripts/eval_task4_classical_clustering.py [--views N]` | 20 min | `outputs/evaluation/task4_classical_clustering_arms_v{N}.csv`. **Nothing reads this any more** - the classical arms left notebook 05 on 2026-09-10. Kept as the evidence behind the recorded rows |
 | `python scripts/eval_task4_real_photos.py` | 3 min | `outputs/evaluation/task4_real_photo_arms{,_per_image}.csv` - both encoders on the 23 labelled real photographs. Notebook 07 reads it |
 
 Training happens in **step 3, a script, not a notebook**: a run is ~100 minutes and is
@@ -463,13 +466,132 @@ Facts that matter:
   went from 20/31 at p ≥ 0.99 and several at exactly 1.0000, to **1/31 and none at 1.0000**.
   It is fitted on catalogue images, so it does not fix out-of-distribution overconfidence.
 
+  **Task 3 collapses out of domain on BOTH heads, and `usage` accuracy hides it.** Measured
+  2026-09-11 by `scripts/eval_task3_ood.py` (which reuses Task 1's corruption ladder unchanged,
+  so the two tasks are comparable), through `letterbox`, gender accuracy falls 90.11 -> 33.81
+  and macro-F1 75.74 -> 17.84. `usage` **accuracy** falls only 90.04 -> 70.87 and looks
+  survivable - that is a trap. `Casual` is 77.3% of the split, so a model that has degenerated
+  into guessing `Casual` still scores about 70%; usage macro-F1 falls 82.70 -> 25.59. **Never
+  quote Task 3 robustness from accuracy.** Table: `outputs/evaluation/task3_ood_results.csv`.
+
+  **Ingestion routing is deployed and was worth ~29 points, free.** `Task3Service` hardcoded
+  `mode="letterbox"`, so an upload reached the model with its background intact. It now uses the
+  same `looks_like_catalogue` router Task 1 has: catalogue tiles keep `letterbox`, uploads get
+  `nobg`. Gender accuracy under mild corruption 36.86 -> 65.85. The catalogue branch is
+  `letterbox` rather than `squash` deliberately - clean scores are identical across squash /
+  letterbox / crop (90.11), so **the graded submission is bit-for-bit unchanged**, verified on
+  40 graded tiles. `build_submission.py` calls this service, so that mattered.
+
+  **A background-adapted arm exists and is NOT promoted.**
+  `scripts/train_task3_background_adaptation.py` fine-tunes the deployed `base` seed-42
+  checkpoint for 8 epochs at p_bg 0.70 on Task 4's 70% Places365 + 30% procedural bank, ~8 min.
+  Only `base` is adapted - `balanced`, `balanced_aug` and `class_weighted` lost the selection
+  and are not touched. Primary metric is the mean of the two heads' macro-F1.
+
+  **Two people wrote this script independently on 2026-09-11**, at the same path, writing the
+  same outputs. The committed one is the teammate's; a second implementation is not in the repo.
+  They cross-validate: the two harnesses agree on the baseline to sixteen digits (gender
+  macro-F1 0.7522152973801136, usage 0.8185825212508178), which is the strongest available
+  evidence that both are correct. The committed script originally had **no argparse at all** -
+  epochs, lr, p_bg and the output paths were hardcoded, so the control below could not be run
+  and a control run would have overwritten the real results. `--epochs --lr --p-bg --seed --tag`
+  were added, every default equal to the committed value, so a bare invocation still reproduces
+  the committed run.
+
+  **The headline delta is confounded, and the control is what shows it.** The adapted arm gets 8
+  epochs the baseline never got, so `--p-bg 0 --tag ...` runs the same schedule with no
+  compositing. Mean macro-F1, both learning rates measured:
+
+  All five rows below come from the committed script, mean of the two heads' macro-F1:
+
+  | | clean | held-out Places365 |
+  |---|---|---|
+  | baseline (deployed) | 0.7854 | 0.2574 |
+  | control, 8 clean epochs, lr 1e-4 | **0.8003** | 0.2598 |
+  | background arm, lr 1e-4 (committed run) | 0.7932 | 0.4298 |
+  | control, 8 clean epochs, lr 3e-4 | **0.8019** | 0.2585 |
+  | background arm, lr 3e-4 | 0.7995 | **0.5524** |
+
+  Eight clean epochs alone move clean **+0.0149 / +0.0165** and out-of-domain **+0.0024 /
+  +0.0011** - that is, extra training on white tiles buys essentially *nothing* out of domain at
+  either learning rate, which is the cleanest possible confirmation that the backdrops are doing
+  the work. It also means the arm's apparent clean *gain* against the baseline is the extra
+  training. Against its own matched control:
+
+  | lr | clean vs control | OOD vs control | trade |
+  |---|---|---|---|
+  | 1e-4 | -0.0071 | +0.1699 | 24:1 |
+  | 3e-4 | **-0.0024** | **+0.2939** | **121:1** |
+
+  **3e-4 dominates 1e-4 on both axes** - a third of the in-domain cost and 1.7x the
+  out-of-domain gain in the same 8-epoch budget. That is not a trade, it is strictly better, and
+  the committed run uses 1e-4; re-run it with `--lr 3e-4`. Per head at 3e-4, out of domain:
+  gender macro-F1 0.2457 -> 0.4636, usage 0.2691 -> 0.6412, exact match 0.4076 -> 0.6433.
+
+  One run per cell and seed variance is unmeasured for Task 3. The out-of-domain gap between the
+  two learning rates (0.4298 against 0.5524) is far too large to be noise; the clean-side
+  numbers all sit within 0.007 of each other and could reorder, so do not rank them on that.
+
+  **Tasks 1 and 2 had the same confound; both controls were run on 2026-09-11** with the
+  `--tag` flag added to `scripts/train_t12_background_adaptation.py` (which already had
+  `--p-bg`). The direction of the correction is **task-dependent**, so it cannot be predicted -
+  it has to be measured:
+
+  | task | metric | reported vs baseline | corrected vs control | |
+  |---|---|---|---|---|
+  | 1 | weighted-F1 | -2.62 / +40.99, 15.7:1 | **-2.41 / +40.86, 16.9:1** | slightly *better* |
+  | 2 | macro-F1 | -3.50 / +8.99, 2.6:1 | **-4.35 / +9.84, 2.3:1** | slightly *worse* |
+  | 3 (lr 3e-4) | mean macro-F1 | +1.41 / +29.50 | **-0.24 / +29.39, 121:1** | sign of the clean delta flips |
+
+  Task 1's control *lost* clean performance over its 8 extra epochs (0.8968 -> 0.8947) while
+  Tasks 2 and 3's controls gained, which is why the correction runs in opposite directions. An
+  earlier note here predicted the cost would be understated in every task; that held for 2 and 3
+  and was wrong for 1.
+
+  **What does hold in every task is the out-of-domain half.** The controls moved out-of-domain
+  by +0.0012 (task 1), -0.0085 (task 2) and +0.0024 / +0.0011 (task 3) - nothing, in all four
+  runs. Extra training on white tiles buys in-domain accuracy and **no** robustness, so the
+  entire out-of-domain gain in all three tasks is attributable to the backdrops. That is the
+  claim the controls were run to secure, and it survives everywhere.
+
+  Two qualifiers: validation was still climbing at epoch 8 in every run, so all of these are
+  **floors**, not converged; and the ingest router above attacks the same failure, so its gain
+  and this one do not simply add.
+
+  **Task 3 now reports Task 4's five benchmark families**, built by
+  `scripts/eval_task3_benchmarks.py` from the same calls `build_queries` uses
+  (`make_eval_backgrounds(600)`, `load_background_bank(2000, split="test")`, then
+  `simulate_ingestion(degrade(..., EVAL_DEGRADATIONS))`), so a Task 3 row and a Task 4 row mean
+  the same thing. 2,000 held-out rows, one sample shared by every arm and benchmark, mean of the
+  two heads' macro-F1. Table: `outputs/evaluation/task3_benchmarks.csv`.
+
+  | arm | clean | hard | photo | wild | wildphoto |
+  |---|---|---|---|---|---|
+  | baseline (deployed) | **77.92** | 25.90 | 23.61 | 27.15 | 23.81 |
+  | control 8ep lr1e-4 | 79.48 | 26.75 | 23.40 | 29.56 | 24.78 |
+  | bg arm lr1e-4 | 78.28 | 41.46 | 37.53 | 39.86 | 33.16 |
+  | control 8ep lr3e-4 | **79.59** | 27.35 | 23.91 | 28.68 | 25.03 |
+  | **bg arm lr3e-4** | 78.77 | **50.58** | **46.01** | **43.38** | **41.41** |
+
+  Three things this says that the single-family numbers could not. **The controls are flat on
+  all four out-of-domain columns** at both learning rates, so every point of movement belongs to
+  the backdrops. **Task 3 does not repeat arm P's mistake**: its `hard` minus `photo` gap is
+  **+4.57** against arm P's **17.91**, which is the 70/30 mix doing its job, and is the arm P
+  lesson transferring to a different task and architecture. And **the accuracy trap is visible
+  in one row** - the deployed baseline's *usage accuracy* across the five is 89.80 / 71.70 /
+  74.30 / 71.35 / 73.10, which looks like a model that barely degrades, while its usage macro-F1
+  on the identical frames is 81.20 / 27.40 / 25.14 / 29.67 / 26.06.
+
+  `wildphoto` is the closest proxy to a real upload, but Task 4's real-photo work showed even
+  that flatters a model (21.74 measured against 55.78 on `photo`), so read it as an upper bound.
+
   Weak points are unchanged and are **not** resolution-limited: `Unisex` F1 0.599, `Girls` 0.607,
   `Sports` recall 0.648. **Accessories is still the ceiling** — 85.5% gender accuracy, 38.7% of all
   gender errors (85.2% / 38.5% at 120×160).
 - **Task 4** - deployed: `ImprovedEncoder`, recorded in the manifest as
   `Improved+TTA+places365`, 128-dim, 38,612-item served index, **trained at 120x160** with
   Places365 backdrops. Its benchmark table is further down this section; clean P@10 is **76.19**
-  and the real-photograph number is **23.04**. The checkpoint is
+  and the real-photograph number is **21.74**. The checkpoint is
   `artifacts/task4_120x160/task4_encoder_mixed_seed42.pt`, served as
   `artifacts/task4/task4_improved_encoder.pt` (same weights, promotion copies it).
 
@@ -542,14 +664,29 @@ Facts that matter:
 
   | encoder | P@1 | P@10 | vs its composited `photo` P@10 |
   |---|---|---|---|
-  | arm D, deployed | 26.09 | **23.04** | 55.78 |
+  | arm D, deployed | 21.74 | **21.74** | 55.78 |
+  | arm P, procedural | 21.74 | 21.30 | 42.22 |
   | arm C, control | 8.70 | 8.70 | 11.84 |
 
-  The direction survives - the augmented encoder is 2.6x the control on real photographs, as it
-  is 4.7x on composites - but **the absolute level does not**: 23.04 against the 55.78 the
+  The direction survives - the augmented encoder is 2.5x the control on real photographs, as it
+  is 4.7x on composites - but **the absolute level does not**: 21.74 against the 55.78 the
   `photo` benchmark reports for the same encoder. Compositing a catalogue cutout onto a
   Places365 scene is easier than a real upload, so `photo` and `wildphoto` should be read as
-  upper bounds, not estimates. Quote 23.04 whenever a real-world number is wanted.
+  upper bounds, not estimates. Quote 21.74 whenever a real-world number is wanted.
+
+  **These figures replaced 26.09 / 23.04 on 2026-09-11, and the model did not change - the
+  harness did.** `score_arms` ingested the photographs *inside* the arm loop, so with `rembg`
+  absent every arm re-ran `cv2.grabCut` and got a different cutout of the same picture: the
+  arms were never compared on identical input. Adding arm P moved arm D's P@1 from 26.09 to
+  30.43 without touching its weights, which is what exposed it. `_ingest_once` now segments each
+  photograph once and hands the same frames to every arm. The comparison is paired now; the
+  absolute value still rides on grabCut's RNG, and only installing `rembg` fixes that.
+
+  **Arm P ties arm D on real photographs while the composited benchmark separates them by
+  13.6 points** (21.30 against 21.74, one retrieved slot apart, versus 42.22 against 55.78).
+  At n=23 that does not refute the composited ranking - it says 23 photographs are too few to
+  confirm it, and that a 13-point gap on composites must not be quoted as a 13-point gap on
+  uploads.
 
   Two caveats travel with that row: **n=23**, so the sampling error is roughly +/-10 points,
   which makes the gap to 55.78 safe and the exact value not; and 1 of the 31 defeats ingestion
@@ -582,7 +719,8 @@ Facts that matter:
   `wild` −3.72. Both directions are many times the noise floor.
 
   **The important consequence: the procedural encoder is not background-invariant, and the old
-  benchmark could not tell.** Between two background families it never trained on, it scores
+  benchmark could not tell.** (That encoder is **arm P** of the background grid below, and the
+  same rows now appear in `05` Part 6b. One run, two places, not two experiments.) Between two background families it never trained on, it scores
   59.50 (checker/stripes) and 42.86 (real photographs) — a **16.6-point** gap. The mixed encoder
   scores 56.32 and 55.78, a **0.5-point** gap. The claim inherited from the
   old background notebook — "the encoder learned that backgrounds are irrelevant, rather than
@@ -630,17 +768,44 @@ Facts that matter:
   on the encoder, so the failure moves when the model changes. `promote_task4_encoder.py` fills
   them.
 
-  **The background 2x2 — what the catalogue's uniformity costs, and what fixes it.** Four arms,
-  all scored on identical query frames (`build_queries(seed=123)`), so every difference is
-  paired. Model family crossed with data treatment; P@10, exact search in every cell:
+  **The background grid — what the catalogue's uniformity costs, and what fixes it.** One
+  architecture, three training distributions, all scored on identical query frames
+  (`build_queries(seed=123)`), so every difference is paired. Same `ImprovedEncoder`, same
+  recipe, same seed, same split, same 42-epoch budget; the training backdrop is the only thing
+  that differs. P@10, exact search in every cell:
 
-  | benchmark | A classical/catalogue | B classical/augmented | C encoder/catalogue | D encoder/augmented |
-  |---|---|---|---|---|
-  | clean | 69.31 | 35.74 | **81.64** | 76.19 |
-  | hard | 16.39 | 28.56 | 9.10 | **56.32** |
-  | photo | 10.17 | 20.93 | 11.84 | **55.78** |
-  | wild | 13.17 | 18.79 | 9.21 | **53.07** |
-  | wildphoto | 8.58 | 13.13 | 6.36 | **51.62** |
+  | benchmark | C catalogue only | P procedural backdrops | D mixed backdrops (deployed) |
+  |---|---|---|---|
+  | clean | **81.64** | 76.35 | 76.19 |
+  | hard | 9.10 | **60.13** | 56.32 |
+  | photo | 11.84 | 42.22 | **55.78** |
+  | wild | 9.21 | **57.17** | 53.07 |
+  | wildphoto | 6.36 | 36.54 | **51.62** |
+
+  **Arm P was retrained on 2026-09-11 and now has a live checkpoint and an interval.** The rows
+  above are that run, scored beside C and D by `compare_task4_background_arms.py` in one pass;
+  the notebook reads that one file and no longer splices from
+  `outputs/task4_resolution_comparison.csv`. The checkpoint is
+  `artifacts/task4_120x160/task4_encoder_procedural_seed42.pt`, gitignored like the others, so a
+  clone still has only the table. **Do not promote it** - `promote_task4_encoder.py` would serve
+  it happily and the only thing on disk that distinguishes it is `background_source: procedural`.
+
+  **That retrain measured Task 4's run-to-run variance for the first time.** Same seed, same
+  recipe, same script: the earlier procedural run scored 76.68 / 59.50 / 42.86 / 56.79 / 37.48
+  against this one's 76.35 / 60.13 / 42.22 / 57.17 / 36.54 - **max drift 0.94 points, mean
+  0.59**. CUDA training is not bit-reproducible because `cudnn.benchmark` picks its convolution
+  algorithms at runtime. That is the same order as the ±1.10 query-sampling floor, so the two
+  noise sources are comparable and a gap of about a point is not a result however the bootstrap
+  interval reads.
+
+  **Arm P is why the invariance claim is now falsifiable.** `hard` and `photo` are both
+  background families no encoder trained on. Arm P scores 60.13 and 42.22 — a **17.91-point
+  gap** — while arm D scores 56.32 and 55.78, a **0.54-point gap**. Procedural augmentation
+  teaches that *formulae* are irrelevant, not that backgrounds are. A checkerboard eval bank
+  would have ranked arm P first on `hard` and `wild` (it beats the deployed encoder on both) and
+  hidden the failure that matters. Its trade against arm C is 5.74:1 against the deployed
+  8.06:1, so the ratio alone does not reveal it either. On `both@10`, paired: arm P costs 6.30
+  in domain and buys 19.52 out of it (3.1:1) against arm D's 5.62 for 24.36 (4.3:1).
 
   **Arm C is the best model in the project on clean catalogue images and near the worst on a
   photograph** — 81.64 clean against the deployed encoder's 76.19, and 11.84 on `photo`. The
@@ -654,32 +819,49 @@ Facts that matter:
   justifies `DEPLOYMENT_WEIGHT = 3.0` in the epoch-selection rule, which was already valuing
   out-of-domain at 3:1 on no evidence.
 
-  **The same intervention has opposite value in the two families, which is the finding.**
-  Classical: −33.57 clean for +10.76 photo, a 0.32:1 trade. Encoder: −5.45 clean for +43.94
-  photo, 8.06:1. So the improvement is not "augment the data" — it is *augment the data and hold
-  a representation that can absorb it*. Averaging a hand-built histogram over backdrops buys
-  invariance by destroying the signal, because in a composite the garment is a minority of the
-  pixels. Arm B is not a failed experiment; it is the control that makes the encoder's number
-  mean something.
+  **A detail worth keeping**: arm C does not degrade, it collapses. 81.64 clean against 9.10,
+  11.84, 9.21 and 6.36 out of domain, against a random-retrieval floor of 5.91. Given a
+  background that never varies, it leaned on it all the way.
 
-  **Arm B's trade curve is monotone, with no sweet spot** — averaging N composited views into
-  each catalogue descriptor gives P@10 clean/photo of 69.31/10.17 (N=0), 49.73/14.49 (N=1),
-  35.74/20.93 (N=3). Every view spent on robustness is taken out of in-domain discrimination,
-  in both directions, so no setting of N buys both. That is what it looks like when a
-  representation is entangled with its backdrop rather than merely uncalibrated for it. Arm A
-  also reproduced to the digit across the two runs, which is a free determinism check on the
-  descriptor path.
+  **The two classical arms were removed from notebook 05 on 2026-09-10, at the user's explicit
+  request** — they found the two-model-family axis confusing, and the three-arm version says
+  what the section is for more directly. The grid used to be a 2x2 (k-Means over
+  `classical_features` crossed with the same data treatment) plus arm P. Do not re-add them
+  without being asked. Their measurements, recorded here because they are now recorded nowhere
+  else in prose:
 
-  **Clustering is not the bottleneck, and this is the measurement that shows it.** Exact search
-  and k-Means routing (k=120, 3 probes, ~5% of the catalogue scanned) differ by at most 1.15
-  points on any cell — one hair outside the ±1.10 floor — while the arms differ by tens.
-  Notebook 06's k-Means over the *encoder's* embeddings is an index layer, not a competing
-  model, and cannot make this attribution; that is why the 2x2's clustering arm runs on an
-  independent representation.
+  | benchmark | A classical/catalogue | B classical/augmented |
+  |---|---|---|
+  | clean | 69.31 | 35.74 |
+  | hard | 16.39 | 28.56 |
+  | photo | 10.17 | 20.93 |
+  | wild | 13.17 | 18.79 |
+  | wildphoto | 8.58 | 13.13 |
 
-  **A detail worth keeping**: on `hard` and `wild`, arm C scores *below* arm A (9.10 vs 16.39,
-  9.21 vs 13.17). A network trained only on clean frames is more background-brittle than a
-  hand-built histogram — given the capacity to lean on the white field, it leaned harder.
+  What went with them, and what it cost:
+
+  - **The claim "the improvement is the representation, not just the augmentation" no longer has
+    a control.** The same intervention had *opposite* value in the two families — classical
+    −33.57 clean for +10.76 photo (0.32:1), encoder −5.45 for +43.94 (8.06:1) — which is what
+    established that augmentation only pays when a representation can absorb it. Arm P now
+    carries a weaker version of the same idea (what the augmentation *contains* matters), which
+    is why removing A and B is defensible rather than free.
+  - **Arm B's trade curve was monotone, with no sweet spot**: averaging N composited views gives
+    clean/photo 69.31/10.17 (N=0), 49.73/14.49 (N=1), 35.74/20.93 (N=3). No setting of N buys
+    both. Arm A also reproduced to the digit across two runs, a free determinism check.
+  - **On `hard` and `wild`, arm C scored *below* arm A** (9.10 vs 16.39, 9.21 vs 13.17) — a
+    network trained only on clean frames is more background-brittle than a hand-built histogram.
+  - **Clustering was never the bottleneck.** Exact search and k-Means routing (k=120, 3 probes,
+    ~5% of the catalogue) differed by at most 1.15 points, one hair outside the ±1.10 floor,
+    while the arms differed by tens.
+  - **The project now contains no unsupervised learning at all.** That k-Means was the last of
+    it. Tasks 1-3 are supervised CNNs and the Task 4 encoder is a supervised triplet net. The
+    user was told this before deciding.
+  - `scripts/eval_task4_classical_clustering.py` and its
+    `outputs/evaluation/task4_classical_clustering_arms_v{1,3}.csv` **still exist and still run**
+    — nothing reads them now. Left in place deliberately: the CSVs are the evidence for the rows
+    above, and the repo's convention is that a script generating a committed measurement table
+    stays. Recoverable notebook prose is in git at the commit before this change.
 
   One seed per arm; the intervals are paired query-sampling error, not seed variance, which is
   still unmeasured for retrieval. **Arm C is a control and must never be promoted** —
