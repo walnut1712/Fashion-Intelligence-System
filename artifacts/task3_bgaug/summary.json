@@ -1,0 +1,73 @@
+{
+  "task": 3,
+  "primary_metric": "mean_macro_f1",
+  "best_epoch": 7,
+  "baseline_clean": {
+    "gender": {
+      "accuracy": 0.8978367569532812,
+      "weighted_f1": 0.8966890178213603,
+      "macro_f1": 0.7522152973801136,
+      "balanced_accuracy": 0.7432712686962898
+    },
+    "usage": {
+      "accuracy": 0.9003817487729504,
+      "weighted_f1": 0.8969720146372963,
+      "macro_f1": 0.8185825212508178,
+      "balanced_accuracy": 0.7989145926026404
+    },
+    "mean_macro_f1": 0.7853989093154656,
+    "exact_match": 0.8093073986547901
+  },
+  "baseline_heldout_places365": {
+    "gender": {
+      "accuracy": 0.5644428285766224,
+      "weighted_f1": 0.5239146065322576,
+      "macro_f1": 0.24571496594924075,
+      "balanced_accuracy": 0.2582325956259518
+    },
+    "usage": {
+      "accuracy": 0.748045809852754,
+      "weighted_f1": 0.6805967467129703,
+      "macro_f1": 0.2691044397029632,
+      "balanced_accuracy": 0.2740391218084889
+    },
+    "mean_macro_f1": 0.257409702826102,
+    "exact_match": 0.4075622614070169
+  },
+  "adapted_clean": {
+    "gender": {
+      "accuracy": 0.898200327213234,
+      "weighted_f1": 0.8975479244089009,
+      "macro_f1": 0.7722322320116405,
+      "balanced_accuracy": 0.7771745710212087
+    },
+    "usage": {
+      "accuracy": 0.8963824759134703,
+      "weighted_f1": 0.8942865265740908,
+      "macro_f1": 0.8141905321862383,
+      "balanced_accuracy": 0.8122131878259484
+    },
+    "mean_macro_f1": 0.7932113820989394,
+    "exact_match": 0.8062170514451917
+  },
+  "adapted_heldout_places365": {
+    "gender": {
+      "accuracy": 0.716415197236866,
+      "weighted_f1": 0.6888410856226842,
+      "macro_f1": 0.360899302455703,
+      "balanced_accuracy": 0.3399762301297819
+    },
+    "usage": {
+      "accuracy": 0.8078531176149791,
+      "weighted_f1": 0.7688433836230086,
+      "macro_f1": 0.4986294188739841,
+      "balanced_accuracy": 0.4313370951922308
+    },
+    "mean_macro_f1": 0.4297643606648436,
+    "exact_match": 0.5664424650063625
+  },
+  "delta_clean_mean_macro_f1": 0.007812472783473745,
+  "delta_ood_mean_macro_f1": 0.1723546578387416,
+  "training_minutes": 8.080782802899678,
+  "checkpoint": "C:\\Users\\Moonie\\Fashion-Intelligence-System\\artifacts\\task3_bgaug\\task3_bgadapt_best.pt"
+}
