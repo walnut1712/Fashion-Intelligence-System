@@ -1,6 +1,6 @@
 """The graded submission: shape, completeness, and which recipe produced it.
 
-Nothing in ``tests/`` covered ``outputs/predictions/styles_prediction.csv`` or
+Nothing in ``tests/`` covered ``outputs/predictions/COSC2753_A2_HN_G2.csv`` or
 ``scripts/build_submission.py``, which left the deliverable itself the one
 artefact with no regression test. That gap is not theoretical: the submission
 column and ``outputs/task1_item_type_predictions_prior_corrected.csv`` disagree
@@ -23,7 +23,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-SUBMISSION = PROJECT_ROOT / "outputs" / "predictions" / "styles_prediction.csv"
+SUBMISSION = PROJECT_ROOT / "outputs" / "predictions" / "COSC2753_A2_HN_G2.csv"
 TASK1_COLUMN = PROJECT_ROOT / "outputs" / "task1_item_type_predictions.csv"
 RECIPE_MANIFEST = TASK1_COLUMN.with_suffix(TASK1_COLUMN.suffix + ".recipe.json")
 TEMPLATE = (PROJECT_ROOT / "A2_FashionDataset" / "FashionDataset" / "test"

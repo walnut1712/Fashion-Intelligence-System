@@ -1,13 +1,12 @@
 {
   "models": [
-    "task1_cnn.pt",
-    "candidate_tail_sqrt_dep.pt"
+    "task1_120x160_onecycle_best.pt"
   ],
-  "tta": true,
+  "tta": false,
   "ingest": "squash",
-  "prior_correct": true,
-  "alpha": 0.5,
+  "prior_correct": false,
+  "alpha": null,
   "rows": 5829,
-  "articletype_sha256": "6d086be095045d2d03a06467da37569966b6be322a734946319174b1020921ee",
-  "written": "2026-09-07T01:20:27"
+  "articletype_sha256": "3ccdbfbea8dc25992d7817834d727afb5730720a98954e0bf740327945847031",
+  "written": "2026-09-10T17:42:28"
 }

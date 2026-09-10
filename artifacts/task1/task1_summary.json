@@ -47,7 +47,7 @@
   "headroom_vs_pretrained_reference": -10.72,
   "unlabelled_distribution_shift_tvd": 44.6,
   "headline_operating_point": "horizontal-flip TTA + logit adjustment (tau=0.4)",
-  "headline_note": "what predict.py / the FastAPI service actually run for a single-image query; the graded submission additionally soft-votes candidate_tail_sqrt_dep and applies the label-shift correction - see scripts/promote_checkpoint.py",
+  "headline_note": "what predict.py / the FastAPI service actually run for a single-image query. The graded submission now runs the same single 120x160 checkpoint; the soft-vote with candidate_tail_sqrt_dep and the label-shift correction are superseded 60x80 evidence, recorded under submission_pipeline.superseded_recipe.",
   "test_accuracy_deployed": 88.40210870750772,
   "test_weighted_f1_deployed": 87.86693394189166,
   "test_macro_f1_deployed": 73.6970678837295,
@@ -81,18 +81,35 @@
   "train_accuracy": 99.87269486778453,
   "train_test_gap": 11.47,
   "submission_pipeline": {
-    "served_model": "artifacts/task1/task1_cnn.pt (CNN_baseline_augnone)",
+    "served_model": "artifacts/task1_120x160/task1_120x160_onecycle_best.pt",
     "submission_ensemble": [
-      "task1_cnn.pt",
-      "candidate_tail_sqrt_dep.pt"
+      "task1_120x160_onecycle_best.pt"
     ],
-    "label_shift_correction": "EM (Saerens-Latinne-Decaestecker), alpha=0.5, guarded by graded_prior.json",
-    "built_by": "scripts/promote_checkpoint.py -> predict.py --submission --models ... --prior-correct",
-    "shared_split_ensemble_metrics": {
-      "test_weighted_f1": 88.22,
-      "test_macro_f1": 76.44,
-      "test_top3_acc": 98.27,
-      "deployment_prior_weighted_f1": 85.71
+    "label_shift_correction": "none",
+    "tta": false,
+    "ingest": "squash",
+    "built_by": "predict.py --images .../images_test --out outputs/task1_item_type_predictions.csv --submission, then scripts/build_submission.py",
+    "shared_split_metrics": {
+      "test_accuracy": 90.23,
+      "test_weighted_f1": 89.68,
+      "test_macro_f1": 73.11,
+      "test_balanced_acc": 72.84
+    },
+    "note": "Single checkpoint, no ensemble and no prior correction: the ensemble-plus-label-shift recipe below is 60x80 evidence and its correction is not applied on this serving path. No graded id exists at 120x160, so predict.py upscales every graded image to the checkpoint's input contract; measured on rows neither checkpoint trained on that costs -3.97 weighted-F1 against the 60x80 checkpoint, P(better) = 0%. The team adopted the 120x160 model with that cost known.",
+    "superseded_recipe": {
+      "served_model": "artifacts/task1/task1_cnn.pt (CNN_baseline_augnone)",
+      "submission_ensemble": [
+        "task1_cnn.pt",
+        "candidate_tail_sqrt_dep.pt"
+      ],
+      "label_shift_correction": "EM (Saerens-Latinne-Decaestecker), alpha=0.5, guarded by graded_prior.json",
+      "built_by": "scripts/promote_checkpoint.py -> predict.py --submission --models ... --prior-correct (that script was deleted once Task 1 moved to 120x160; it installed into artifacts/task1/task1_cnn.pt, which nothing serves)",
+      "shared_split_ensemble_metrics": {
+        "test_weighted_f1": 88.22,
+        "test_macro_f1": 76.44,
+        "test_top3_acc": 98.27,
+        "deployment_prior_weighted_f1": 85.71
+      }
     }
   }
 }

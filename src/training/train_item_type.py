@@ -1241,7 +1241,10 @@ def sync_summary(path=ARTIFACT_DIR / "task1_cnn.pt", summary_path=None, verbose=
         "headline_note": ("what predict.py / the FastAPI service actually run for a "
                           "single-image query; the graded submission additionally "
                           "soft-votes candidate_tail_sqrt_dep and applies the "
-                          "label-shift correction - see scripts/promote_checkpoint.py"),
+                          "label-shift correction. That recipe is superseded 60x80 evidence: "
+                          "the submission now ships the single 120x160 "
+                          "checkpoint, built by predict.py --submission "
+                          "then scripts/build_submission.py"),
         "test_accuracy_deployed": test_metrics.get("accuracy"),
         "test_weighted_f1_deployed": test_metrics.get("weighted_f1"),
         "test_macro_f1_deployed": test_metrics.get("macro_f1"),

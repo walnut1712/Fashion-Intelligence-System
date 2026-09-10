@@ -3,7 +3,7 @@
 
 Why this exists
 ---------------
-Task 4 contributes nothing to ``styles_prediction.csv`` - the graded submission
+Task 4 contributes nothing to ``COSC2753_A2_HN_G2.csv`` - the graded submission
 is classification only, and the spec defines no format for retrieval. That is
 exactly why Task 4's evidence has to be produced deliberately: nothing else in
 the pipeline forces it.
