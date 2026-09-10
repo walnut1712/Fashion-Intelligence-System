@@ -53,8 +53,8 @@ artifacts/task1/candidate_*.pt
 # test or notebook loads these files.
 artifacts/task1/specialist_*.pt
 
-# Generated labelling aid: 3.6 MB of base64 thumbnails, rebuilt on demand by
-# scripts/build_label_sheet.py. The labels it produces are committed; it is not.
+# Generated labelling aid, superseded by scripts/make_label_contact_sheet.py.
+# The labels are committed; this rendering of them is not.
 outputs/input_images_labelling.html
 
 # Task 4 resolution caches: 2.2 GB at 120x160, rebuilt by

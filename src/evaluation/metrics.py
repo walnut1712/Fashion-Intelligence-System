@@ -310,8 +310,8 @@ def evaluate_real_photos(engine, labels, images_dir, k=10, mode="nobg",
     scored = labels[labels["articleType"] != ""].reset_index(drop=True)
     if scored.empty:
         raise ValueError(
-            "No labelled rows. Run scripts/build_label_sheet.py, label the "
-            "photographs, and save the CSV it produces.")
+            "No labelled rows. Run scripts/make_label_contact_sheet.py, label "
+            "the photographs, and save the CSV it produces.")
 
     # A type that is not in the catalogue can never be retrieved, so scoring it
     # would report the vocabulary as an encoder failure.

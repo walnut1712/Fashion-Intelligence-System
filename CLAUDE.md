@@ -521,10 +521,14 @@ Facts that matter:
   Places365 scene is easier than a real upload, so `photo` and `wildphoto` should be read as
   upper bounds, not estimates. Quote 23.04 whenever a real-world number is wanted.
 
-  Three caveats travel with that row, and all three belong beside it: **n=23**, so the sampling
-  error is roughly +/-10 points; **the labels were produced by a vision model, not a human**,
-  and are unverified (they agree with Task 1's own top-1 on only 5 of 23, so they are at least
-  not circular); and 1 of the 31 defeats ingestion entirely and falls back to a centre crop.
+  Two caveats travel with that row: **n=23**, so the sampling error is roughly +/-10 points,
+  which makes the gap to 55.78 safe and the exact value not; and 1 of the 31 defeats ingestion
+  entirely and falls back to a centre crop.
+
+  **The labels were drafted by a vision model and hand-verified on 2026-09-10**, including the
+  three rows on the `Casual Shoes` / `Sports Shoes` boundary that the draft had flagged. They
+  are ground truth now, not a second opinion. They agree with the shipped Task 1 classifier's
+  top-1 on only 3 of 23, so they are not an echo of a model this project also scores.
 
   `EXCLUDED_ARTICLE_TYPES` in `src/evaluation/real_photo_arms.py` is the single definition of
   the `none` marker, imported by `scripts/make_label_contact_sheet.py`. It exists because
