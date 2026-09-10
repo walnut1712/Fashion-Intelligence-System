@@ -1,0 +1,72 @@
+{
+  "protocol": {
+    "task1_baseline": "C:\\Users\\Moonie\\Fashion-Intelligence-System\\artifacts\\task1_120x160\\task1_120x160_onecycle_best.pt",
+    "task1_background_adapted": "C:\\Users\\Moonie\\Fashion-Intelligence-System\\artifacts\\task1_bgaug\\task1_bgadapt_best.pt",
+    "task4_manifest_method": "Improved+TTA+places365",
+    "tune_queries": 500,
+    "test_queries": 1000,
+    "query_types_limited_to_task1_supported_92_classes": true,
+    "ood_proxy": "garments composited onto held-out Places365 scene categories",
+    "rerank_pool": 100,
+    "top_k": 10,
+    "selection_objective": "0.5*clean_P@10 + 0.5*OOD_P@10",
+    "selected_semantic_weight": 0.1,
+    "same_product_candidates_excluded": true
+  },
+  "results": [
+    {
+      "system": "T4 cosine only",
+      "semantic_weight": 0.0,
+      "P@10": 0.7301,
+      "mAP@10": 0.8072301409360041,
+      "domain": "clean",
+      "delta_P": 0.0,
+      "delta_mAP": 0.0
+    },
+    {
+      "system": "T4 + original T1",
+      "semantic_weight": 0.1,
+      "P@10": 0.842,
+      "mAP@10": 0.8883716565885613,
+      "domain": "clean",
+      "delta_P": 0.1119,
+      "delta_mAP": 0.08114151565255723
+    },
+    {
+      "system": "T4 + BG-adapted T1",
+      "semantic_weight": 0.1,
+      "P@10": 0.7950999999999999,
+      "mAP@10": 0.8412931283068783,
+      "domain": "clean",
+      "delta_P": 0.06499999999999995,
+      "delta_mAP": 0.03406298737087421
+    },
+    {
+      "system": "T4 cosine only",
+      "semantic_weight": 0.0,
+      "P@10": 0.5734000000000001,
+      "mAP@10": 0.651671388888889,
+      "domain": "heldout_places365",
+      "delta_P": 0.0,
+      "delta_mAP": 0.0
+    },
+    {
+      "system": "T4 + original T1",
+      "semantic_weight": 0.1,
+      "P@10": 0.5717000000000001,
+      "mAP@10": 0.6460285752078609,
+      "domain": "heldout_places365",
+      "delta_P": -0.0017000000000000348,
+      "delta_mAP": -0.005642813681028036
+    },
+    {
+      "system": "T4 + BG-adapted T1",
+      "semantic_weight": 0.1,
+      "P@10": 0.5732,
+      "mAP@10": 0.6327519408226253,
+      "domain": "heldout_places365",
+      "delta_P": -0.000200000000000089,
+      "delta_mAP": -0.018919448066263667
+    }
+  ]
+}

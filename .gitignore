@@ -66,3 +66,5 @@ A2_FashionDataset/processed/task4_masks_*.npy
 # candidate_120x160 --smoke, encoders and run summaries from the training arms.
 # main does not track them either; promoting a candidate copies it to artifacts/task4/.
 artifacts/task*_120x160/
+
+/artifacts/task1_bgaug/task1_bgadapt_best.pt
