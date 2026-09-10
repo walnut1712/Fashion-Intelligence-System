@@ -343,11 +343,16 @@ Facts that matter:
   in prose - `scripts/build_submission.py`'s usage example and `tests/test_submission.py`'s
   docstring - but neither reads it.
 
-  **Error structure — the ceiling is label convention, not the model.** Family (`subCategory`)
-  accuracy is **96.97%** against 88.29% at `articleType`, and **73.2%** of test error mass is
-  *symmetric* confusion between adjacent classes: `Sports Shoes`↔`Casual Shoes` (82 errors),
-  `Tshirts`↔`Tops` (71), `Flats`↔`Heels` (37), `Sandals`↔`Flip Flops` (22). The model almost always
-  knows what the object is; the residual is which label the catalogue chose. Do not treat this as a
+  **Error structure - the ceiling is label convention, not the model.** For the shipped 120x160
+  checkpoint on its 5,495 held-out rows, family (`subCategory`) accuracy is **97.20%** against
+  **90.23%** at `articleType`, and **71.7%** of the error mass is *symmetric* confusion between
+  adjacent classes: `Casual Shoes`/`Sports Shoes` (73 errors), `Tops`/`Tshirts` (42),
+  `Flats`/`Heels` (42), `Casual Shoes`/`Formal Shoes` (17). The 60x80 checkpoint reproduces the
+  structure on its pooled val+test rows (96.97% family against 88.29%, 73.2% symmetric), so this
+  is a property of the catalogue rather than of one network. The model almost always knows what
+  the object is; the residual is which label the catalogue chose.
+  Regenerate with `python scripts/task1_error_structure.py` ->
+  `outputs/evaluation/task1_error_structure{,_pairs}.csv`; notebook 02's CELL 34b reads it. Do not treat this as a
   bug, and **do not relabel** — the held-out `articleType` values are the grading target, so
   "correcting" them moves away from it.
 

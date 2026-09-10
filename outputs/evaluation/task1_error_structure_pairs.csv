@@ -1,0 +1,44 @@
+pair,errors,pct_of_all_errors
+Casual Shoes <-> Sports Shoes,73,13.6
+Tops <-> Tshirts,42,7.8
+Flats <-> Heels,42,7.8
+Casual Shoes <-> Formal Shoes,17,3.2
+Flip Flops <-> Sandals,11,2.0
+Shirts <-> Tops,10,1.9
+Tops <-> Tunics,10,1.9
+Handbags <-> Laptop Bag,10,1.9
+Casual Shoes <-> Flats,8,1.5
+Shirts <-> Tshirts,8,1.5
+Sandals <-> Sports Sandals,8,1.5
+Clutches <-> Wallets,8,1.5
+Sweaters <-> Tops,7,1.3
+Jackets <-> Sweatshirts,7,1.3
+Clutches <-> Handbags,6,1.1
+Capris <-> Shorts,6,1.1
+Handbags <-> Messenger Bag,6,1.1
+Jeans <-> Trousers,6,1.1
+Duffel Bag <-> Handbags,6,1.1
+Innerwear Vests <-> Tshirts,6,1.1
+Casual Shoes <-> Heels,5,0.9
+Casual Shoes <-> Sandals,5,0.9
+Sweatshirts <-> Tshirts,5,0.9
+Kurtis <-> Tops,5,0.9
+Lounge Pants <-> Track Pants,5,0.9
+Kurtas <-> Tunics,5,0.9
+Dresses <-> Tops,4,0.7
+Jackets <-> Shirts,4,0.7
+Flats <-> Sandals,4,0.7
+Backpacks <-> Handbags,4,0.7
+Flip Flops <-> Heels,4,0.7
+Handbags <-> Wallets,4,0.7
+Churidar <-> Leggings,4,0.7
+Jackets <-> Sweaters,4,0.7
+Kurtis <-> Tunics,4,0.7
+Briefs <-> Trunk,4,0.7
+Fragrance Gift Set <-> Perfume and Body Mist,4,0.7
+Sweaters <-> Tshirts,3,0.6
+Handbags <-> Waist Pouch,3,0.6
+Shorts <-> Trousers,2,0.4
+Mufflers <-> Scarves,2,0.4
+Jackets <-> Tops,2,0.4
+Deodorant <-> Perfume and Body Mist,2,0.4

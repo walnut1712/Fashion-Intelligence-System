@@ -1,0 +1,2 @@
+checkpoint,resolution,rows,articleType_accuracy,family_accuracy,errors,errors_keeping_family,errors_keeping_family_pct,symmetric_error_mass,symmetric_error_mass_pct
+task1_120x160_onecycle_best.pt,120x160,5495,90.23,97.2,537,383,71.3,385,71.7
