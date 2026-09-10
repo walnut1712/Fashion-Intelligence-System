@@ -1,6 +1,6 @@
 """Task 4 visual search - loadable engine for user-supplied images.
 
-Loads the artefacts produced by ``05_task4_triplet_encoder.ipynb`` and
+Loads the artefacts produced by ``05_task4_visual_search.ipynb`` and
 answers "which catalogue items look like this photo?" for images that were
 never part of the dataset.
 
@@ -43,7 +43,7 @@ from src.data.user_image import (  # noqa: F401
 )
 
 __all__ = ["SearchEngine", "load_user_image", "ImprovedEncoder",
-           "ImprovedEncoderV2", "GeM", "CosineHead", "build_encoder", "ARCHITECTURES",
+           "build_encoder", "ARCHITECTURES",
            "NON_WEARABLE_CATEGORIES", "BAND_NAMES", "crop_floor",
            "foreground_mask", "list_images", "PREPROCESS_MODES",
            "DEFAULT_CONFIDENCE"]
@@ -117,201 +117,24 @@ class ImprovedEncoder(nn.Module):
                 self.colour_head(z) if self.colour_head is not None else None)
 
 
-# ------------------------------------------------- improved components ----
-class GeM(nn.Module):
-    """Generalised-mean pooling.
-
-    ``AdaptiveAvgPool2d`` weights every spatial cell equally, which suits
-    classification but blurs retrieval: the garment occupies roughly a third of
-    a 60x80 tile and the rest is white. GeM learns an exponent ``p`` that
-    interpolates between average pooling (p=1) and max pooling (p -> inf), so
-    the network can concentrate on the cells that carry the item.
-    """
-
-    def __init__(self, p=3.0, eps=1e-6):
-        super().__init__()
-        self.p = nn.Parameter(torch.tensor(float(p)))
-        self.eps = eps
-
-    def forward(self, x):
-        clamped = x.clamp(min=self.eps).pow(self.p)
-        return F.adaptive_avg_pool2d(clamped, 1).pow(1.0 / self.p)
-
-    def extra_repr(self):
-        return f"p={float(self.p):.3f}"
-
-
-class CosineHead(nn.Module):
-    """Cosine classifier with a learnable scale and an optional CosFace margin.
-
-    ``ImprovedEncoder`` applies ``Linear`` directly to an L2-normalised
-    embedding, which makes it a cosine classifier whose logits are bounded by
-    ``||W||``. With the input on the unit sphere the cross-entropy can never
-    become confident, so the auxiliary losses contributed only a weak gradient -
-    the heads were ArcFace without the scale or the margin.
-
-    Adding the scale restores that gradient; the additive margin pushes classes
-    apart in the same space the retrieval metric uses. Unlike the PK-sampled
-    triplet loss this also reaches classes with fewer than K images, which
-    previously received no metric gradient at all.
-    """
-
-    def __init__(self, in_features, n_classes, scale=30.0, margin=0.0):
-        super().__init__()
-        self.weight = nn.Parameter(torch.empty(n_classes, in_features))
-        nn.init.xavier_uniform_(self.weight)
-        self.log_scale = nn.Parameter(torch.tensor(float(np.log(scale))))
-        self.margin = float(margin)
-
-    @property
-    def scale(self):
-        return self.log_scale.exp()
-
-    def forward(self, x, target=None):
-        cosine = F.normalize(x, p=2, dim=1) @ F.normalize(self.weight, p=2, dim=1).T
-        if self.margin > 0 and target is not None:
-            one_hot = torch.zeros_like(cosine).scatter_(1, target.view(-1, 1), 1.0)
-            cosine = cosine - one_hot * self.margin
-        return self.scale * cosine
-
-
-class ImprovedEncoderV2(nn.Module):
-    """Two-branch encoder: deep semantics plus a mid-level colour pathway.
-
-    ``ImprovedEncoder`` reads both articleType and baseColour off the final
-    block. Colour is a low-level property, and after four stride-2 blocks and a
-    global pool very little of it survives - which is the most likely reason
-    ``colour@10`` (~54) trails ``P@10`` (~80) so badly, and why the unsupervised
-    autoencoder beat the triplet encoder on the colour control (26.55 vs 18.63).
-
-    Here the embedding is the concatenation of a deep branch (block 4, carrying
-    shape and category) and a shallow branch tapped at ``colour_block``
-    (carrying colour and texture). Both are supervised, and both are inside the
-    embedding, so colour can actually influence retrieval rather than only the
-    auxiliary loss.
-
-    The total width is unchanged at 128, so the index and the served artefacts
-    are the same size as before.
-    """
-
-    architecture = "improved_v2"
-
-    def __init__(self, embedding_dim=128, widths=(32, 64, 128, 256),
-                 n_types=0, n_colours=0, colour_dim=32, colour_block=2,
-                 pool="gem", bnneck=True, scale=30.0, margin=0.2):
-        super().__init__()
-        if not 0 < colour_dim < embedding_dim:
-            raise ValueError("colour_dim must be inside (0, embedding_dim)")
-        if not 1 <= colour_block <= len(widths):
-            raise ValueError("colour_block must index one of the backbone blocks")
-
-        channels = 3
-        blocks = []
-        for width in widths:
-            blocks.append(ConvBlock(channels, width))
-            channels = width
-        self.blocks = nn.ModuleList(blocks)
-
-        self.colour_block = colour_block
-        self.deep_dim = embedding_dim - colour_dim
-        self.colour_dim = colour_dim
-
-        self.pool = GeM() if pool == "gem" else nn.AdaptiveAvgPool2d(1)
-        self.colour_pool = nn.AdaptiveAvgPool2d(1)      # colour is a mean, not a peak
-
-        self.project = nn.Linear(channels, self.deep_dim)
-        self.colour_project = nn.Linear(widths[colour_block - 1], colour_dim)
-
-        # BNNeck: the triplet loss wants the raw feature, cross-entropy wants a
-        # centred one. Forcing both onto a single L2-normalised vector makes them
-        # pull against each other.
-        self.bottleneck = nn.BatchNorm1d(embedding_dim) if bnneck else None
-        if self.bottleneck is not None:
-            self.bottleneck.bias.requires_grad_(False)
-
-        self.type_head = CosineHead(embedding_dim, n_types, scale, margin) if n_types else None
-        self.colour_head = CosineHead(colour_dim, n_colours, scale, margin) if n_colours else None
-
-    def warm_start(self, state_dict, strict_shapes=True):
-        """Lift a trained ``ImprovedEncoder``'s backbone into this model.
-
-        The colour-branch architecture was specified as a ladder
-        of three candidates x three seeds x thirty epochs *from scratch*, which
-        on a CPU-only machine is days rather than a night, and that cost is why
-        it was never run.
-
-        It does not need to be from scratch. The two models share their
-        convolutional stack exactly - the same four ``ConvBlock`` widths, the
-        same tensors - and differ only in the key prefix (``backbone.N`` against
-        ``blocks.N``) because one uses ``Sequential`` and the other a
-        ``ModuleList``. All 48 backbone tensors transfer, which is 96.5% of the
-        parameters, leaving 14 to train: the two projections, the BNNeck and the
-        cosine heads.
-
-        Be clear about what this does and does not buy. The features transfer;
-        the embedding space does not, because ``project`` changes shape
-        (256->96 here against 256->128 there) and is necessarily fresh. So this
-        is a shorter run, not a free one - budget more epochs than the twelve a
-        pure fine-tune needs.
-
-        Returns ``(loaded, skipped)`` tensor-name lists so a caller can assert
-        on what actually transferred rather than trusting a silent load.
-        """
-        own = self.state_dict()
-        loaded, skipped = [], []
-        for key, value in state_dict.items():
-            target = key.replace("backbone.", "blocks.", 1)
-            if target in own and (not strict_shapes or own[target].shape == value.shape):
-                own[target] = value.clone()
-                loaded.append(target)
-            else:
-                skipped.append(key)
-        self.load_state_dict(own)
-        return loaded, skipped
-
-    def features(self, x):
-        """Return (embedding_before_bnneck, colour_branch_features)."""
-        colour_feature = None
-        for depth, block in enumerate(self.blocks, start=1):
-            x = block(x)
-            if depth == self.colour_block:
-                colour_feature = self.colour_project(
-                    self.colour_pool(x).flatten(1))
-        deep = self.project(self.pool(x).flatten(1))
-        return torch.cat([deep, colour_feature], dim=1), colour_feature
-
-    def embed(self, x):
-        combined, _ = self.features(x)
-        if self.bottleneck is not None:
-            combined = self.bottleneck(combined)
-        return F.normalize(combined, p=2, dim=1)
-
-    def forward(self, x, with_heads=False, target_type=None, target_colour=None):
-        """Training reads the heads; inference only ever uses the embedding.
-
-        The triplet loss is applied to ``metric`` (pre-BNNeck) and the
-        classification losses to the post-BNNeck vector, which is the split
-        BNNeck exists to provide.
-        """
-        combined, colour_feature = self.features(x)
-        normalised = self.bottleneck(combined) if self.bottleneck is not None else combined
-        z = F.normalize(normalised, p=2, dim=1)
-        if not with_heads:
-            return z
-        return (
-            z,
-            F.normalize(combined, p=2, dim=1),                       # metric space
-            self.type_head(normalised, target_type) if self.type_head is not None else None,
-            self.colour_head(colour_feature, target_colour) if self.colour_head is not None else None,
-        )
-
-
-#: Every Task 4 encoder, keyed by the string a checkpoint records in
-#: ``architecture``. Checkpoints written before that field existed are
-#: ``ImprovedEncoder`` by definition, so the default preserves them.
+# A checkpoint stores weights and a name, not a class. To rebuild a model from
+# one you have to know which network those weights belong to, and this is the
+# lookup that answers that: it maps the string a checkpoint records in its
+# ``architecture`` field to the class to construct. ``build_encoder`` below reads
+# the field, looks it up here, and instantiates it.
+#
+# Task 4 ships one network, so there is one entry. The table exists rather than
+# a hardcoded class for two reasons. It makes an unknown name fail loudly with
+# the list of names that do work, instead of silently loading weights into the
+# wrong architecture; and the ``.get`` default keeps checkpoints written before
+# the ``architecture`` field existed loadable, because those are ImprovedEncoder
+# by definition.
+#
+# It briefly held a second entry, ``improved_v2``, for a network that was never
+# trained. Nothing selected it, since no checkpoint ever recorded that name, and
+# it was removed along with the class.
 ARCHITECTURES = {
     "improved": ImprovedEncoder,
-    "improved_v2": ImprovedEncoderV2,
 }
 
 
@@ -334,10 +157,6 @@ def build_encoder(checkpoint):
         n_types=checkpoint.get("n_types", 0),
         n_colours=checkpoint.get("n_colours", 0),
     )
-    if name == "improved_v2":
-        for key in ("colour_dim", "colour_block", "pool", "bnneck", "scale", "margin"):
-            if key in checkpoint:
-                kwargs[key] = checkpoint[key]
     return ARCHITECTURES[name](**kwargs)
 
 
@@ -520,7 +339,7 @@ class SearchEngine:
         if len(metadata) != len(index):
             raise ValueError(
                 f"Index has {len(index)} rows but metadata has {len(metadata)}. "
-                "Re-run the final cells of 05_task4_triplet_encoder.ipynb."
+                "Re-run the final cells of 05_task4_visual_search.ipynb."
             )
 
         device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))

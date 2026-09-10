@@ -49,5 +49,5 @@
     "ms_per_query": 0.0195,
     "dim": 128.0
   },
-  "note": "Measured by 05_task4_triplet_encoder.ipynb against a catalogue-only index. The SERVED artefacts are written by scripts/promote_task4_encoder.py and cover the whole catalogue."
+  "note": "Measured by 05_task4_visual_search.ipynb against a catalogue-only index. The SERVED artefacts are written by scripts/promote_task4_encoder.py and cover the whole catalogue."
 }

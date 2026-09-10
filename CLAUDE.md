@@ -14,9 +14,9 @@ models can be reused outside the notebook without re-training.
 | Task | Question | Notebook | Artifacts |
 |---|---|---|---|
 | 1 | `articleType` (92 classes) | `notebooks/02_task1_item_type.ipynb` | `artifacts/task1_120x160/task1_120x160_onecycle_best.pt` |
-| 2 | `season` (4 classes) | `notebooks/03_task2_season_pytorch.ipynb` | `artifacts/task2/task2_season_best_pytorch.pth` |
-| 3 | `gender` (5) + `usage` (4), one multi-task CNN | `notebooks/04_task3_cnn_architectures.ipynb` | `artifacts/task3/task3_cnn_model.pt` |
-| 4 | visual search — top-K similar items | `notebooks/05_task4_triplet_encoder.ipynb` (triplet CNN encoder, two background arms) | `artifacts/task4/` |
+| 2 | `season` (4 classes) | `notebooks/03_task2_season.ipynb` | `artifacts/task2/task2_season_best_pytorch.pth` |
+| 3 | `gender` (5) + `usage` (4), one multi-task CNN | `notebooks/04_task3_gender_usage.ipynb` | `artifacts/task3/task3_cnn_model.pt` |
+| 4 | visual search — top-K similar items | `notebooks/05_task4_visual_search.ipynb` (triplet CNN encoder, two background arms) | `artifacts/task4/` |
 
 `notebooks/01_eda.ipynb` produces the shared cleaned metadata every task reads.
 `notebooks/07_ultimate_judgement.ipynb` is cross-task comparison. Rewritten and
@@ -103,7 +103,7 @@ project**. This is the order to rebuild Task 4 from scratch.
 | 2 | `python scripts/build_task4_cache.py --resolution 120x160` | terminal | 2.4 min | once; writes the image + mask caches |
 | 3 | `python -m src.training.train_task4_120x160 --backgrounds mixed --seed 42` | terminal | ~100 min (GPU) | to retrain the encoder |
 | 4 | `python scripts/promote_task4_encoder.py --encoder artifacts/task4_120x160/task4_encoder_mixed_seed42.pt` | terminal | ~2 min | after step 3, to serve the new encoder |
-| 5 | `notebooks/05_task4_triplet_encoder.ipynb` | VS Code | ~10 min | reads steps 2-4 and writes the figures. Part 8b rebuilds both encoder indexes, ~3 min of it |
+| 5 | `notebooks/05_task4_visual_search.ipynb` | VS Code | ~10 min | reads steps 2-4 and writes the figures. Part 8b rebuilds both encoder indexes, ~3 min of it |
 
 The background 2x2 in `05` section 10d is produced by three more commands, none of which the
 notebook re-runs:
@@ -138,7 +138,7 @@ python -m pip install -r requirements-backend.txt  # API
 Notebooks are run in **VS Code**, not the Jupyter web UI. `Path.cwd()` in a notebook is
 `notebooks/` — the notebook's own directory, not the project root — so every notebook sets
 `PROJECT_DIR = Path.cwd().parent` and anchors its paths on that rather than writing them
-relative to the file. (`03_task2_season_pytorch.ipynb` probes for `A2_FashionDataset/`
+relative to the file. (`03_task2_season.ipynb` probes for `A2_FashionDataset/`
 instead and works either way.) An earlier version of this file claimed the opposite; the
 stored output of `01_eda.ipynb` cell 1 prints the real value.
 
@@ -195,7 +195,21 @@ down. `POST /api/analyze` runs all four tasks on one upload.
 what the notebooks train on; `.venv` has `torch 2.13.0+cpu` and pytest. Tests only load
 checkpoints and run a forward pass, so CPU is fine, but don't train from `.venv`.
 
-**146 collected: 140 pass, 6 skip, ~65 s** (measured 2026-09-09). Nothing fails.
+**138 collected: 133 pass, 5 skip, ~65 s** (measured 2026-09-10). Nothing fails.
+The count moved from 140/6 when `ImprovedEncoderV2` and its nine tests were deleted
+(-9) and `test_shipped_predictions_are_reproducible` was added (+1).
+
+**That new test is the only one that anchors a stored result to the shipped model.**
+Every other submission check compares one file to another - the CSV against the template,
+the task1 column against the CSV, its sha256 against the recipe manifest - and all of them
+pass when the CSV and the manifest are stale *together*, which is exactly what a retrain
+produces. That is not hypothetical: on 2026-09-10 the shipped submission was found at 65%
+agreement on `articleType`, 83% on `season` and 89% on `gender`, with the whole suite green.
+It replays `artifacts/task1_120x160/task1_predictions_120x160.csv` through the deployed
+checkpoint; rebuild it with `python scripts/refresh_task1_fixture.py` only after confirming
+the change was intended, then rerun `predict.py --submission` and `build_submission.py`.
+The script's `--pair legacy` handles the older 60x80 fixture, which pairs with
+`task1_cnn.pt` and must not be rebuilt against the shipped model.
 
 The five `tests/test_splits.py` failures this note used to record are fixed. They wanted
 `processed/image_cache_task1_60x80{,_ids}.npy`, which was simply not on disk: notebook `02`
@@ -452,10 +466,19 @@ Facts that matter:
   Weak points are unchanged and are **not** resolution-limited: `Unisex` F1 0.599, `Girls` 0.607,
   `Sports` recall 0.648. **Accessories is still the ceiling** — 85.5% gender accuracy, 38.7% of all
   gender errors (85.2% / 38.5% at 120×160).
-- **Task 4** — deployed: `Improved+TTA+bgaug`, 128-dim, 38,612-item served index, trained at
-  60×80. Clean P@10 80.2; on the disjoint out-of-domain bank 60.6, recorded as
-  `hard_metrics_disjoint` in the manifest. The older `hard_metrics` 52.8 was measured against
-  the encoder's own training backgrounds and is circular — do not publish it.
+- **Task 4** - deployed: `ImprovedEncoder`, recorded in the manifest as
+  `Improved+TTA+places365`, 128-dim, 38,612-item served index, **trained at 120x160** with
+  Places365 backdrops. Its benchmark table is further down this section; clean P@10 is **76.19**
+  and the real-photograph number is **23.04**. The checkpoint is
+  `artifacts/task4_120x160/task4_encoder_mixed_seed42.pt`, served as
+  `artifacts/task4/task4_improved_encoder.pt` (same weights, promotion copies it).
+
+  The retired 60x80 encoder's figures - clean P@10 80.2, disjoint bank 60.6 - are **not**
+  comparable to the above and are not this model: the 120x160 gallery drops 41 rows, which
+  reshuffles the product holdout so completely that only 6% of held-out queries are shared. One
+  lesson from that era still applies: the old `hard_metrics` 52.8 was measured against the
+  encoder's own training backgrounds and is circular, so never grade an encoder on backdrops it
+  trained on.
   `?mode=` selects ingestion (`nobg` default); the confidence gate is advisory and is now
   surfaced in the UI rather than discarded.
   Augmentation models the camera and the serve path as well as the backdrop (`degrade`,
@@ -463,8 +486,10 @@ Facts that matter:
   `colour@10` is always reported beside `colourfam@10`, which merges lexical colour variants
   only (`Navy Blue` → Blue): naming explains 3.04 of the 26-point gap to `P@10`, the other 23
   are real.
-  **Only two models remain in Task 4**, by request: this encoder and the clustering model in
-  notebook 06. The four methods notebook 05 compared against — Classical (HSV + gradient
+  **One model remains in Task 4**: this encoder. The clustering was removed entirely on
+  2026-09-09 and notebook 06 was folded into 05 and then deleted, so an earlier version of this
+  line naming "the clustering model in notebook 06" is wrong. The four methods notebook 05
+  compared against — Classical (HSV + gradient
   histograms), Task3-CNN reused as a feature extractor, a convolutional autoencoder and a plain
   triplet network — were removed. Their measurements survive as a table in notebook 05 §5 and as
   CSVs in `artifacts/task4/superseded/`; their checkpoints are deleted. The Classical
@@ -661,9 +686,17 @@ Facts that matter:
   `promote_task4_encoder.py` would serve it happily. Its checkpoint records
   `background_augmented: False`, which is the only thing on disk that distinguishes it.
 
-  **Never built**: `ImprovedEncoderV2` (GeM pooling, CosFace head, block-2 colour branch) is
-  implemented and unit-tested in `src/visual_search/search_engine.py` but has never been
-  trained.
+  **`ImprovedEncoderV2` was deleted on 2026-09-10** (GeM pooling, CosFace head, block-2 colour
+  branch). It was implemented and unit-tested but never trained, and no trainer could reach it:
+  `train_task4_120x160.py` has no `--arch` flag and never calls `build_encoder`. No checkpoint ever
+  recorded `architecture: improved_v2`, so nothing selected it. Removed with its `GeM` and
+  `CosineHead` helpers, used nowhere else, and its nine tests; the suite went 140/6 to 132/5,
+  exactly the nine removed. Recoverable from git if it is ever wanted.
+
+  `ARCHITECTURES` in `src/visual_search/search_engine.py` now has one entry, `"improved"`. Keep the
+  table rather than hardcoding the class: it makes an unknown `architecture` name fail loudly with
+  the list of valid names instead of loading weights into the wrong network, and its default keeps
+  checkpoints written before that field existed loadable.
 
 ### Task 3 label policy (do not silently change)
 

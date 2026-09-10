@@ -34,8 +34,9 @@ which is deliberately a separate decision from the fixture: the fixture must sit
 on the serving path (one checkpoint, whatever TTA the checkpoint declares), while
 the submission recipe is a choice the team makes explicitly.
 
-    python scripts/refresh_task1_fixture.py            # rebuild it
-    python scripts/refresh_task1_fixture.py --check     # report drift, write nothing
+    python scripts/refresh_task1_fixture.py                     # rebuild the shipped pair
+    python scripts/refresh_task1_fixture.py --check             # report drift, write nothing
+    python scripts/refresh_task1_fixture.py --pair legacy --check
 """
 
 from __future__ import annotations
@@ -51,18 +52,31 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-# The fixture is paired with the 60x80 checkpoint on purpose.
-# ``test_saved_predictions_are_reproducible`` replays it through ``legacy_service``,
-# which loads ``task1_cnn.pt``, so rebuilding it against the deployed 120x160
-# checkpoint would make the test fail rather than pass. The pairing is frozen
-# historical evidence, not drift.
-PAIRED_CHECKPOINT = PROJECT_ROOT / "artifacts" / "task1" / "task1_cnn.pt"
-FIXTURE = PROJECT_ROOT / "artifacts" / "task1" / "task1_predictions.csv"
+# A fixture is only meaningful next to the checkpoint that produced it, so the
+# two are named together here. Rebuilding one against the other's checkpoint
+# makes its test fail rather than pass, which is a mistake that has already been
+# made once: `shipped` and `legacy` disagree on 1,644 of 5,829 labels, because
+# they are different models, not because either is stale.
+PAIRS = {
+    # The deployed model. Guards against a retrain silently desyncing the
+    # submission: every other check in the suite compares one file to another,
+    # so only replaying THIS pair can notice that the checkpoint moved.
+    "shipped": (
+        PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_120x160_onecycle_best.pt",
+        PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_predictions_120x160.csv",
+    ),
+    # Frozen historical evidence. `test_saved_predictions_are_reproducible`
+    # replays it through `legacy_service`, which loads the 60x80 checkpoint.
+    "legacy": (
+        PROJECT_ROOT / "artifacts" / "task1" / "task1_cnn.pt",
+        PROJECT_ROOT / "artifacts" / "task1" / "task1_predictions.csv",
+    ),
+}
 TEST_IMAGES = (PROJECT_ROOT / "A2_FashionDataset" / "FashionDataset" / "test"
                / "images_test")
 
 
-def build_frame(checkpoint_path=PAIRED_CHECKPOINT, verbose=True):
+def build_frame(checkpoint_path, verbose=True):
     """Score the graded tiles through the serving path and return the fixture frame."""
     from src.models.item_type_classifier import (  # noqa: E402
         choose_device,
@@ -102,25 +116,27 @@ def build_frame(checkpoint_path=PAIRED_CHECKPOINT, verbose=True):
 def main(argv=None):
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--checkpoint", type=Path, default=PAIRED_CHECKPOINT)
+    parser.add_argument("--pair", choices=tuple(PAIRS), default="shipped",
+                        help="which checkpoint/fixture pair to act on")
     parser.add_argument("--check", action="store_true",
                         help="report whether the committed fixture is stale, write nothing")
     args = parser.parse_args(argv)
+    checkpoint, fixture = PAIRS[args.pair]
 
-    if not args.checkpoint.exists():
-        print("checkpoint not found: {}".format(args.checkpoint))
+    if not checkpoint.exists():
+        print("checkpoint not found: {}".format(checkpoint))
         return 1
     if not TEST_IMAGES.exists():
         print("graded tiles not found: {}".format(TEST_IMAGES))
         return 1
 
-    frame = build_frame(args.checkpoint)
+    frame = build_frame(checkpoint)
 
     if args.check:
-        if not FIXTURE.exists():
-            print("fixture absent: {}".format(FIXTURE))
+        if not fixture.exists():
+            print("fixture absent: {}".format(fixture))
             return 1
-        current = pd.read_csv(FIXTURE)
+        current = pd.read_csv(fixture)
         if len(current) != len(frame):
             print("STALE: {} rows on disk, {} scored".format(len(current), len(frame)))
             return 1
@@ -130,12 +146,12 @@ def main(argv=None):
         # from tie-breaking at the top of the softmax without the pairing being
         # wrong; a few hundred means the fixture and the checkpoint have parted.
         print("{} of {} labels differ from {}".format(
-            changed, len(frame), Path(args.checkpoint).name))
+            changed, len(frame), checkpoint.name))
         return 1 if changed else 0
 
-    FIXTURE.parent.mkdir(parents=True, exist_ok=True)
-    frame.to_csv(FIXTURE, index=False)
-    print("wrote {} ({} rows)".format(FIXTURE.relative_to(PROJECT_ROOT), len(frame)))
+    fixture.parent.mkdir(parents=True, exist_ok=True)
+    frame.to_csv(fixture, index=False)
+    print("wrote {} ({} rows)".format(fixture.relative_to(PROJECT_ROOT), len(frame)))
     print("now run: .venv/Scripts/python.exe -m pytest tests/test_prediction.py -q")
     return 0
 

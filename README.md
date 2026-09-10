@@ -7,8 +7,8 @@ four questions from a single uploaded image.
 | Task | Question | Notebook | Headline |
 |---|---|---|---|
 | 1 | What type of item is this? (`articleType`, 92 classes) | `notebooks/02_task1_item_type.ipynb` | 90.23% accuracy / 89.68 weighted-F1 |
-| 2 | Which season is it for? (4 classes) | `notebooks/03_task2_season_pytorch.ipynb` | 67.5% accuracy |
-| 3 | Who is it for, and for what occasion? (`gender` x `usage`) | `notebooks/04_task3_cnn_architectures.ipynb` | 90.1% / 91.2% |
+| 2 | Which season is it for? (4 classes) | `notebooks/03_task2_season.ipynb` | 67.5% accuracy |
+| 3 | Who is it for, and for what occasion? (`gender` x `usage`) | `notebooks/04_task3_gender_usage.ipynb` | 90.1% / 91.2% |
 | 4 | Which catalogue items look like this? (top-K retrieval) | `notebooks/05`-`07` | P@10 80.2 |
 
 The notebooks are the deliverable. `src/`, `app/` and `artifacts/` exist so the trained
@@ -57,9 +57,9 @@ cleaned metadata every other notebook reads.
 ```
 01_eda.ipynb                          shared cleaning, splits, prediction metadata
 02_task1_item_type.ipynb              Task 1
-03_task2_season_pytorch.ipynb         Task 2
-04_task3_cnn_architectures.ipynb      Task 3
-05_task4_triplet_encoder.ipynb        Task 4 - the encoder and the background comparison
+03_task2_season.ipynb         Task 2
+04_task3_gender_usage.ipynb      Task 3
+05_task4_visual_search.ipynb        Task 4 - the encoder and the background comparison
 07_ultimate_judgement.ipynb           cross-task judgement and deployment policy
 ```
 

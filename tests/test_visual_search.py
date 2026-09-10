@@ -309,78 +309,12 @@ def test_visual_search_index_is_normalised_on_construction():
     assert np.allclose(np.linalg.norm(index.vectors, axis=1), 1.0)
 
 
-# ------------------------------------------------------- architecture v2 ----
-def test_v2_embedding_is_unit_norm_and_the_expected_width():
-    from src.visual_search.search_engine import ImprovedEncoderV2
-
-    model = ImprovedEncoderV2(embedding_dim=128, n_types=10, n_colours=5).eval()
-    with torch.no_grad():
-        z = model.embed(torch.randn(4, 3, 80, 60))
-    assert z.shape == (4, 128)
-    assert torch.allclose(z.norm(dim=1), torch.ones(4), atol=1e-5)
-
-
-def test_v2_keeps_the_index_the_same_size_as_v1():
-    """The colour branch is carved out of the 128 dims, not added to them.
-
-    If this ever grows, every stored index and the served artefact size change
-    with it.
-    """
-    from src.visual_search.search_engine import ImprovedEncoderV2
-
-    model = ImprovedEncoderV2(embedding_dim=128, colour_dim=32)
-    assert model.deep_dim + model.colour_dim == 128
-
-
-def test_v2_colour_branch_receives_gradient():
-    """The whole point of the second branch - if it is starved, it is decoration."""
-    from src.visual_search.search_engine import ImprovedEncoderV2
-
-    model = ImprovedEncoderV2(embedding_dim=128, n_types=10, n_colours=5)
-    _, metric, type_logits, colour_logits = model(
-        torch.randn(4, 3, 80, 60), with_heads=True,
-        target_type=torch.tensor([0, 1, 2, 3]), target_colour=torch.tensor([0, 1, 2, 3]))
-    (type_logits.sum() + colour_logits.sum() + metric.sum()).backward()
-    assert model.colour_project.weight.grad is not None
-    assert model.colour_project.weight.grad.abs().sum() > 0
-
-
-def test_cosine_head_scale_is_learnable_and_margin_lowers_the_target():
-    """``ImprovedEncoder``'s heads had neither, which is why they barely trained."""
-    from src.visual_search.search_engine import CosineHead
-
-    head = CosineHead(16, 4, scale=30.0, margin=0.3)
-    assert head.log_scale.requires_grad
-    x = torch.randn(4, 16)
-    target = torch.tensor([0, 1, 2, 3])
-    with torch.no_grad():
-        plain = head(x)
-        margined = head(x, target)
-    picked = torch.arange(4)
-    assert torch.all(margined[picked, target] < plain[picked, target])
-
-
 def test_build_encoder_defaults_to_the_original_architecture():
     """Checkpoints written before the field existed must keep loading."""
     from src.visual_search.search_engine import ImprovedEncoder, build_encoder
 
     encoder = build_encoder({"embedding_dim": 128, "n_types": 4, "n_colours": 2})
     assert isinstance(encoder, ImprovedEncoder)
-
-
-def test_build_encoder_round_trips_v2():
-    from src.visual_search.search_engine import ImprovedEncoderV2, build_encoder
-
-    model = ImprovedEncoderV2(embedding_dim=128, n_types=10, n_colours=5).eval()
-    checkpoint = {"state_dict": model.state_dict(), "architecture": "improved_v2",
-                  "embedding_dim": 128, "n_types": 10, "n_colours": 5,
-                  "colour_dim": 32, "colour_block": 2, "pool": "gem", "bnneck": True}
-    rebuilt = build_encoder(checkpoint)
-    rebuilt.load_state_dict(checkpoint["state_dict"])       # strict
-    rebuilt.eval()
-    x = torch.randn(2, 3, 80, 60)
-    with torch.no_grad():
-        assert torch.allclose(rebuilt.embed(x), model.embed(x), atol=1e-6)
 
 
 def test_build_encoder_rejects_an_unknown_architecture():
@@ -923,71 +857,6 @@ def test_bands_do_not_return_unwearable_items():
 # --------------------------------------------------- V2 warm start ----
 # The colour branch was costed as 9 runs x 30 epochs from scratch and shelved.
 # The two models share their convolutional stack exactly, so it is a fine-tune.
-
-def test_v2_warm_start_transfers_the_whole_backbone():
-    """Every ConvBlock tensor must cross; a silent partial load would waste a run."""
-    from src.visual_search.search_engine import ImprovedEncoderV2
-
-    source = ImprovedEncoder(embedding_dim=128, n_types=124, n_colours=47)
-    target = ImprovedEncoderV2(embedding_dim=128, n_types=124, n_colours=47)
-
-    loaded, skipped = target.warm_start(source.state_dict())
-    backbone = [k for k in source.state_dict() if k.startswith("backbone.")]
-    assert len(backbone) == 48
-    assert all(k.replace("backbone.", "blocks.", 1) in loaded for k in backbone)
-
-    # project changes shape (256->96 against 256->128) and cannot transfer.
-    assert "project.weight" in skipped and "project.bias" in skipped
-
-
-def test_v2_warm_start_actually_copies_the_weights():
-    """load_state_dict succeeding is not evidence the values arrived."""
-    from src.visual_search.search_engine import ImprovedEncoderV2
-
-    source = ImprovedEncoder(embedding_dim=128, n_types=124, n_colours=47)
-    target = ImprovedEncoderV2(embedding_dim=128, n_types=124, n_colours=47)
-    target.warm_start(source.state_dict())
-
-    key = "backbone.0.block.0.weight"
-    assert torch.equal(source.state_dict()[key],
-                       target.state_dict()[key.replace("backbone.", "blocks.", 1)])
-
-
-def test_v2_still_embeds_after_a_warm_start():
-    """A warm-started model has to be usable, not merely loadable."""
-    from src.visual_search.search_engine import ImprovedEncoderV2
-
-    target = ImprovedEncoderV2(embedding_dim=128, n_types=124, n_colours=47)
-    target.warm_start(
-        ImprovedEncoder(embedding_dim=128, n_types=124, n_colours=47).state_dict())
-    target.eval()
-
-    vectors = target.embed(torch.randn(4, 3, 80, 60))
-    assert vectors.shape == (4, 128)
-    assert torch.allclose(vectors.norm(dim=1), torch.ones(4), atol=1e-5)
-
-
-def test_v2_warm_start_from_the_shipped_clean_encoder():
-    """The real checkpoint, not a synthetic one - shapes there are what matter."""
-    if not CLEAN_CHECKPOINT.exists():
-        pytest.skip("clean encoder not present")
-    from src.visual_search.search_engine import ImprovedEncoderV2
-
-    checkpoint = torch.load(CLEAN_CHECKPOINT, map_location="cpu")
-    assert not checkpoint.get("background_augmented", False), (
-        "the warm start must begin from the clean encoder, not an augmented one"
-    )
-    target = ImprovedEncoderV2(
-        embedding_dim=checkpoint["embedding_dim"],
-        n_types=checkpoint.get("n_types", 124),
-        n_colours=checkpoint.get("n_colours", 47))
-
-    loaded, _ = target.warm_start(checkpoint["state_dict"])
-    carried = sum(target.state_dict()[k].numel() for k in loaded)
-    total = sum(p.numel() for p in target.parameters())
-    assert carried / total > 0.95, "only {:.1%} of parameters transferred".format(
-        carried / total)
-
 
 # ------------------------------------------------------- resolution ----
 # The 120x160 catalogue lifts the ceiling every limitations section in this

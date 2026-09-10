@@ -27,6 +27,8 @@ from src.models.item_type_classifier import (  # noqa: E402
 CHECKPOINT_PATH = PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_120x160_onecycle_best.pt"
 LEGACY_CHECKPOINT_PATH = PROJECT_ROOT / "artifacts" / "task1" / "task1_cnn.pt"
 PREDICTIONS_CSV = PROJECT_ROOT / "artifacts" / "task1" / "task1_predictions.csv"
+SHIPPED_PREDICTIONS_CSV = (PROJECT_ROOT / "artifacts" / "task1_120x160"
+                           / "task1_predictions_120x160.csv")
 TEST_IMAGE_DIR = PROJECT_ROOT / "A2_FashionDataset" / "FashionDataset" / "test" / "images_test"
 
 
@@ -104,4 +106,42 @@ def test_saved_predictions_are_reproducible(legacy_service):
     predicted = [legacy_service.class_names[index] for index in probabilities.argmax(1)]
 
     assert predicted == list(saved["articleType"])
+    assert np.allclose(probabilities.max(1), saved["articleType_confidence"], atol=5e-4)
+
+
+def test_shipped_predictions_are_reproducible(service):
+    """The delivered checkpoint still produces the labels the submission was built from.
+
+    This is the only test in the suite that anchors a stored result to the model
+    that ships. Everything else compares one file to another: the submission is
+    checked against the template, the task1 column against the submission, and
+    the column's sha256 against the recipe manifest. All of those pass happily
+    when the CSV and the manifest are stale *together*, which is exactly what a
+    retrain produces - a new checkpoint on disk, an untouched CSV, and a manifest
+    that still agrees with it.
+
+    Measured: before this existed, the shipped submission had drifted to 65%
+    agreement on articleType and nothing in the suite noticed.
+
+    Regenerate deliberately, after checking the change is intended:
+
+        python scripts/refresh_task1_fixture.py
+    """
+    if not SHIPPED_PREDICTIONS_CSV.exists() or not TEST_IMAGE_DIR.exists():
+        pytest.skip("shipped predictions CSV or dataset images not present")
+    pandas = pytest.importorskip("pandas")
+
+    saved = pandas.read_csv(SHIPPED_PREDICTIONS_CSV).head(64)
+    paths = [TEST_IMAGE_DIR / "{}.jpg".format(image_id) for image_id in saved["id"]]
+    if not all(path.exists() for path in paths):
+        pytest.skip("sampled images missing")
+
+    probabilities = predict_proba(service.model, service.checkpoint, paths,
+                                  batch_size=64, tta=service.tta)
+    predicted = [service.class_names[index] for index in probabilities.argmax(1)]
+
+    assert predicted == list(saved["articleType"]), (
+        "the shipped checkpoint no longer reproduces its stored predictions; if the "
+        "model was retrained on purpose, rerun predict.py --submission and "
+        "scripts/refresh_task1_fixture.py")
     assert np.allclose(probabilities.max(1), saved["articleType_confidence"], atol=5e-4)

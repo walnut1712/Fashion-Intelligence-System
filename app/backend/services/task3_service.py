@@ -1,6 +1,6 @@
 """Task 3 - gender and occasion prediction.
 
-Serves the model trained in ``notebooks/04_task3_cnn_architectures.ipynb``: a
+Serves the model trained in ``notebooks/04_task3_gender_usage.ipynb``: a
 VGG-style convolutional network with early task branching, where the first two
 blocks are shared and each attribute then has its own convolutional pathway and
 classifier.
@@ -125,7 +125,7 @@ class Task3Service:
             self.project_root / "artifacts" / "task3" / "task3_cnn_model.pt")
         if not self.model_path.exists():
             raise FileNotFoundError(
-                "Task 3 model not found: {}. Run notebooks/04_task3_cnn_architectures.ipynb"
+                "Task 3 model not found: {}. Run notebooks/04_task3_gender_usage.ipynb"
                 .format(self.model_path))
 
         checkpoint = self._load_checkpoint()
