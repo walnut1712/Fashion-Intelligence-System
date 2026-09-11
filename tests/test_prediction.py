@@ -24,7 +24,12 @@ from src.models.item_type_classifier import (  # noqa: E402
     preprocess_image,
 )
 
-CHECKPOINT_PATH = PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_120x160_onecycle_best.pt"
+# The DEPLOYED checkpoint, i.e. the one Task1Service loads by default. The
+# fixtures below skip on its absence, so it has to name the same file the
+# service does or the suite skips on a file nothing uses while the service
+# fails on the one it needs.
+CHECKPOINT_PATH = (PROJECT_ROOT / "artifacts" / "task1_120x160"
+                   / "task1_120x160_background_adapted.pt")
 LEGACY_CHECKPOINT_PATH = PROJECT_ROOT / "artifacts" / "task1" / "task1_cnn.pt"
 PREDICTIONS_CSV = PROJECT_ROOT / "artifacts" / "task1" / "task1_predictions.csv"
 SHIPPED_PREDICTIONS_CSV = (PROJECT_ROOT / "artifacts" / "task1_120x160"
@@ -83,7 +88,13 @@ def test_rejects_data_that_is_not_an_image(service):
 
 def test_service_and_module_agree_on_logits(service, sample_image_bytes):
     """The notebook and the API must run identical maths on identical pixels."""
-    model, checkpoint = load_item_type_model(CHECKPOINT_PATH, service.device)
+    # Read the path off the service rather than a module constant. What this
+    # test pins is that the API and the module run the same maths on the same
+    # pixels, which is a statement about whichever checkpoint is deployed; a
+    # hardcoded path turns a deliberate promotion into a failure here and says
+    # nothing about agreement. It drifted once, when Task 1 moved to the
+    # background-adapted checkpoint on 2026-09-11.
+    model, checkpoint = load_item_type_model(service.model_path, service.device)
     with torch.no_grad():
         reference = model(preprocess_image(sample_image_bytes, checkpoint, service.device))
         served = service.model(service.preprocess(sample_image_bytes))

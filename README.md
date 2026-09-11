@@ -4,12 +4,36 @@ RMIT COSC2753 Assignment 2. Four models over a catalogue of ~38,600 low-resoluti
 fashion product photographs, plus a FastAPI + vanilla-JS application that answers all
 four questions from a single uploaded image.
 
-| Task | Question | Notebook | Headline |
-|---|---|---|---|
-| 1 | What type of item is this? (`articleType`, 92 classes) | `notebooks/02_task1_item_type.ipynb` | 90.23% accuracy / 89.68 weighted-F1 |
-| 2 | Which season is it for? (4 classes) | `notebooks/03_task2_season.ipynb` | 67.5% accuracy |
-| 3 | Who is it for, and for what occasion? (`gender` x `usage`) | `notebooks/04_task3_gender_usage.ipynb` | 90.1% / 91.2% |
-| 4 | Which catalogue items look like this? (top-K retrieval) | `notebooks/05`-`07` | P@10 80.2 |
+| Task | Question | Notebook | Catalogue tiles | Real backgrounds |
+|---|---|---|---|---|
+| 1 | What type of item is this? (`articleType`, 92 classes) | `notebooks/02_task1_item_type.ipynb` | 87.14 weighted-F1 | 57.96 |
+| 2 | Which season is it for? (4 classes) | `notebooks/03_task2_season.ipynb` | 63.06 macro-F1 | 31.26 |
+| 3 | Who is it for, and for what occasion? (`gender` x `usage`) | `notebooks/04_task3_gender_usage.ipynb` | 77.23 / 82.67 macro-F1 | 46.36 / 64.12 |
+| 4 | Which catalogue items look like this? (top-K retrieval) | `notebooks/05`-`07` | P@10 76.19 | P@10 55.78 |
+
+Two columns rather than one, because a single catalogue number is the most misleading
+thing this project could report. Every training photograph is one garment, centred, on
+white, and a model trained only on that does not degrade gracefully when the background
+changes - it collapses. Task 1's catalogue-only checkpoint scores 89.68 weighted-F1 on
+tiles and **16.84** through held-out photographic scenes.
+
+**Tasks 1 and 3 therefore ship background-adapted models**, trained with photographic
+backdrops composited behind the garment. Task 1 pays for it: weighted-F1 89.68 -> 87.14
+and macro-F1 73.11 -> 63.88, the second being the larger loss and concentrated in the
+rare tail. Task 3 pays nothing measurable - it improves on both axes. Task 2 keeps its
+baseline, where the trade is only about 2.6:1 on the project's weakest model. Task 4
+ships the mixed-backdrop encoder (arm D). The right-hand column is what the choice buys;
+the left is what it costs. Both are measured, and the per-task notebooks carry the
+matched controls that attribute the gain to the backdrops rather than to extra training.
+
+Both columns of a row use the **same metric**, which matters most for Task 3. Its accuracy
+would read 90.20% / 90.33% on tiles and 77.4% / 83.9% on backgrounds, which looks like a
+model that barely degrades; `Casual` is 77.3% of the usage split, so a model collapsing
+toward the majority class still scores well on accuracy. Macro-F1 on the identical frames
+is the row above. Never quote Task 3 robustness as accuracy.
+
+The real-background column is measured on **composited** frames and is an upper bound:
+on 23 genuine photographs Task 4 scores 16.52 where its composited benchmark says 55.78.
 
 The notebooks are the deliverable. `src/`, `app/` and `artifacts/` exist so the trained
 models can be reused and served without re-training.
@@ -137,14 +161,40 @@ task models and the Task 4 encoder included.
 
 One optional dependency deserves stating plainly. Upload ingestion (`src/data/user_image.py`)
 segments the subject with a tiered ladder, and its highest tier uses **rembg (u2netp)**, which
-is a pretrained matting network. It is not installed by either requirements file and it is not
-used to produce any reported result: across all 5,829 test images the segmentation tier was
-`border-model` or a decline to centre-crop, never rembg (see `ingest_method` in
-`outputs/task4_test_retrieval.csv`). The ladder degrades to GrabCut and then to a numpy border
+is a pretrained matting network. The ladder degrades to GrabCut and then to a numpy border
 colour model when rembg is absent.
 
-If you install it for convenience, the graded run should be repeated without it so that no
-reported number depends on a network trained elsewhere.
+**As of 2026-09-11 rembg is installed and is listed in both requirements files.** What it is and
+is not used for matters, so both halves are stated here.
+
+It is **not** used for anything graded. The graded deliverable is
+`styles_prediction_template.csv`, 5,829 catalogue tiles. Task 1 reaches them through
+`predict.py`, whose `--ingest` default is `squash`, a plain resize that never calls
+`foreground_mask`. Task 2 and Task 3 reach them through their services, which route on
+`looks_like_catalogue`; every one of the 5,829 tiles takes the catalogue branch, which is
+`letterbox` and likewise never segments. That is asserted rather than assumed - see
+`tests/test_graded_path_never_segments.py`, which walks all 5,829 and fails if any one of them
+routes to the photograph branch.
+
+That test exists because the property did not hold when rembg was installed. Four tiles
+(52166, 56624, 59593, 59606) are 53x80 or 54x80 rather than 60x80, and `looks_like_catalogue`
+applied its aspect-ratio gate before its size test, so those four were classified as
+photographs and segmented. The size test is now absolute (a dataset tile is at most 100px on
+its long side, against the smallest real upload's 225px) and runs first, so the aspect gate only
+ever sees images too large to be tiles.
+
+It **is** used for one reported result, and this is a genuine qualification on it: the
+real-photograph tables in notebooks 02, 05 and 07, measured on the 31 personal photographs in
+`A2_FashionDataset/input_images/`. Those are an out-of-domain analysis of the deployed models,
+not a graded prediction and not a training signal - no model was trained, fine-tuned or selected
+using rembg. The figures there were remeasured on 2026-09-11 and the earlier GrabCut values are
+recorded beside them in `CLAUDE.md`.
+
+To reproduce with no pretrained component present at all, uninstall rembg: the ladder falls back
+to GrabCut, every graded number is bit-for-bit identical because the graded path never reaches
+the ladder, and the real-photograph tables return to their GrabCut values, which are less stable
+(Task 1's 7-repeat spread goes from 0.00 back to +/-1.64) but depend on nothing trained
+elsewhere.
 
 ## Repository layout
 

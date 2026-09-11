@@ -62,7 +62,7 @@ PAIRS = {
     # submission: every other check in the suite compares one file to another,
     # so only replaying THIS pair can notice that the checkpoint moved.
     "shipped": (
-        PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_120x160_onecycle_best.pt",
+        PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_120x160_background_adapted.pt",
         PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_predictions_120x160.csv",
     ),
     # Frozen historical evidence. `test_saved_predictions_are_reproducible`

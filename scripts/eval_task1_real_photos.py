@@ -3,13 +3,24 @@
 Why this exists
 ---------------
 Every Task 1 number in the repository is measured on catalogue tiles: a centred
-garment, filling roughly half the frame, on white. The headline is 90.23% test
-accuracy and 96.97% at the coarser ``subCategory`` level. Neither says anything
-about the input the deployed app actually receives, because the app takes an
-upload.
+garment, filling roughly half the frame, on white. Neither the headline nor the
+96.97% at the coarser ``subCategory`` level says anything about the input the
+deployed app actually receives, because the app takes an upload.
+
+Since 2026-09-11 the deployed checkpoint is the **background-adapted** one, so
+this script scores that by default. Pass ``--model`` for the catalogue-only
+checkpoint; on these 23 photographs it scores 13.04 top-1 through ``nobg`` and
+8.70 through ``squash``, against the deployed model's 17.39 and 21.74.
+
+One result here is worth reading twice: for the adapted model ``squash`` **beats**
+``nobg`` (21.74 against 17.39), reversing the ordering that held for the catalogue
+model (8.70 against 13.04). A model trained with backdrops behind the garment does
+not need the backdrop removed, and removing it costs something. At n=23 that is a
+one-photograph difference and not yet a reason to change the service's routing,
+but it is the measurement that would settle it if repeated on more photographs.
 
 Task 4 already measured that gap for retrieval - its composited ``photo``
-benchmark reports 55.78 P@10 while the same encoder scores 23.04 on real
+benchmark reports 55.78 P@10 while the same encoder scores 16.52 on real
 photographs. Task 1 had no equivalent, so the classifier half of the system was
 being reported entirely on the distribution it was trained on. This scores the
 **shipped 120x160 checkpoint** on the same 23 hand-labelled photographs Task 4
@@ -19,26 +30,26 @@ Both ingestion modes are reported because they answer different questions.
 ``squash`` is what a catalogue tile gets; ``nobg`` segments the subject and
 re-crops to catalogue framing, which is what ``auto`` routes a photograph to.
 
-Repeats, and why they are not decoration
-----------------------------------------
-``nobg`` is **order-dependent on this machine**. ``foreground_mask`` prefers
-``rembg`` and falls back to ``cv2.grabCut``; ``rembg`` is not installed here, so
-every photograph is segmented by grabCut, whose GMM initialisation draws from
-OpenCV's RNG.
+Repeats, and what they now measure
+----------------------------------
+``foreground_mask`` prefers ``rembg`` (u2netp) and falls back to ``cv2.grabCut``.
+These repeats exist because for most of this project's life ``rembg`` was not
+installed, so every photograph was segmented by grabCut, whose GMM initialisation
+draws from OpenCV's process-global RNG. That gave one photograph no stable answer
+at all - consecutive segmentations of the same image disagreed, one image's
+foreground fraction moving 0.238 to 0.444 across three calls - so a photograph's
+score depended on how many segmentations preceded it in the process. A single
+pass reported one draw rather than the score, and the spread had to be shown
+beside the mean so the instability was visible rather than averaged into a number
+that looked solid.
 
-That RNG is seeded once per process, so this script reproduces exactly from run
-to run - two separate invocations were checked and agree to the digit. What it
-does *not* do is give one photograph a stable answer: consecutive segmentations
-of the same image disagree, and one image's foreground fraction moved 0.238 to
-0.444 across three calls. So a photograph's score depends on how many
-segmentations preceded it in the process, which is not a property a benchmark
-should have, and not one the served API reproduces - it segments a single upload
-per request.
-
-A single pass therefore reports one draw rather than the score. This runs
-``--repeats`` passes and reports the spread beside the mean, so the instability
-is visible instead of being averaged into a number that looks solid. ``squash``
-touches none of that path and is exact, which is why it is run once.
+``rembg`` is installed now and is deterministic, so the repeats measure nothing
+and that is the point: they are a **regression check**. As of 2026-09-11 the
+7-repeat spread is exactly ``0.00`` (min = max = 13.04), against +/-1.64 under
+grabCut. A non-zero ``top1_sd`` in the output means the ladder has silently
+dropped to a classical tier - most likely ``rembg`` missing from the interpreter
+that ran it - and the numbers are back to being one draw. ``squash`` touches none
+of that path and is exact, which is why it is run once.
 
     python scripts/eval_task1_real_photos.py              # ~1 min, 7 repeats
 
@@ -172,7 +183,17 @@ def main():
     print()
     print(summary.to_string(index=False))
     print()
-    print("catalogue reference for the same checkpoint: 90.23 top-1, 96.97 family")
+    # Read from the checkpoint rather than hardcoded. It said "90.23 top-1, 96.97
+    # family for the same checkpoint" while the deployed checkpoint had changed
+    # underneath it, which is the one sentence in this output a reader would take
+    # on trust.
+    metrics = service.checkpoint.get("test_metrics") or {}
+    if metrics.get("accuracy") is not None:
+        print("catalogue reference for THIS checkpoint: %.2f top-1 (%s)"
+              % (100 * float(metrics["accuracy"]),
+                 service.checkpoint.get("model_name", service.model_path.name)))
+    else:
+        print("catalogue reference: this checkpoint records no test_metrics")
     print()
     print("wrote {}".format(OUT_PER_IMAGE.relative_to(PROJECT_DIR)))
     print("wrote {}".format(OUT_SUMMARY.relative_to(PROJECT_DIR)))

@@ -508,7 +508,7 @@ def load_user_image(source, size=IMAGE_SIZE_PIL, mode="letterbox", margin=0.06,
 
 def looks_like_catalogue(source, size=IMAGE_SIZE_PIL, aspect_tolerance=0.08,
                          white_fraction=0.35, white_level=235,
-                         small_ratio=2.0, photo_ratio=2.75):
+                         small_ratio=2.0, photo_ratio=2.75, tile_max_side=100):
     """Is this image already in catalogue form, or is it a photograph?
 
     The two cases want opposite handling, and the gap is large in both
@@ -539,13 +539,33 @@ def looks_like_catalogue(source, size=IMAGE_SIZE_PIL, aspect_tolerance=0.08,
             opened.close()
 
     width, height = img.size
+    longest, model_input = max(width, height), max(size)
+
+    # An absolute size test, before the aspect gate, and both halves matter.
+    #
+    # BEFORE the aspect gate, because the dataset is not perfectly uniform: 17 of
+    # 38,612 train and 6 of 5,829 graded images are 60x77, 60x76, 60x75, 60x60 or
+    # 53x80 rather than 60x80. An aspect gate placed first calls those tiles
+    # photographs and sends them to segmentation - four graded tiles (52166,
+    # 56624, 59593, 59606) did exactly that, which on a machine with rembg
+    # installed put a pretrained network in the graded path.
+    #
+    # ABSOLUTE rather than a multiple of the model input, because "is this a
+    # dataset tile" is a property of the dataset and not of the resolution the
+    # model happens to want. ``small_ratio * model_input`` is 320px against the
+    # 120x160 checkpoint, which swallows the two 225x225 photographs in
+    # input_images/ - they are uploads and must be segmented. The dataset's
+    # longest side is 80, so a 100px ceiling admits every tile with room to
+    # spare and excludes the smallest real upload (225px) by a wide margin.
+    if longest <= tile_max_side:
+        return True
+
     target = size[0] / size[1]
     if abs(width / height - target) / target > aspect_tolerance:
         return False
 
-    longest, model_input = max(width, height), max(size)
     if longest <= small_ratio * model_input:
-        return True                      # only a dataset tile is this small
+        return True                      # catalogue-shaped and small
     if longest >= photo_ratio * model_input:
         return False                     # nothing in the dataset is this large
     array = np.asarray(img)

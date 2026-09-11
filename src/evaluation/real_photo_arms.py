@@ -170,8 +170,12 @@ def _ingest_once(engine, paths, mode):
     third arm was enough to move the deployed arm's real-photo P@1 by four
     points, which is how this was found. One ingestion, shared, removes it.
 
-    The absolute scores still depend on grabCut's RNG; only the comparison
-    between arms is repaired here. Installing ``rembg`` is what would fix that.
+    Sharing the ingestion repairs the *comparison*. The absolute scores used to
+    depend on grabCut's RNG as well, which ``rembg`` fixes: it is the ladder's
+    top tier, is deterministic, and is now a declared requirement, so two
+    invocations of this harness produce byte-identical tables. Keep this
+    function even so - the ladder still falls back to grabCut wherever ``rembg``
+    is unavailable, and the pairing must not depend on which tier ran.
     """
     from src.data.user_image import load_user_image
 

@@ -8,7 +8,7 @@ carries only ``articleType``; ``gender``, ``season`` and ``usage`` ship blank.
 That is not a missing capability - every model exists and every one of them
 covers all 5,829 graded ids:
 
-    articleType   artifacts/task1_120x160/task1_120x160_onecycle_best.pt via predict.py
+    articleType   artifacts/task1_120x160/task1_120x160_background_adapted.pt via predict.py
     season        artifacts/task2/task2_season_best_pytorch.pth via Task2Service
     gender+usage  artifacts/task3/task3_cnn_model.pt   via Task3Service
 

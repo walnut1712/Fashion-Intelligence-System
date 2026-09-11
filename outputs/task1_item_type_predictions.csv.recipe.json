@@ -1,12 +1,12 @@
 {
   "models": [
-    "task1_120x160_onecycle_best.pt"
+    "task1_120x160_background_adapted.pt"
   ],
   "tta": false,
   "ingest": "squash",
   "prior_correct": false,
   "alpha": null,
   "rows": 5829,
-  "articletype_sha256": "3ccdbfbea8dc25992d7817834d727afb5730720a98954e0bf740327945847031",
-  "written": "2026-09-10T17:42:28"
+  "articletype_sha256": "e36950234d13efd41a873a463ac0843c1f0836437e5a4a193e196fc608396237",
+  "written": "2026-09-11T13:27:34"
 }

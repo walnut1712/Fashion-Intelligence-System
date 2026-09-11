@@ -1,17 +1,25 @@
 {
-  "final_model": "base",
+  "final_model": "base + background adaptation (lr 3e-4)",
   "selected_by_rule": "base",
   "parameters": 4249577,
   "noise_floor": 0.674,
-  "test_gender_accuracy": 90.33,
-  "test_gender_macro_f1": 76.37,
-  "test_usage_accuracy": 90.24,
-  "test_usage_macro_f1": 82.66,
+  "test_gender_accuracy": 90.2,
+  "test_gender_macro_f1": 77.23,
+  "test_usage_accuracy": 90.33,
+  "test_usage_macro_f1": 82.67,
   "test_exact_match": 81.59,
   "temperature": {
-    "gender": 5.8289,
-    "usage": 5.9429
+    "gender": 2.139,
+    "usage": 1.9985
   },
   "baseline_gender_accuracy": 54.2,
-  "baseline_usage_accuracy": 77.11
+  "baseline_usage_accuracy": 77.11,
+  "baseline_within_same_harness": {
+    "gender_accuracy": 89.78,
+    "gender_macro_f1": 75.22,
+    "usage_accuracy": 90.04,
+    "usage_macro_f1": 81.86,
+    "exact_match": 80.93
+  },
+  "metrics_source": "scripts/train_task3_background_adaptation.py, clean held-out test. NOT the same row set as the 90.33/76.37/90.24/82.66 figures in notebook 04: that harness scores the same BASELINE weights at 89.78/75.22/90.04/81.86, a 0.55-point row-set difference. Compare adapted against baseline WITHIN one harness, never across."
 }

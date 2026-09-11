@@ -1,6 +1,12 @@
 """Task 1 serving wrapper - fashion item type (articleType) from an image.
 
-This service uses the shipped Task 1 catalogue checkpoint only.
+This service uses the shipped Task 1 checkpoint, which since 2026-09-11 is the
+**background-adapted** one: the same `ItemTypeCNN`, fine-tuned for 8 epochs with
+photographic backdrops composited behind the garment. The catalogue-only
+checkpoint it came from is still on disk and is still better on catalogue tiles
+(weighted-F1 0.8968 against 0.8714, macro-F1 0.7311 against 0.6388); it was
+replaced because the system is served to real uploads too, where it collapses to
+0.1684 against this model's 0.5796.
 
 For ingestion:
 - catalogue-like images -> "squash" (historical catalogue preprocessing)
@@ -46,7 +52,7 @@ class Task1Service:
         self.model_path = (
             Path(model_path)
             if model_path
-            else self.project_root / "artifacts" / "task1_120x160" / "task1_120x160_onecycle_best.pt"
+            else self.project_root / "artifacts" / "task1_120x160" / "task1_120x160_background_adapted.pt"
         )
 
         if not self.model_path.exists():

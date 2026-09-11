@@ -1,185 +1,185 @@
 repeat,file,ingest,truth,truth_family,predicted,confidence,predicted_family,top3,correct,family_correct,in_top3
-0,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Stoles,0.1607,Stoles,Stoles | Bra | Socks,False,False,False
-0,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,squash,Dresses,Dress,Jackets,0.1978,Topwear,Jackets | Bra | Trunk,False,False,False
-0,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Watches,0.3118,Watches,Watches | Sports Shoes | Dupatta,False,False,False
-0,25637193-carousel-block-earrings-v1.webp,squash,Earrings,Jewellery,Handbags,0.1096,Bags,Handbags | Backpacks | Flats,False,False,False
-0,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9897,Socks,Socks | Tshirts | Watches,True,True,True
-0,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,squash,Socks,Socks,Socks,0.8958,Socks,Socks | Sports Shoes | Briefs,True,True,True
-0,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.7669,Watches,Watches | Free Gifts | Backpacks,False,False,False
-0,4793e3cb1e694edeb25651fb1ae578e6.jpg,squash,Ties,Ties,Shirts,0.5424,Topwear,Shirts | Flip Flops | Pendant,False,False,False
-0,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.9761,Socks,Socks | Deodorant | Watches,True,True,True
-0,600_google-pattern-socks.jpg,squash,Socks,Socks,Socks,0.9976,Socks,Socks | Watches | Jewellery Set,True,True,True
-0,83123110.webp,nobg,Earrings,Jewellery,Watches,0.7382,Watches,Watches | Sandals | Mufflers,False,False,False
-0,83123110.webp,squash,Earrings,Jewellery,Watches,0.2838,Watches,Watches | Sandals | Flats,False,False,False
-0,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Kurtas,0.0846,Topwear,Kurtas | Socks | Dresses,False,True,False
-0,ae9d94dee29112613a6fae774382a2d4.jpg,squash,Jackets,Topwear,Bracelet,0.1497,Jewellery,Bracelet | Shirts | Briefs,False,False,False
-0,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.6043,Bags,Backpacks | Shirts | Dresses,False,False,True
-0,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,squash,Dresses,Dress,Backpacks,0.7645,Bags,Backpacks | Skirts | Tops,False,False,False
-0,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.2421,Innerwear,Briefs | Accessory Gift Set | Bra,False,False,False
-0,Collier_ruban_or_vermeil_2.webp,squash,Necklace and Chains,Jewellery,Briefs,0.3,Innerwear,Briefs | Bra | Pendant,False,False,False
-0,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.95,Socks,Socks | Shorts | Gloves,False,False,False
-0,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,squash,Casual Shoes,Shoes,Briefs,0.1408,Innerwear,Briefs | Trousers | Bra,False,False,False
-0,images (1).jpg,nobg,Dresses,Dress,Innerwear Vests,0.1209,Bottomwear,Innerwear Vests | Leggings | Skirts,False,False,False
-0,images (1).jpg,squash,Dresses,Dress,Necklace and Chains,0.1224,Jewellery,Necklace and Chains | Bra | Nightdress,False,False,False
-0,images (10).jpg,nobg,Sports Shoes,Shoes,Sandals,0.2479,Sandal,Sandals | Sports Shoes | Jackets,False,False,True
-0,images (10).jpg,squash,Sports Shoes,Shoes,Tshirts,0.2675,Topwear,Tshirts | Innerwear Vests | Briefs,False,False,False
-0,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.4997,Bags,Backpacks | Sports Shoes | Handbags,False,True,True
-0,images (11).jpg,squash,Handbags,Bags,Backpacks,0.1363,Bags,Backpacks | Briefs | Flip Flops,False,True,False
-0,images (3).jpg,nobg,Caps,Headwear,Tshirts,0.3604,Topwear,Tshirts | Watches | Scarves,False,False,False
-0,images (3).jpg,squash,Caps,Headwear,Casual Shoes,0.3801,Shoes,Casual Shoes | Bra | Swimwear,False,False,False
-0,images (4).jpg,nobg,Pendant,Jewellery,Formal Shoes,0.4084,Shoes,Formal Shoes | Bra | Camisoles,False,False,False
-0,images (4).jpg,squash,Pendant,Jewellery,Briefs,0.1471,Shoes,Briefs | Casual Shoes | Flats,False,False,False
-0,images (5).jpg,nobg,Necklace and Chains,Jewellery,Necklace and Chains,0.4068,Jewellery,Necklace and Chains | Jewellery Set | Pendant,True,True,True
-0,images (5).jpg,squash,Necklace and Chains,Jewellery,Pendant,0.4485,Jewellery,Pendant | Necklace and Chains | Jewellery Set,False,True,True
-0,images (6).jpg,nobg,Heels,Shoes,Formal Shoes,0.1157,Topwear,Formal Shoes | Bra | Handbags,False,False,False
-0,images (6).jpg,squash,Heels,Shoes,Briefs,0.2434,Innerwear,Briefs | Sports Shoes | Tshirts,False,False,False
-0,images (7).jpg,nobg,Ties,Ties,Watches,0.2387,Watches,Watches | Mufflers | Socks,False,False,False
-0,images (7).jpg,squash,Ties,Ties,Briefs,0.3267,Innerwear,Briefs | Sandals | Watches,False,False,False
-0,images (8).jpg,nobg,Earrings,Jewellery,Handbags,0.1011,Bags,Handbags | Messenger Bag | Accessory Gift Set,False,False,False
-0,images (8).jpg,squash,Earrings,Jewellery,Tops,0.6657,Topwear,Tops | Tshirts | Salwar,False,False,False
-0,images (9).jpg,nobg,Casual Shoes,Shoes,Socks,0.2849,Socks,Socks | Watches | Sports Shoes,False,False,False
-0,images (9).jpg,squash,Casual Shoes,Shoes,Sandals,0.1576,Shoes,Sandals | Flats | Flip Flops,False,True,False
-0,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.2301,Bottomwear,Tracksuits | Watches | Nightdress,False,False,False
-0,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,squash,Jackets,Topwear,Sarees,0.1276,Loungewear and Nightwear,Sarees | Kurta Sets | Night suits,False,False,False
-0,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Watches,0.3088,Watches,Watches | Socks | Shorts,False,False,False
-0,nike-5644799_640.jpg,squash,Casual Shoes,Shoes,Necklace and Chains,0.1654,Bags,Necklace and Chains | Backpacks | Caps,False,False,False
-0,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Handbags,0.2979,Bags,Handbags | Perfume and Body Mist | Watches,False,False,False
-0,The_dress_blueblackwhitegold.jpg,squash,Dresses,Dress,Watches,0.1047,Topwear,Watches | Tops | Necklace and Chains,False,False,False
-1,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Stoles,0.2828,Stoles,Stoles | Jackets | Bra,False,False,False
-1,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Watches,0.1989,Watches,Watches | Dupatta | Sports Shoes,False,False,False
-1,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9897,Socks,Socks | Tshirts | Watches,True,True,True
-1,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.7658,Watches,Watches | Free Gifts | Backpacks,False,False,False
-1,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.9782,Socks,Socks | Watches | Deodorant,True,True,True
-1,83123110.webp,nobg,Earrings,Jewellery,Watches,0.7854,Watches,Watches | Sandals | Mufflers,False,False,False
-1,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Kurtas,0.0846,Topwear,Kurtas | Socks | Dresses,False,True,False
-1,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.6043,Bags,Backpacks | Shirts | Dresses,False,False,True
-1,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.233,Innerwear,Briefs | Bra | Accessory Gift Set,False,False,False
-1,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.984,Socks,Socks | Gloves | Shorts,False,False,False
-1,images (1).jpg,nobg,Dresses,Dress,Innerwear Vests,0.2783,Innerwear,Innerwear Vests | Caps | Bra,False,False,False
-1,images (10).jpg,nobg,Sports Shoes,Shoes,Sandals,0.246,Sandal,Sandals | Sports Shoes | Jackets,False,False,True
-1,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.502,Bags,Backpacks | Sports Shoes | Handbags,False,True,True
-1,images (3).jpg,nobg,Caps,Headwear,Tshirts,0.4312,Topwear,Tshirts | Watches | Scarves,False,False,False
-1,images (4).jpg,nobg,Pendant,Jewellery,Formal Shoes,0.2807,Innerwear,Formal Shoes | Bra | Camisoles,False,False,False
-1,images (5).jpg,nobg,Necklace and Chains,Jewellery,Necklace and Chains,0.4068,Jewellery,Necklace and Chains | Jewellery Set | Pendant,True,True,True
-1,images (6).jpg,nobg,Heels,Shoes,Handbags,0.1775,Bags,Handbags | Tshirts | Bra,False,False,False
-1,images (7).jpg,nobg,Ties,Ties,Watches,0.4493,Watches,Watches | Socks | Mufflers,False,False,False
-1,images (8).jpg,nobg,Earrings,Jewellery,Handbags,0.1011,Bags,Handbags | Messenger Bag | Accessory Gift Set,False,False,False
-1,images (9).jpg,nobg,Casual Shoes,Shoes,Socks,0.3797,Socks,Socks | Watches | Sandals,False,False,False
-1,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.2444,Bottomwear,Tracksuits | Watches | Nightdress,False,False,False
-1,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Socks,0.5274,Socks,Socks | Watches | Tshirts,False,False,False
-1,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Handbags,0.2711,Bags,Handbags | Laptop Bag | Perfume and Body Mist,False,False,False
-2,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Stoles,0.1336,Topwear,Stoles | Bra | Socks,False,False,False
-2,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Watches,0.4248,Watches,Watches | Sports Shoes | Dupatta,False,False,False
-2,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9897,Socks,Socks | Tshirts | Watches,True,True,True
-2,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.7658,Watches,Watches | Free Gifts | Backpacks,False,False,False
-2,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.9744,Socks,Socks | Flip Flops | Deodorant,True,True,True
-2,83123110.webp,nobg,Earrings,Jewellery,Watches,0.7206,Watches,Watches | Sandals | Mufflers,False,False,False
-2,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Socks,0.0899,Topwear,Socks | Kurtas | Dresses,False,True,False
-2,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.6043,Bags,Backpacks | Shirts | Dresses,False,False,True
-2,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.0939,Bags,Briefs | Handbags | Accessory Gift Set,False,False,False
-2,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.9502,Socks,Socks | Shorts | Gloves,False,False,False
-2,images (1).jpg,nobg,Dresses,Dress,Nightdress,0.1278,Bottomwear,Nightdress | Watches | Heels,False,False,False
-2,images (10).jpg,nobg,Sports Shoes,Shoes,Sandals,0.246,Sandal,Sandals | Sports Shoes | Jackets,False,False,True
-2,images (11).jpg,nobg,Handbags,Bags,Messenger Bag,0.1698,Bags,Messenger Bag | Handbags | Backpacks,False,True,True
-2,images (3).jpg,nobg,Caps,Headwear,Tshirts,0.371,Topwear,Tshirts | Watches | Scarves,False,False,False
-2,images (4).jpg,nobg,Pendant,Jewellery,Formal Shoes,0.2687,Innerwear,Formal Shoes | Bra | Camisoles,False,False,False
-2,images (5).jpg,nobg,Necklace and Chains,Jewellery,Necklace and Chains,0.4068,Jewellery,Necklace and Chains | Jewellery Set | Pendant,True,True,True
-2,images (6).jpg,nobg,Heels,Shoes,Handbags,0.1795,Bags,Handbags | Tshirts | Bra,False,False,False
-2,images (7).jpg,nobg,Ties,Ties,Tshirts,0.4891,Topwear,Tshirts | Socks | Dresses,False,False,False
-2,images (8).jpg,nobg,Earrings,Jewellery,Handbags,0.1011,Bags,Handbags | Messenger Bag | Accessory Gift Set,False,False,False
-2,images (9).jpg,nobg,Casual Shoes,Shoes,Socks,0.3037,Socks,Socks | Watches | Perfume and Body Mist,False,False,False
-2,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.231,Bottomwear,Tracksuits | Watches | Nightdress,False,False,False
-2,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Socks,0.4416,Socks,Socks | Watches | Tshirts,False,False,False
-2,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Handbags,0.2979,Bags,Handbags | Perfume and Body Mist | Watches,False,False,False
-3,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Stoles,0.2828,Stoles,Stoles | Jackets | Bra,False,False,False
-3,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Watches,0.1921,Watches,Watches | Dupatta | Sports Shoes,False,False,False
-3,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9897,Socks,Socks | Tshirts | Watches,True,True,True
-3,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.7658,Watches,Watches | Free Gifts | Backpacks,False,False,False
-3,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.9741,Socks,Socks | Flip Flops | Deodorant,True,True,True
-3,83123110.webp,nobg,Earrings,Jewellery,Watches,0.7178,Watches,Watches | Sandals | Mufflers,False,False,False
-3,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Socks,0.092,Topwear,Socks | Kurtas | Dresses,False,True,False
-3,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.6043,Bags,Backpacks | Shirts | Dresses,False,False,True
-3,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.1596,Innerwear,Briefs | Bra | Sunglasses,False,False,False
-3,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.9466,Socks,Socks | Shorts | Gloves,False,False,False
-3,images (1).jpg,nobg,Dresses,Dress,Leggings,0.0872,Bottomwear,Leggings | Skirts | Innerwear Vests,False,False,False
-3,images (10).jpg,nobg,Sports Shoes,Shoes,Sandals,0.2479,Sandal,Sandals | Sports Shoes | Jackets,False,False,True
-3,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.5596,Bags,Backpacks | Sports Shoes | Handbags,False,True,True
-3,images (3).jpg,nobg,Caps,Headwear,Tshirts,0.3642,Topwear,Tshirts | Watches | Scarves,False,False,False
-3,images (4).jpg,nobg,Pendant,Jewellery,Formal Shoes,0.2855,Shoes,Formal Shoes | Bra | Camisoles,False,False,False
-3,images (5).jpg,nobg,Necklace and Chains,Jewellery,Necklace and Chains,0.4068,Jewellery,Necklace and Chains | Jewellery Set | Pendant,True,True,True
-3,images (6).jpg,nobg,Heels,Shoes,Formal Shoes,0.1202,Shoes,Formal Shoes | Bra | Handbags,False,True,False
-3,images (7).jpg,nobg,Ties,Ties,Tshirts,0.466,Topwear,Tshirts | Socks | Dresses,False,False,False
-3,images (8).jpg,nobg,Earrings,Jewellery,Handbags,0.1011,Bags,Handbags | Messenger Bag | Accessory Gift Set,False,False,False
-3,images (9).jpg,nobg,Casual Shoes,Shoes,Socks,0.3037,Socks,Socks | Watches | Perfume and Body Mist,False,False,False
-3,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.2289,Bottomwear,Tracksuits | Watches | Nightdress,False,False,False
-3,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Socks,0.2857,Socks,Socks | Watches | Sports Shoes,False,False,False
-3,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Handbags,0.2594,Bags,Handbags | Laptop Bag | Perfume and Body Mist,False,False,False
-4,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Stoles,0.1607,Stoles,Stoles | Bra | Socks,False,False,False
-4,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Watches,0.3516,Watches,Watches | Sports Shoes | Socks,False,False,False
-4,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9897,Socks,Socks | Tshirts | Watches,True,True,True
-4,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.7658,Watches,Watches | Free Gifts | Backpacks,False,False,False
-4,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.9661,Socks,Socks | Deodorant | Watches,True,True,True
-4,83123110.webp,nobg,Earrings,Jewellery,Watches,0.7304,Watches,Watches | Sandals | Mufflers,False,False,False
-4,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Socks,0.0845,Topwear,Socks | Kurtas | Dresses,False,True,False
-4,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.6043,Bags,Backpacks | Shirts | Dresses,False,False,True
-4,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.2163,Innerwear,Briefs | Bra | Accessory Gift Set,False,False,False
-4,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.9493,Socks,Socks | Shorts | Gloves,False,False,False
-4,images (1).jpg,nobg,Dresses,Dress,Innerwear Vests,0.1209,Bottomwear,Innerwear Vests | Leggings | Skirts,False,False,False
-4,images (10).jpg,nobg,Sports Shoes,Shoes,Sandals,0.2479,Sandal,Sandals | Sports Shoes | Jackets,False,False,True
-4,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.2997,Bags,Backpacks | Sports Shoes | Handbags,False,True,True
-4,images (3).jpg,nobg,Caps,Headwear,Tshirts,0.4007,Topwear,Tshirts | Watches | Scarves,False,False,False
-4,images (4).jpg,nobg,Pendant,Jewellery,Formal Shoes,0.3959,Shoes,Formal Shoes | Bra | Camisoles,False,False,False
-4,images (5).jpg,nobg,Necklace and Chains,Jewellery,Necklace and Chains,0.4068,Jewellery,Necklace and Chains | Jewellery Set | Pendant,True,True,True
-4,images (6).jpg,nobg,Heels,Shoes,Handbags,0.1775,Bags,Handbags | Tshirts | Bra,False,False,False
-4,images (7).jpg,nobg,Ties,Ties,Tshirts,0.516,Topwear,Tshirts | Socks | Watches,False,False,False
-4,images (8).jpg,nobg,Earrings,Jewellery,Handbags,0.1011,Bags,Handbags | Messenger Bag | Accessory Gift Set,False,False,False
-4,images (9).jpg,nobg,Casual Shoes,Shoes,Socks,0.281,Socks,Socks | Watches | Perfume and Body Mist,False,False,False
-4,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.2161,Bottomwear,Tracksuits | Watches | Nightdress,False,False,False
-4,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Watches,0.8552,Watches,Watches | Socks | Mufflers,False,False,False
-4,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Handbags,0.3062,Bags,Handbags | Perfume and Body Mist | Watches,False,False,False
-5,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Stoles,0.1611,Topwear,Stoles | Bra | Socks,False,False,False
-5,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Watches,0.1963,Watches,Watches | Dupatta | Sports Shoes,False,False,False
-5,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9897,Socks,Socks | Tshirts | Watches,True,True,True
-5,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.7658,Watches,Watches | Free Gifts | Backpacks,False,False,False
-5,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.9721,Socks,Socks | Flip Flops | Deodorant,True,True,True
-5,83123110.webp,nobg,Earrings,Jewellery,Watches,0.7242,Watches,Watches | Sandals | Mufflers,False,False,False
-5,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Kurtas,0.0846,Topwear,Kurtas | Socks | Dresses,False,True,False
-5,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.6043,Bags,Backpacks | Shirts | Dresses,False,False,True
-5,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.1282,Innerwear,Briefs | Sunglasses | Accessory Gift Set,False,False,False
-5,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.9507,Socks,Socks | Shorts | Gloves,False,False,False
-5,images (1).jpg,nobg,Dresses,Dress,Nightdress,0.1293,Loungewear and Nightwear,Nightdress | Watches | Heels,False,False,False
-5,images (10).jpg,nobg,Sports Shoes,Shoes,Sports Shoes,0.2942,Shoes,Sports Shoes | Messenger Bag | Sandals,True,True,True
-5,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.3071,Bags,Backpacks | Handbags | Sports Shoes,False,True,True
-5,images (3).jpg,nobg,Caps,Headwear,Tshirts,0.3689,Topwear,Tshirts | Watches | Scarves,False,False,False
-5,images (4).jpg,nobg,Pendant,Jewellery,Formal Shoes,0.3959,Shoes,Formal Shoes | Bra | Camisoles,False,False,False
-5,images (5).jpg,nobg,Necklace and Chains,Jewellery,Necklace and Chains,0.4068,Jewellery,Necklace and Chains | Jewellery Set | Pendant,True,True,True
-5,images (6).jpg,nobg,Heels,Shoes,Bra,0.1131,Topwear,Bra | Formal Shoes | Tshirts,False,False,False
-5,images (7).jpg,nobg,Ties,Ties,Watches,0.2461,Watches,Watches | Mufflers | Socks,False,False,False
-5,images (8).jpg,nobg,Earrings,Jewellery,Handbags,0.1011,Bags,Handbags | Messenger Bag | Accessory Gift Set,False,False,False
-5,images (9).jpg,nobg,Casual Shoes,Shoes,Socks,0.3797,Socks,Socks | Watches | Sandals,False,False,False
-5,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.2445,Bottomwear,Tracksuits | Watches | Nightdress,False,False,False
-5,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Socks,0.4541,Socks,Socks | Watches | Tshirts,False,False,False
-5,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Handbags,0.3062,Bags,Handbags | Perfume and Body Mist | Watches,False,False,False
-6,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Stoles,0.152,Topwear,Stoles | Bra | Socks,False,False,False
-6,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Watches,0.4874,Watches,Watches | Dupatta | Sports Shoes,False,False,False
-6,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9897,Socks,Socks | Tshirts | Watches,True,True,True
-6,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.7658,Watches,Watches | Free Gifts | Backpacks,False,False,False
-6,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.9743,Socks,Socks | Flip Flops | Deodorant,True,True,True
-6,83123110.webp,nobg,Earrings,Jewellery,Watches,0.7396,Watches,Watches | Sandals | Mufflers,False,False,False
-6,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Socks,0.0918,Topwear,Socks | Kurtas | Dresses,False,True,False
-6,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.6043,Bags,Backpacks | Shirts | Dresses,False,False,True
-6,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.227,Innerwear,Briefs | Bra | Accessory Gift Set,False,False,False
-6,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.986,Socks,Socks | Gloves | Shorts,False,False,False
-6,images (1).jpg,nobg,Dresses,Dress,Nightdress,0.1304,Loungewear and Nightwear,Nightdress | Watches | Heels,False,False,False
-6,images (10).jpg,nobg,Sports Shoes,Shoes,Sandals,0.2427,Sandal,Sandals | Sports Shoes | Jackets,False,False,True
-6,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.3572,Bags,Backpacks | Sports Shoes | Handbags,False,True,True
-6,images (3).jpg,nobg,Caps,Headwear,Tshirts,0.4663,Topwear,Tshirts | Watches | Scarves,False,False,False
-6,images (4).jpg,nobg,Pendant,Jewellery,Formal Shoes,0.2855,Shoes,Formal Shoes | Bra | Camisoles,False,False,False
-6,images (5).jpg,nobg,Necklace and Chains,Jewellery,Necklace and Chains,0.4068,Jewellery,Necklace and Chains | Jewellery Set | Pendant,True,True,True
-6,images (6).jpg,nobg,Heels,Shoes,Handbags,0.1852,Bags,Handbags | Tshirts | Bra,False,False,False
-6,images (7).jpg,nobg,Ties,Ties,Watches,0.438,Watches,Watches | Socks | Mufflers,False,False,False
-6,images (8).jpg,nobg,Earrings,Jewellery,Handbags,0.1011,Bags,Handbags | Messenger Bag | Accessory Gift Set,False,False,False
-6,images (9).jpg,nobg,Casual Shoes,Shoes,Socks,0.3764,Socks,Socks | Watches | Accessory Gift Set,False,False,False
-6,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.2366,Bottomwear,Tracksuits | Watches | Stoles,False,False,False
-6,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Watches,0.4538,Watches,Watches | Socks | Tshirts,False,False,False
-6,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Handbags,0.3062,Bags,Handbags | Perfume and Body Mist | Watches,False,False,False
+0,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Dresses,0.3432,Dress,Dresses | Kurta Sets | Sarees,True,True,True
+0,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,squash,Dresses,Dress,Dresses,0.138,Topwear,Dresses | Shirts | Tops,True,False,True
+0,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Sunglasses,0.3935,Eyewear,Sunglasses | Socks | Scarves,False,False,False
+0,25637193-carousel-block-earrings-v1.webp,squash,Earrings,Jewellery,Kurtas,0.2045,Topwear,Kurtas | Dupatta | Stoles,False,False,False
+0,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9707,Socks,Socks | Sports Shoes | Watches,True,True,True
+0,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,squash,Socks,Socks,Socks,0.9655,Socks,Socks | Watches | Deodorant,True,True,True
+0,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.5139,Watches,Watches | Free Gifts | Dresses,False,False,False
+0,4793e3cb1e694edeb25651fb1ae578e6.jpg,squash,Ties,Ties,Shirts,0.4864,Topwear,Shirts | Ties | Kurtas,False,False,True
+0,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.8035,Socks,Socks | Flip Flops | Jeans,True,True,True
+0,600_google-pattern-socks.jpg,squash,Socks,Socks,Socks,0.9207,Socks,Socks | Jeans | Flip Flops,True,True,True
+0,83123110.webp,nobg,Earrings,Jewellery,Watches,0.3168,Watches,Watches | Sandals | Flip Flops,False,False,False
+0,83123110.webp,squash,Earrings,Jewellery,Sandals,0.1938,Sandal,Sandals | Watches | Heels,False,False,False
+0,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Kurtas,0.224,Topwear,Kurtas | Dresses | Nightdress,False,True,False
+0,ae9d94dee29112613a6fae774382a2d4.jpg,squash,Jackets,Topwear,Ties,0.1056,Jewellery,Ties | Earrings | Dresses,False,False,False
+0,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.751,Bags,Backpacks | Sarees | Free Gifts,False,False,False
+0,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,squash,Dresses,Dress,Backpacks,0.6609,Bags,Backpacks | Scarves | Dresses,False,False,True
+0,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.3102,Innerwear,Briefs | Heels | Sunglasses,False,False,False
+0,Collier_ruban_or_vermeil_2.webp,squash,Necklace and Chains,Jewellery,Briefs,0.1876,Shoes,Briefs | Casual Shoes | Bra,False,False,False
+0,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.7878,Socks,Socks | Briefs | Sunglasses,False,False,False
+0,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,squash,Casual Shoes,Shoes,Socks,0.1871,Innerwear,Socks | Briefs | Watches,False,False,False
+0,images (1).jpg,nobg,Dresses,Dress,Tshirts,0.208,Topwear,Tshirts | Night suits | Kurta Sets,False,False,False
+0,images (1).jpg,squash,Dresses,Dress,Tops,0.0724,Topwear,Tops | Ties | Kurtas,False,False,False
+0,images (10).jpg,nobg,Sports Shoes,Shoes,Socks,0.1792,Shoes,Socks | Casual Shoes | Heels,False,True,False
+0,images (10).jpg,squash,Sports Shoes,Shoes,Watches,0.1652,Watches,Watches | Socks | Briefs,False,False,False
+0,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.4196,Bags,Backpacks | Handbags | Dresses,False,True,True
+0,images (11).jpg,squash,Handbags,Bags,Watches,0.1545,Bags,Watches | Nightdress | Backpacks,False,True,False
+0,images (3).jpg,nobg,Caps,Headwear,Belts,0.1372,Shoes,Belts | Sandals | Heels,False,False,False
+0,images (3).jpg,squash,Caps,Headwear,Casual Shoes,0.278,Shoes,Casual Shoes | Heels | Sandals,False,False,False
+0,images (4).jpg,nobg,Pendant,Jewellery,Briefs,0.6814,Innerwear,Briefs | Heels | Socks,False,False,False
+0,images (4).jpg,squash,Pendant,Jewellery,Casual Shoes,0.2152,Shoes,Casual Shoes | Formal Shoes | Heels,False,False,False
+0,images (5).jpg,nobg,Necklace and Chains,Jewellery,Casual Shoes,0.1326,Jewellery,Casual Shoes | Necklace and Chains | Belts,False,True,True
+0,images (5).jpg,squash,Necklace and Chains,Jewellery,Pendant,0.1844,Jewellery,Pendant | Necklace and Chains | Casual Shoes,False,True,True
+0,images (6).jpg,nobg,Heels,Shoes,Heels,0.4256,Shoes,Heels | Casual Shoes | Formal Shoes,True,True,True
+0,images (6).jpg,squash,Heels,Shoes,Heels,0.3479,Shoes,Heels | Casual Shoes | Formal Shoes,True,True,True
+0,images (7).jpg,nobg,Ties,Ties,Socks,0.11,Topwear,Socks | Heels | Tshirts,False,False,False
+0,images (7).jpg,squash,Ties,Ties,Tshirts,0.4109,Topwear,Tshirts | Shirts | Briefs,False,False,False
+0,images (8).jpg,nobg,Earrings,Jewellery,Caps,0.3447,Headwear,Caps | Ring | Earrings,False,False,True
+0,images (8).jpg,squash,Earrings,Jewellery,Tops,0.7299,Topwear,Tops | Tshirts | Earrings,False,False,True
+0,images (9).jpg,nobg,Casual Shoes,Shoes,Sports Shoes,0.3314,Shoes,Sports Shoes | Sunglasses | Casual Shoes,False,True,True
+0,images (9).jpg,squash,Casual Shoes,Shoes,Casual Shoes,0.2302,Shoes,Casual Shoes | Heels | Sports Shoes,True,True,True
+0,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.097,Bottomwear,Tracksuits | Night suits | Dupatta,False,False,False
+0,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,squash,Jackets,Topwear,Kurtas,0.3361,Topwear,Kurtas | Dupatta | Kurtis,False,True,False
+0,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Watches,0.366,Watches,Watches | Socks | Mufflers,False,False,False
+0,nike-5644799_640.jpg,squash,Casual Shoes,Shoes,Watches,0.3834,Watches,Watches | Shirts | Backpacks,False,False,False
+0,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Watches,0.2323,Watches,Watches | Deodorant | Free Gifts,False,False,False
+0,The_dress_blueblackwhitegold.jpg,squash,Dresses,Dress,Watches,0.1794,Topwear,Watches | Tops | Shirts,False,False,False
+1,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Dresses,0.3432,Dress,Dresses | Kurta Sets | Sarees,True,True,True
+1,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Sunglasses,0.3935,Eyewear,Sunglasses | Socks | Scarves,False,False,False
+1,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9707,Socks,Socks | Sports Shoes | Watches,True,True,True
+1,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.5139,Watches,Watches | Free Gifts | Dresses,False,False,False
+1,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.8035,Socks,Socks | Flip Flops | Jeans,True,True,True
+1,83123110.webp,nobg,Earrings,Jewellery,Watches,0.3168,Watches,Watches | Sandals | Flip Flops,False,False,False
+1,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Kurtas,0.224,Topwear,Kurtas | Dresses | Nightdress,False,True,False
+1,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.751,Bags,Backpacks | Sarees | Free Gifts,False,False,False
+1,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.3102,Innerwear,Briefs | Heels | Sunglasses,False,False,False
+1,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.7878,Socks,Socks | Briefs | Sunglasses,False,False,False
+1,images (1).jpg,nobg,Dresses,Dress,Tshirts,0.208,Topwear,Tshirts | Night suits | Kurta Sets,False,False,False
+1,images (10).jpg,nobg,Sports Shoes,Shoes,Socks,0.1792,Shoes,Socks | Casual Shoes | Heels,False,True,False
+1,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.4196,Bags,Backpacks | Handbags | Dresses,False,True,True
+1,images (3).jpg,nobg,Caps,Headwear,Belts,0.1372,Shoes,Belts | Sandals | Heels,False,False,False
+1,images (4).jpg,nobg,Pendant,Jewellery,Briefs,0.6814,Innerwear,Briefs | Heels | Socks,False,False,False
+1,images (5).jpg,nobg,Necklace and Chains,Jewellery,Casual Shoes,0.1326,Jewellery,Casual Shoes | Necklace and Chains | Belts,False,True,True
+1,images (6).jpg,nobg,Heels,Shoes,Heels,0.4256,Shoes,Heels | Casual Shoes | Formal Shoes,True,True,True
+1,images (7).jpg,nobg,Ties,Ties,Socks,0.11,Topwear,Socks | Heels | Tshirts,False,False,False
+1,images (8).jpg,nobg,Earrings,Jewellery,Caps,0.3447,Headwear,Caps | Ring | Earrings,False,False,True
+1,images (9).jpg,nobg,Casual Shoes,Shoes,Sports Shoes,0.3314,Shoes,Sports Shoes | Sunglasses | Casual Shoes,False,True,True
+1,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.097,Bottomwear,Tracksuits | Night suits | Dupatta,False,False,False
+1,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Watches,0.366,Watches,Watches | Socks | Mufflers,False,False,False
+1,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Watches,0.2323,Watches,Watches | Deodorant | Free Gifts,False,False,False
+2,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Dresses,0.3432,Dress,Dresses | Kurta Sets | Sarees,True,True,True
+2,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Sunglasses,0.3935,Eyewear,Sunglasses | Socks | Scarves,False,False,False
+2,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9707,Socks,Socks | Sports Shoes | Watches,True,True,True
+2,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.5139,Watches,Watches | Free Gifts | Dresses,False,False,False
+2,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.8035,Socks,Socks | Flip Flops | Jeans,True,True,True
+2,83123110.webp,nobg,Earrings,Jewellery,Watches,0.3168,Watches,Watches | Sandals | Flip Flops,False,False,False
+2,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Kurtas,0.224,Topwear,Kurtas | Dresses | Nightdress,False,True,False
+2,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.751,Bags,Backpacks | Sarees | Free Gifts,False,False,False
+2,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.3102,Innerwear,Briefs | Heels | Sunglasses,False,False,False
+2,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.7878,Socks,Socks | Briefs | Sunglasses,False,False,False
+2,images (1).jpg,nobg,Dresses,Dress,Tshirts,0.208,Topwear,Tshirts | Night suits | Kurta Sets,False,False,False
+2,images (10).jpg,nobg,Sports Shoes,Shoes,Socks,0.1792,Shoes,Socks | Casual Shoes | Heels,False,True,False
+2,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.4196,Bags,Backpacks | Handbags | Dresses,False,True,True
+2,images (3).jpg,nobg,Caps,Headwear,Belts,0.1372,Shoes,Belts | Sandals | Heels,False,False,False
+2,images (4).jpg,nobg,Pendant,Jewellery,Briefs,0.6814,Innerwear,Briefs | Heels | Socks,False,False,False
+2,images (5).jpg,nobg,Necklace and Chains,Jewellery,Casual Shoes,0.1326,Jewellery,Casual Shoes | Necklace and Chains | Belts,False,True,True
+2,images (6).jpg,nobg,Heels,Shoes,Heels,0.4256,Shoes,Heels | Casual Shoes | Formal Shoes,True,True,True
+2,images (7).jpg,nobg,Ties,Ties,Socks,0.11,Topwear,Socks | Heels | Tshirts,False,False,False
+2,images (8).jpg,nobg,Earrings,Jewellery,Caps,0.3447,Headwear,Caps | Ring | Earrings,False,False,True
+2,images (9).jpg,nobg,Casual Shoes,Shoes,Sports Shoes,0.3314,Shoes,Sports Shoes | Sunglasses | Casual Shoes,False,True,True
+2,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.097,Bottomwear,Tracksuits | Night suits | Dupatta,False,False,False
+2,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Watches,0.366,Watches,Watches | Socks | Mufflers,False,False,False
+2,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Watches,0.2323,Watches,Watches | Deodorant | Free Gifts,False,False,False
+3,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Dresses,0.3432,Dress,Dresses | Kurta Sets | Sarees,True,True,True
+3,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Sunglasses,0.3935,Eyewear,Sunglasses | Socks | Scarves,False,False,False
+3,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9707,Socks,Socks | Sports Shoes | Watches,True,True,True
+3,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.5139,Watches,Watches | Free Gifts | Dresses,False,False,False
+3,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.8035,Socks,Socks | Flip Flops | Jeans,True,True,True
+3,83123110.webp,nobg,Earrings,Jewellery,Watches,0.3168,Watches,Watches | Sandals | Flip Flops,False,False,False
+3,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Kurtas,0.224,Topwear,Kurtas | Dresses | Nightdress,False,True,False
+3,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.751,Bags,Backpacks | Sarees | Free Gifts,False,False,False
+3,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.3102,Innerwear,Briefs | Heels | Sunglasses,False,False,False
+3,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.7878,Socks,Socks | Briefs | Sunglasses,False,False,False
+3,images (1).jpg,nobg,Dresses,Dress,Tshirts,0.208,Topwear,Tshirts | Night suits | Kurta Sets,False,False,False
+3,images (10).jpg,nobg,Sports Shoes,Shoes,Socks,0.1792,Shoes,Socks | Casual Shoes | Heels,False,True,False
+3,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.4196,Bags,Backpacks | Handbags | Dresses,False,True,True
+3,images (3).jpg,nobg,Caps,Headwear,Belts,0.1372,Shoes,Belts | Sandals | Heels,False,False,False
+3,images (4).jpg,nobg,Pendant,Jewellery,Briefs,0.6814,Innerwear,Briefs | Heels | Socks,False,False,False
+3,images (5).jpg,nobg,Necklace and Chains,Jewellery,Casual Shoes,0.1326,Jewellery,Casual Shoes | Necklace and Chains | Belts,False,True,True
+3,images (6).jpg,nobg,Heels,Shoes,Heels,0.4256,Shoes,Heels | Casual Shoes | Formal Shoes,True,True,True
+3,images (7).jpg,nobg,Ties,Ties,Socks,0.11,Topwear,Socks | Heels | Tshirts,False,False,False
+3,images (8).jpg,nobg,Earrings,Jewellery,Caps,0.3447,Headwear,Caps | Ring | Earrings,False,False,True
+3,images (9).jpg,nobg,Casual Shoes,Shoes,Sports Shoes,0.3314,Shoes,Sports Shoes | Sunglasses | Casual Shoes,False,True,True
+3,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.097,Bottomwear,Tracksuits | Night suits | Dupatta,False,False,False
+3,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Watches,0.366,Watches,Watches | Socks | Mufflers,False,False,False
+3,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Watches,0.2323,Watches,Watches | Deodorant | Free Gifts,False,False,False
+4,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Dresses,0.3432,Dress,Dresses | Kurta Sets | Sarees,True,True,True
+4,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Sunglasses,0.3935,Eyewear,Sunglasses | Socks | Scarves,False,False,False
+4,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9707,Socks,Socks | Sports Shoes | Watches,True,True,True
+4,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.5139,Watches,Watches | Free Gifts | Dresses,False,False,False
+4,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.8035,Socks,Socks | Flip Flops | Jeans,True,True,True
+4,83123110.webp,nobg,Earrings,Jewellery,Watches,0.3168,Watches,Watches | Sandals | Flip Flops,False,False,False
+4,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Kurtas,0.224,Topwear,Kurtas | Dresses | Nightdress,False,True,False
+4,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.751,Bags,Backpacks | Sarees | Free Gifts,False,False,False
+4,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.3102,Innerwear,Briefs | Heels | Sunglasses,False,False,False
+4,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.7878,Socks,Socks | Briefs | Sunglasses,False,False,False
+4,images (1).jpg,nobg,Dresses,Dress,Tshirts,0.208,Topwear,Tshirts | Night suits | Kurta Sets,False,False,False
+4,images (10).jpg,nobg,Sports Shoes,Shoes,Socks,0.1792,Shoes,Socks | Casual Shoes | Heels,False,True,False
+4,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.4196,Bags,Backpacks | Handbags | Dresses,False,True,True
+4,images (3).jpg,nobg,Caps,Headwear,Belts,0.1372,Shoes,Belts | Sandals | Heels,False,False,False
+4,images (4).jpg,nobg,Pendant,Jewellery,Briefs,0.6814,Innerwear,Briefs | Heels | Socks,False,False,False
+4,images (5).jpg,nobg,Necklace and Chains,Jewellery,Casual Shoes,0.1326,Jewellery,Casual Shoes | Necklace and Chains | Belts,False,True,True
+4,images (6).jpg,nobg,Heels,Shoes,Heels,0.4256,Shoes,Heels | Casual Shoes | Formal Shoes,True,True,True
+4,images (7).jpg,nobg,Ties,Ties,Socks,0.11,Topwear,Socks | Heels | Tshirts,False,False,False
+4,images (8).jpg,nobg,Earrings,Jewellery,Caps,0.3447,Headwear,Caps | Ring | Earrings,False,False,True
+4,images (9).jpg,nobg,Casual Shoes,Shoes,Sports Shoes,0.3314,Shoes,Sports Shoes | Sunglasses | Casual Shoes,False,True,True
+4,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.097,Bottomwear,Tracksuits | Night suits | Dupatta,False,False,False
+4,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Watches,0.366,Watches,Watches | Socks | Mufflers,False,False,False
+4,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Watches,0.2323,Watches,Watches | Deodorant | Free Gifts,False,False,False
+5,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Dresses,0.3432,Dress,Dresses | Kurta Sets | Sarees,True,True,True
+5,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Sunglasses,0.3935,Eyewear,Sunglasses | Socks | Scarves,False,False,False
+5,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9707,Socks,Socks | Sports Shoes | Watches,True,True,True
+5,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.5139,Watches,Watches | Free Gifts | Dresses,False,False,False
+5,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.8035,Socks,Socks | Flip Flops | Jeans,True,True,True
+5,83123110.webp,nobg,Earrings,Jewellery,Watches,0.3168,Watches,Watches | Sandals | Flip Flops,False,False,False
+5,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Kurtas,0.224,Topwear,Kurtas | Dresses | Nightdress,False,True,False
+5,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.751,Bags,Backpacks | Sarees | Free Gifts,False,False,False
+5,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.3102,Innerwear,Briefs | Heels | Sunglasses,False,False,False
+5,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.7878,Socks,Socks | Briefs | Sunglasses,False,False,False
+5,images (1).jpg,nobg,Dresses,Dress,Tshirts,0.208,Topwear,Tshirts | Night suits | Kurta Sets,False,False,False
+5,images (10).jpg,nobg,Sports Shoes,Shoes,Socks,0.1792,Shoes,Socks | Casual Shoes | Heels,False,True,False
+5,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.4196,Bags,Backpacks | Handbags | Dresses,False,True,True
+5,images (3).jpg,nobg,Caps,Headwear,Belts,0.1372,Shoes,Belts | Sandals | Heels,False,False,False
+5,images (4).jpg,nobg,Pendant,Jewellery,Briefs,0.6814,Innerwear,Briefs | Heels | Socks,False,False,False
+5,images (5).jpg,nobg,Necklace and Chains,Jewellery,Casual Shoes,0.1326,Jewellery,Casual Shoes | Necklace and Chains | Belts,False,True,True
+5,images (6).jpg,nobg,Heels,Shoes,Heels,0.4256,Shoes,Heels | Casual Shoes | Formal Shoes,True,True,True
+5,images (7).jpg,nobg,Ties,Ties,Socks,0.11,Topwear,Socks | Heels | Tshirts,False,False,False
+5,images (8).jpg,nobg,Earrings,Jewellery,Caps,0.3447,Headwear,Caps | Ring | Earrings,False,False,True
+5,images (9).jpg,nobg,Casual Shoes,Shoes,Sports Shoes,0.3314,Shoes,Sports Shoes | Sunglasses | Casual Shoes,False,True,True
+5,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.097,Bottomwear,Tracksuits | Night suits | Dupatta,False,False,False
+5,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Watches,0.366,Watches,Watches | Socks | Mufflers,False,False,False
+5,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Watches,0.2323,Watches,Watches | Deodorant | Free Gifts,False,False,False
+6,1017_women_0023_a36fe2486db54e83b62813b56147a042_master.webp,nobg,Dresses,Dress,Dresses,0.3432,Dress,Dresses | Kurta Sets | Sarees,True,True,True
+6,25637193-carousel-block-earrings-v1.webp,nobg,Earrings,Jewellery,Sunglasses,0.3935,Eyewear,Sunglasses | Socks | Scarves,False,False,False
+6,3-Stripes_High_Crew_Socks_3_Pairs_White_KD8239_01_01_00_standard.avif,nobg,Socks,Socks,Socks,0.9707,Socks,Socks | Sports Shoes | Watches,True,True,True
+6,4793e3cb1e694edeb25651fb1ae578e6.jpg,nobg,Ties,Ties,Watches,0.5139,Watches,Watches | Free Gifts | Dresses,False,False,False
+6,600_google-pattern-socks.jpg,nobg,Socks,Socks,Socks,0.8035,Socks,Socks | Flip Flops | Jeans,True,True,True
+6,83123110.webp,nobg,Earrings,Jewellery,Watches,0.3168,Watches,Watches | Sandals | Flip Flops,False,False,False
+6,ae9d94dee29112613a6fae774382a2d4.jpg,nobg,Jackets,Topwear,Kurtas,0.224,Topwear,Kurtas | Dresses | Nightdress,False,True,False
+6,Afternoon_ensemble_MET_63.212a-b_CP4.jpg,nobg,Dresses,Dress,Backpacks,0.751,Bags,Backpacks | Sarees | Free Gifts,False,False,False
+6,Collier_ruban_or_vermeil_2.webp,nobg,Necklace and Chains,Jewellery,Briefs,0.3102,Innerwear,Briefs | Heels | Sunglasses,False,False,False
+6,giay-local-brand-viet-nam_b140845b-6e68-45f7-af85-4c504c4d1571.webp,nobg,Casual Shoes,Shoes,Socks,0.7878,Socks,Socks | Briefs | Sunglasses,False,False,False
+6,images (1).jpg,nobg,Dresses,Dress,Tshirts,0.208,Topwear,Tshirts | Night suits | Kurta Sets,False,False,False
+6,images (10).jpg,nobg,Sports Shoes,Shoes,Socks,0.1792,Shoes,Socks | Casual Shoes | Heels,False,True,False
+6,images (11).jpg,nobg,Handbags,Bags,Backpacks,0.4196,Bags,Backpacks | Handbags | Dresses,False,True,True
+6,images (3).jpg,nobg,Caps,Headwear,Belts,0.1372,Shoes,Belts | Sandals | Heels,False,False,False
+6,images (4).jpg,nobg,Pendant,Jewellery,Briefs,0.6814,Innerwear,Briefs | Heels | Socks,False,False,False
+6,images (5).jpg,nobg,Necklace and Chains,Jewellery,Casual Shoes,0.1326,Jewellery,Casual Shoes | Necklace and Chains | Belts,False,True,True
+6,images (6).jpg,nobg,Heels,Shoes,Heels,0.4256,Shoes,Heels | Casual Shoes | Formal Shoes,True,True,True
+6,images (7).jpg,nobg,Ties,Ties,Socks,0.11,Topwear,Socks | Heels | Tshirts,False,False,False
+6,images (8).jpg,nobg,Earrings,Jewellery,Caps,0.3447,Headwear,Caps | Ring | Earrings,False,False,True
+6,images (9).jpg,nobg,Casual Shoes,Shoes,Sports Shoes,0.3314,Shoes,Sports Shoes | Sunglasses | Casual Shoes,False,True,True
+6,mygoods_34_475601_3x4-ezgif.com-avif-to-jpg-converter-1.jpg,nobg,Jackets,Topwear,Tracksuits,0.097,Bottomwear,Tracksuits | Night suits | Dupatta,False,False,False
+6,nike-5644799_640.jpg,nobg,Casual Shoes,Shoes,Watches,0.366,Watches,Watches | Socks | Mufflers,False,False,False
+6,The_dress_blueblackwhitegold.jpg,nobg,Dresses,Dress,Watches,0.2323,Watches,Watches | Deodorant | Free Gifts,False,False,False

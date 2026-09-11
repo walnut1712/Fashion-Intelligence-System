@@ -81,21 +81,21 @@
   "train_accuracy": 99.87269486778453,
   "train_test_gap": 11.47,
   "submission_pipeline": {
-    "served_model": "artifacts/task1_120x160/task1_120x160_onecycle_best.pt",
+    "served_model": "artifacts/task1_120x160/task1_120x160_background_adapted.pt",
     "submission_ensemble": [
-      "task1_120x160_onecycle_best.pt"
+      "task1_120x160_background_adapted.pt"
     ],
     "label_shift_correction": "none",
     "tta": false,
     "ingest": "squash",
     "built_by": "predict.py --images .../images_test --out outputs/task1_item_type_predictions.csv --submission, then scripts/build_submission.py",
     "shared_split_metrics": {
-      "test_accuracy": 90.23,
-      "test_weighted_f1": 89.68,
-      "test_macro_f1": 73.11,
-      "test_balanced_acc": 72.84
+      "test_accuracy": 88.24,
+      "test_weighted_f1": 87.14,
+      "test_macro_f1": 63.88,
+      "test_balanced_acc": 62.59
     },
-    "note": "Single checkpoint, no ensemble and no prior correction: the ensemble-plus-label-shift recipe below is 60x80 evidence and its correction is not applied on this serving path. No graded id exists at 120x160, so predict.py upscales every graded image to the checkpoint's input contract; measured on rows neither checkpoint trained on that costs -3.97 weighted-F1 against the 60x80 checkpoint, P(better) = 0%. The team adopted the 120x160 model with that cost known.",
+    "note": "Single checkpoint, no ensemble and no prior correction. Since 2026-09-11 the served checkpoint is the BACKGROUND-ADAPTED one - see `promoted` for the trade and `promoted.historical_catalogue_metrics` for the catalogue-only scores this field used to carry. the ensemble-plus-label-shift recipe below is 60x80 evidence and its correction is not applied on this serving path. No graded id exists at 120x160, so predict.py upscales every graded image to the checkpoint's input contract; measured on rows neither checkpoint trained on that costs -3.97 weighted-F1 against the 60x80 checkpoint, P(better) = 0%. The team adopted the 120x160 model with that cost known.",
     "superseded_recipe": {
       "served_model": "artifacts/task1/task1_cnn.pt (CNN_baseline_augnone)",
       "submission_ensemble": [
@@ -109,6 +109,26 @@
         "test_macro_f1": 76.44,
         "test_top3_acc": 98.27,
         "deployment_prior_weighted_f1": 85.71
+      }
+    },
+    "promoted": {
+      "date": "2026-09-11",
+      "from": "task1_120x160_onecycle_best.pt",
+      "why": "The deliverable is served to real uploads as well as graded catalogue tiles. Through held-out Places365 scenes the catalogue checkpoint collapses to 0.1681 weighted-F1; this one holds 0.5780. The in-domain cost was accepted knowingly.",
+      "in_domain_cost": {
+        "weighted_f1": "0.8968 -> 0.8714 (-2.62)",
+        "macro_f1": "0.7311 -> 0.6388 (-9.23)",
+        "note": "macro-F1 falls far harder than weighted-F1: the adapted model predicts 66 distinct classes on the graded set against 76, so the loss is concentrated in the rare tail. Quote both, never weighted-F1 alone."
+      },
+      "out_of_domain_gain": {
+        "weighted_f1": "0.1681 -> 0.5780 (+40.99)"
+      },
+      "submission_effect": "articleType changed on 1,454 of 5,829 graded rows (24.94%)",
+      "historical_catalogue_metrics": {
+        "test_accuracy": 90.23,
+        "test_weighted_f1": 89.68,
+        "test_macro_f1": 73.11,
+        "test_balanced_acc": 72.84
       }
     }
   }

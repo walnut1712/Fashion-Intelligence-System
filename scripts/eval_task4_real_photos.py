@@ -12,13 +12,15 @@ it is a proxy for a real upload rather than the thing itself. These 23 rows are
 the only measurement in the project that scores real photographs against labels,
 and they are what says whether the proxy is honest.
 
-It is not, quite: the deployed encoder scores 23.04 here against 55.78 on the
-composited ``photo`` benchmark. Compositing preserves the ordering between the
-arms and overstates the level, so ``photo`` and ``wildphoto`` are upper bounds.
+It is not, quite: the deployed encoder scores 16.52 here against 55.78 on the
+composited ``photo`` benchmark. Compositing overstates the level by a wide
+margin, so ``photo`` and ``wildphoto`` are upper bounds. It does **not** reliably
+preserve the ordering between the arms either - on these photographs arm P leads
+arm D on P@10 while the composited benchmark puts arm D 13.6 points ahead. At
+n=23 that cannot refute the composited ranking, but it cannot confirm it.
 
 Two limits travel with the number and belong beside it wherever it is quoted:
-n=23 (so roughly +/-10 points of sampling error), and 1 of the 31 defeats
-ingestion and falls back to a centre crop. The labels themselves were drafted
+n=23, so roughly +/-10 points of sampling error and one P@1 worth 4.35 points. The labels themselves were drafted
 by a vision model and hand-verified on 2026-09-10, so they are ground truth.
 
     python scripts/eval_task4_real_photos.py        # ~3 min, builds both indexes

@@ -32,6 +32,6 @@
   },
   "delta_clean": -0.029932613435828648,
   "delta_heldout_places365": 0.08002727113021346,
-  "training_minutes": 8.745785999298096,
+  "training_minutes": 9.22254592180252,
   "checkpoint": "C:\\Users\\LEGION\\Documents\\jupyter_notebook\\Fashion-Intelligence-System\\artifacts\\task2_bgaug_local\\task2_bgadapt_best.pth"
 }

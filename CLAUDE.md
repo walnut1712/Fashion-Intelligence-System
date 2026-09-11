@@ -13,9 +13,9 @@ models can be reused outside the notebook without re-training.
 
 | Task | Question | Notebook | Artifacts |
 |---|---|---|---|
-| 1 | `articleType` (92 classes) | `notebooks/02_task1_item_type.ipynb` | `artifacts/task1_120x160/task1_120x160_onecycle_best.pt` |
+| 1 | `articleType` (92 classes) | `notebooks/02_task1_item_type.ipynb` | `artifacts/task1_120x160/task1_120x160_background_adapted.pt` (promoted 2026-09-11) |
 | 2 | `season` (4 classes) | `notebooks/03_task2_season.ipynb` | `artifacts/task2/task2_season_best_pytorch.pth` |
-| 3 | `gender` (5) + `usage` (4), one multi-task CNN | `notebooks/04_task3_gender_usage.ipynb` | `artifacts/task3/task3_cnn_model.pt` |
+| 3 | `gender` (5) + `usage` (4), one multi-task CNN | `notebooks/04_task3_gender_usage.ipynb` | `artifacts/task3/task3_cnn_model.pt` (background-adapted since 2026-09-11) |
 | 4 | visual search — top-K similar items | `notebooks/05_task4_visual_search.ipynb` (triplet CNN encoder, two background arms) | `artifacts/task4/` |
 
 `notebooks/01_eda.ipynb` produces the shared cleaned metadata every task reads.
@@ -33,6 +33,57 @@ in seconds. Three things in it are worth knowing before editing any task:
   20.38. Two tasks, two architectures, two corruption families, same conclusion.
   `candidate_webphoto.pt` is **not in the repo**; the rows survive in
   `outputs/evaluation/task1_ood_results.csv`.
+
+  **Task 1's deployed model is the BACKGROUND-ADAPTED checkpoint since 2026-09-11.**
+  `artifacts/task1_120x160/task1_120x160_background_adapted.pt` is what `predict.py`,
+  `Task1Service` and `scripts/refresh_task1_fixture.py` all load by default. The catalogue-only
+  `task1_120x160_onecycle_best.pt` is still on disk, still git-tracked, and is still the better
+  model on catalogue tiles; it is now historical.
+
+  | | weighted-F1 | macro-F1 | balanced acc | held-out Places365 weighted-F1 |
+  |---|---|---|---|---|
+  | catalogue only (historical) | **89.68** | **73.11** | **72.84** | 16.84 |
+  | background-adapted (deployed) | 87.14 | 63.88 | 62.59 | **57.96** |
+
+  **Why, and it is a deliberate reversal of the earlier decision.** The earlier reasoning was
+  that the graded deliverable is 5,829 catalogue tiles, so in-domain cost is real and
+  out-of-domain gain buys nothing graded. That was correct about the tiles and wrong about the
+  brief: the system is also served to real uploads, and the assignment credits solving the
+  dataset's limitations rather than only scoring its test split. Against held-out Places365
+  scenes the catalogue model does not degrade, it collapses - 16.84 weighted-F1, against a
+  89.68 clean - and the adapted model holds 57.96.
+
+  **Two runs of this arm exist and their figures must not be mixed.** The teammate's committed
+  run is the one `outputs/evaluation/task1_bgadapt_comparison.csv` records (clean 87.06, OOD
+  57.80, -2.62 / +40.99, 15.7:1) and **its weights are gitignored and were never on this
+  machine**. What is deployed is a local reproduction, `--tag _local`, recorded in
+  `..._comparison_local.csv`: clean **87.14**, OOD **57.96**, **-2.53 / +41.11, 16.2:1**. Every
+  figure describing the *deployed* model therefore comes from the local run, and that is the row
+  above. The two agree to within 0.16 on every metric, which is what makes the reproduction
+  usable; an earlier version of this file quoted the local clean number beside the committed
+  out-of-domain number, which is a row that describes no model that exists.
+
+  **The in-domain cost is larger than the weighted-F1 line suggests, and both numbers must be
+  quoted.** Weighted-F1 falls 2.53; **macro-F1 falls 9.23** (73.11 -> 63.88) and balanced
+  accuracy 10.25. On the graded set the adapted model predicts **66 distinct classes against
+  76**, so the loss is concentrated in the rare tail - exactly the part of Task 1 that was
+  already weakest. Never report the -2.53 on its own.
+
+  **Submission effect**: `articleType` changed on **1,454 of 5,829 rows (24.94%)**. Regenerated
+  with `python predict.py --images ... --submission` then `python scripts/build_submission.py`,
+  and `scripts/refresh_task1_fixture.py` was re-run so
+  `artifacts/task1_120x160/task1_predictions_120x160.csv` replays the deployed model.
+
+  **What the promotion is worth on real photographs is much less clear than the composite says.**
+  Holding ingestion at `nobg` so only the weights differ, top-1 on the 23 labelled photographs
+  goes **13.04 -> 17.39** - one extra photograph, well inside the +/-10 sampling error at n=23.
+  The 2,000-row composited benchmark is the evidence for this promotion; the 23 photographs
+  neither confirm nor refute it.
+
+  **`tests/test_prediction.py` no longer hardcodes the deployed checkpoint.** It reads
+  `service.model_path`, because what that test pins is that the module and the API run identical
+  maths on identical pixels - a statement about whichever checkpoint ships. Hardcoding turned
+  this promotion into a test failure that said nothing about agreement.
 - **The two tasks then made opposite deployment decisions from that same evidence, and both are
   right.** Task 1's deliverable is 5,829 catalogue tiles, so in-domain cost is real and
   out-of-domain gain buys nothing graded. Task 4's deliverable is a search box that accepts an
@@ -138,6 +189,30 @@ python -m pip install -r requirements.txt          # notebooks
 python -m pip install -r requirements-backend.txt  # API
 ```
 
+**`rembg` is installed as of 2026-09-11, and pip cannot resolve it cleanly.** It declares
+`numpy>=2.3.0` while `opencv-python` declares `numpy<2.3.0`, so the two conflict. Install rembg
+first, then pin numpy back for OpenCV:
+
+```bash
+python -m pip install "rembg[cpu]"
+python -m pip install "numpy<2.3"
+```
+
+rembg's floor is a packaging artifact, not a real ABI requirement - verified working at numpy
+2.2.6, as were `cv2.grabCut`, `cv2.resize` and the torch array bridge. pip still prints the
+conflict; it is expected. It also pulls `onnxruntime`, `numba`, `llvmlite`, `scikit-image` and
+`pymatting`, and bumps pillow to 12.3.0. First use downloads `u2netp.onnx` (4.6 MB) to
+`~/.rembg`, so it needs network once.
+
+**Why it is installed**: it is the deterministic top tier of `foreground_mask`. Below it sits
+`cv2.grabCut`, which seeds its GMM from OpenCV's process-global RNG, so every real-photo number
+measured before this date rode on that RNG. With rembg the harnesses reproduce exactly - Task 1's
+7-repeat spread went from +/-1.64 to **0.00** and two runs of `eval_task4_real_photos.py` are
+byte-identical. **It is pretrained**, so what it may and may not touch is a constraint rather
+than a preference: see the README's pretrained-components note and
+`tests/test_graded_path_never_segments.py`. Nothing graded reaches it; the 31-photograph tables
+do.
+
 Notebooks are run in **VS Code**, not the Jupyter web UI. `Path.cwd()` in a notebook is
 `notebooks/` — the notebook's own directory, not the project root — so every notebook sets
 `PROJECT_DIR = Path.cwd().parent` and anchors its paths on that rather than writing them
@@ -198,9 +273,12 @@ down. `POST /api/analyze` runs all four tasks on one upload.
 what the notebooks train on; `.venv` has `torch 2.13.0+cpu` and pytest. Tests only load
 checkpoints and run a forward pass, so CPU is fine, but don't train from `.venv`.
 
-**138 collected: 133 pass, 5 skip, ~65 s** (measured 2026-09-10). Nothing fails.
+**144 collected: 139 pass, 5 skip, ~71 s** (measured 2026-09-11, after the Task 1
+routing and Task 3 promotion). Nothing fails.
 The count moved from 140/6 when `ImprovedEncoderV2` and its nine tests were deleted
-(-9) and `test_shipped_predictions_are_reproducible` was added (+1).
+(-9) and `test_shipped_predictions_are_reproducible` was added (+1), then to 144/5
+when `tests/test_graded_path_never_segments.py` was added (+6) with the router fix
+below.
 
 **That new test is the only one that anchors a stored result to the shipped model.**
 Every other submission check compares one file to another - the CSV against the template,
@@ -254,8 +332,17 @@ Facts that matter:
   test scores landed within ±0.2 of the 60×80 model on every metric, at four times the compute.
   Task 3 has since been returned to 60×80 on that evidence. Do not assume more pixels will move
   the other tasks either without measuring it.
-- **Task 1's final model is the 120×160 checkpoint.** `artifacts/task1_120x160/task1_120x160_onecycle_best.pt`
-  is the submitted and deployed model, with test accuracy **90.23%**, weighted-F1 **89.68%**,
+- **Task 1's final model is the 120×160 BACKGROUND-ADAPTED checkpoint** (promoted 2026-09-11),
+  `artifacts/task1_120x160/task1_120x160_background_adapted.pt`: test weighted-F1 **87.14%**,
+  macro-F1 **63.88%**, balanced accuracy **62.59%**, and **57.96%** weighted-F1 through held-out
+  Places365 scenes, where the checkpoint below scores 16.84. See the Task 1 entry under **Model
+  state** for the trade and why it was taken.
+
+  **Everything in the rest of this bullet describes `task1_120x160_onecycle_best.pt`**, the
+  catalogue-only checkpoint it was fine-tuned from. Those figures are **historical**: that model
+  is no longer submitted or served, though it remains the arm every resolution comparison here
+  was measured on. It
+  had test accuracy **90.23%**, weighted-F1 **89.68%**,
   macro-F1 **73.11%**, and balanced accuracy **72.84%**. Earlier 60×80 results remain historical
   development and ablation evidence. The resolution comparison was measured on rows neither
   model trained on (3,248 of them; the fully clean test-only intersection is 884 and agrees):
@@ -349,6 +436,13 @@ Facts that matter:
   inverse-frequency class weights, AdamW + OneCycleLR for 40 epochs. Test accuracy **90.23%**,
   weighted-F1 **89.68%**, macro-F1 **73.11%**, balanced accuracy **72.84%**. Checkpoint:
   `artifacts/task1_120x160/task1_120x160_onecycle_best.pt`.
+
+  **That checkpoint is the catalogue reference, not the deployed model.** Since 2026-09-11 the
+  served and submitted model is `task1_120x160_background_adapted.pt`, the same network
+  fine-tuned with photographic backdrops: 88.24% accuracy, 87.14% weighted-F1, 63.88% macro-F1,
+  62.59% balanced accuracy, and 57.96% weighted-F1 through held-out Places365 scenes where the
+  checkpoint above scores 16.84%. The recipe above is still the recipe - the adapted model is
+  that model plus eight epochs - so the architecture and training arguments carry over unchanged.
 
   The old `task1_cnn.pt` results remain historical 60×80 development and OOD evidence. They are
   not the service or submission model.
@@ -482,7 +576,31 @@ Facts that matter:
   letterbox / crop (90.11), so **the graded submission is bit-for-bit unchanged**, verified on
   40 graded tiles. `build_submission.py` calls this service, so that mattered.
 
-  **A background-adapted arm exists and is NOT promoted.**
+  **That 40-tile verification was not enough, and the gap was found on 2026-09-11.** Checked
+  across all 5,829, **four graded tiles routed to the photograph branch**: 52166, 56624, 59593
+  and 59606 are 53x80 or 54x80 rather than 60x80, and `looks_like_catalogue` applied its
+  aspect-ratio gate *before* its size test, so an off-aspect tile was called a photograph and
+  sent to `nobg`, which segments. Two consequences, both bad. The segmentation ladder's top tier
+  is `rembg`, a **pretrained** network, so with rembg installed those four tiles put a pretrained
+  component in the graded path - which the assignment forbids and the README disclaims. And the
+  routing silently disagreed with the committed predictions: `outputs/task3_gender_usage_predictions.csv`
+  holds the `letterbox` answers, so regenerating the submission would have flipped 52166 from
+  `Unisex` to `Men` and 56624 from `Women` to `Men`, with the whole suite green.
+
+  **The fix makes the size test absolute and runs it first.** A dataset tile is at most 100px on
+  its long side; the smallest real upload is 225px. A simple reorder is wrong - `small_ratio *
+  model_input` is 320px against the 120x160 checkpoint, which swallows the two 225x225
+  photographs in `input_images/` - so the ceiling cannot be a multiple of the model input. After
+  the fix all 5,829 graded tiles take the catalogue branch and all 31 photographs take the
+  photograph branch. `tests/test_graded_path_never_segments.py` walks both sets and asserts each
+  direction, because a rule that called everything a tile would pass the first check and break
+  the app.
+
+  **PROMOTED 2026-09-11. The paragraphs below describe how the arm was built and
+  measured; the deployment decision they end with has since been reversed, on the
+  evidence recorded in "The promotion" further down.**
+
+  **A background-adapted arm exists.**
   `scripts/train_task3_background_adaptation.py` fine-tunes the deployed `base` seed-42
   checkpoint for 8 epochs at p_bg 0.70 on Task 4's 70% Places365 + 30% procedural bank, ~8 min.
   Only `base` is adapted - `balanced`, `balanced_aug` and `class_weighted` lost the selection
@@ -540,6 +658,7 @@ Facts that matter:
   | task | metric | reported vs baseline | corrected vs control | |
   |---|---|---|---|---|
   | 1 | weighted-F1 | -2.62 / +40.99, 15.7:1 | **-2.41 / +40.86, 16.9:1** | slightly *better* |
+  <!-- Task 1's row is the teammate's COMMITTED run, not the deployed local reproduction. -->
   | 2 | macro-F1 | -3.50 / +8.99, 2.6:1 | **-4.35 / +9.84, 2.3:1** | slightly *worse* |
   | 3 (lr 3e-4) | mean macro-F1 | +1.41 / +29.50 | **-0.24 / +29.39, 121:1** | sign of the clean delta flips |
 
@@ -557,6 +676,67 @@ Facts that matter:
   Two qualifiers: validation was still climbing at epoch 8 in every run, so all of these are
   **floors**, not converged; and the ingest router above attacks the same failure, so its gain
   and this one do not simply add.
+
+  **The promotion (2026-09-11).** Task 3's adapted arm at lr 3e-4 is now the deployed model:
+  `artifacts/task3/task3_cnn_model.pt` holds it, `model_name` is
+  `base + background adaptation (lr 3e-4)`, and the previous `base` weights are recoverable from
+  git. Tasks 1 and 2 were **not** promoted - see their entries.
+
+  **Why this task and not the others.** A deployment decision compares the candidate against the
+  incumbent, which is a different comparison from the one the control exists to settle. Against
+  the deployed baseline, within the adaptation harness:
+
+  | task | metric | clean | held-out Places365 |
+  |---|---|---|---|
+  | 1 | weighted-F1 | 0.8968 -> 0.8714 (**-2.53**) | 0.1684 -> 0.5796 (+41.11) |
+  | 2 | macro-F1 | 0.6306 -> 0.5956 (**-3.50**) | 0.3126 -> 0.4025 (+8.99) |
+  | 3 | mean macro-F1 | 0.7854 -> **0.7995 (+1.41)** | 0.2574 -> 0.5524 (+29.50) |
+
+  Only Task 3 improves on **both** axes, so only Task 3 needs no trade. As ratios: Task 1
+  **16.2:1**, Task 2 **2.6:1**, Task 3 no trade at all.
+
+  **Task 2's row is the teammate's committed run**, which is the one every other Task 2 figure
+  in this file also reports. A local reproduction trained on 2026-09-11
+  (`--tag _local`, weights at `artifacts/task2_bgaug_local/`) lands at -2.99 / +8.00, so the two
+  agree on the decision and differ by about half a point; quote the committed numbers and treat
+  the reproduction as the repeat that confirms them. Tasks 1 and 3's rows are single runs. Every clean test metric
+  moved the right way: gender accuracy 89.78 -> 90.20, gender macro-F1 75.22 -> 77.23, gender
+  balanced accuracy 74.33 -> 77.24, usage accuracy 90.04 -> 90.33, usage macro-F1 81.86 -> 82.67,
+  exact match 80.93 -> 81.59.
+
+  **Do not quote the clean gain as evidence for backdrops.** The matched `--p-bg 0` control
+  reaches 0.8019 clean, *above* the adapted arm, so the +1.41 is the 8 extra epochs and the
+  backdrops cost about 0.24 of it. The out-of-domain half is entirely the backdrops: that
+  control moves out-of-domain by +0.0011. Both statements are true at once and the promotion
+  rests on the first, the science on the second.
+
+  **Two inherited fields were stale and both were fixed; a future promotion must check them.**
+  `train_task3_background_adaptation.py` copies the source checkpoint's metadata forward.
+
+  - **Temperature.** The arm inherited the base model's `{gender: 5.83, usage: 5.94}`, fitted for
+    weights that no longer exist. On the adapted weights that scores **ECE 20.30 / 26.73** -
+    worse than no temperature at all (5.16 / 5.69), because fine-tuning left the model far less
+    overconfident (mean confidence 95.7% against the base's 98.6%). Refit with
+    `python scripts/refit_task3_temperature.py --checkpoint <ckpt>`: gender **2.1390**, usage
+    **1.9985**, ECE **2.20 / 1.03**, comparable to the base model's 1.23 / 1.35. Temperature is
+    monotonic, so **no prediction moved** - the script asserts it - and the submission is
+    unaffected by this step alone.
+  - **`test_metrics`.** Also the baseline's. Now the adapted model's, with
+    `test_metrics_source` recording which harness produced them.
+
+  **The two harnesses do not score the same rows, and the difference is not noise-sized.** On the
+  *same baseline weights*, notebook 04 reports gender accuracy **90.33** and the adaptation
+  script reports **89.78**. Compare adapted against baseline **within one harness**; never mix
+  them. This is why `artifacts/task3/task3_cnn_summary.json` now carries
+  `baseline_within_same_harness` beside the headline.
+
+  **The submission changed and was regenerated.** `python scripts/build_submission.py
+  --force-task3` rewrote `outputs/predictions/COSC2753_A2_HN_G2.csv`: **494 gender rows (8.47%)
+  and 278 usage rows (4.77%)** differ; `articleType` and `season` are byte-identical. The churn
+  is large for a ~2-point macro-F1 gain and is the expected shape of it - the baseline
+  over-predicted `Women` (4,148 -> 3,944) and the adapted model is more balanced (`Men`
+  1,504 -> 1,688, `Unisex` 116 -> 135), which is the +2.9 gender balanced-accuracy gain landing
+  on the graded set.
 
   **Task 3 now reports Task 4's five benchmark families**, built by
   `scripts/eval_task3_benchmarks.py` from the same calls `build_queries` uses
@@ -583,7 +763,7 @@ Facts that matter:
   on the identical frames is 81.20 / 27.40 / 25.14 / 29.67 / 26.06.
 
   `wildphoto` is the closest proxy to a real upload, but Task 4's real-photo work showed even
-  that flatters a model (21.74 measured against 55.78 on `photo`), so read it as an upper bound.
+  that flatters a model (16.52 measured against 55.78 on `photo`), so read it as an upper bound.
 
   Weak points are unchanged and are **not** resolution-limited: `Unisex` F1 0.599, `Girls` 0.607,
   `Sports` recall 0.648. **Accessories is still the ceiling** — 85.5% gender accuracy, 38.7% of all
@@ -591,7 +771,7 @@ Facts that matter:
 - **Task 4** - deployed: `ImprovedEncoder`, recorded in the manifest as
   `Improved+TTA+places365`, 128-dim, 38,612-item served index, **trained at 120x160** with
   Places365 backdrops. Its benchmark table is further down this section; clean P@10 is **76.19**
-  and the real-photograph number is **21.74**. The checkpoint is
+  and the real-photograph number is **16.52**. The checkpoint is
   `artifacts/task4_120x160/task4_encoder_mixed_seed42.pt`, served as
   `artifacts/task4/task4_improved_encoder.pt` (same weights, promotion copies it).
 
@@ -664,33 +844,44 @@ Facts that matter:
 
   | encoder | P@1 | P@10 | vs its composited `photo` P@10 |
   |---|---|---|---|
-  | arm D, deployed | 21.74 | **21.74** | 55.78 |
-  | arm P, procedural | 21.74 | 21.30 | 42.22 |
-  | arm C, control | 8.70 | 8.70 | 11.84 |
+  | arm D, deployed | 17.39 | **16.52** | 55.78 |
+  | arm P, procedural | 17.39 | 19.57 | 42.22 |
+  | arm C, control | 13.04 | 12.17 | 11.84 |
 
-  The direction survives - the augmented encoder is 2.5x the control on real photographs, as it
-  is 4.7x on composites - but **the absolute level does not**: 21.74 against the 55.78 the
-  `photo` benchmark reports for the same encoder. Compositing a catalogue cutout onto a
-  Places365 scene is easier than a real upload, so `photo` and `wildphoto` should be read as
-  upper bounds, not estimates. Quote 21.74 whenever a real-world number is wanted.
+  **The absolute level does not survive**: 16.52 against the 55.78 the `photo` benchmark
+  reports for the same encoder. Compositing a catalogue cutout onto a Places365 scene is easier
+  than a real upload, so `photo` and `wildphoto` should be read as upper bounds, not estimates.
+  Quote 16.52 whenever a real-world number is wanted.
 
-  **These figures replaced 26.09 / 23.04 on 2026-09-11, and the model did not change - the
-  harness did.** `score_arms` ingested the photographs *inside* the arm loop, so with `rembg`
-  absent every arm re-ran `cv2.grabCut` and got a different cutout of the same picture: the
-  arms were never compared on identical input. Adding arm P moved arm D's P@1 from 26.09 to
-  30.43 without touching its weights, which is what exposed it. `_ingest_once` now segments each
-  photograph once and hands the same frames to every arm. The comparison is paired now; the
-  absolute value still rides on grabCut's RNG, and only installing `rembg` fixes that.
+  **These figures replaced 21.74 / 21.30 / 8.70 on 2026-09-11 when `rembg` was installed, and
+  the model did not change - the segmentation did.** Every earlier real-photo number in this
+  repo was measured through `cv2.grabCut`, the fallback tier `foreground_mask` uses when `rembg`
+  is absent, whose GMM initialisation draws from OpenCV's process-global RNG. `rembg` (u2netp)
+  is the ladder's top tier, is deterministic, and is now installed, so **the harness reproduces
+  exactly**: two consecutive invocations of `eval_task4_real_photos.py` were diffed and are
+  byte-identical, and Task 1's 7-repeat spread collapsed from +/-1.64 to **0.00**. It also
+  segments all 31 photographs, where grabCut declined 1 and fell back to a centre crop. This is
+  the third real-photo table (26.09 / 23.04, then 21.74, now 16.52) and it is the first that
+  does not ride on an RNG; earlier values are superseded, not alternatives.
 
-  **Arm P ties arm D on real photographs while the composited benchmark separates them by
-  13.6 points** (21.30 against 21.74, one retrieved slot apart, versus 42.22 against 55.78).
-  At n=23 that does not refute the composited ranking - it says 23 photographs are too few to
-  confirm it, and that a 13-point gap on composites must not be quoted as a 13-point gap on
-  uploads.
+  **The gap between the augmented arms and the control narrowed sharply, and that is a finding
+  rather than a regression.** Arm D was 2.5x arm C under grabCut (21.74 against 8.70) and is
+  **1.36x** under `rembg` (16.52 against 12.17), while on composites it stays 4.7x. Arm C is the
+  catalogue-only control, so a clean cutout on white is precisely the distribution it was
+  trained on: better segmentation hands it back most of what the missing augmentation cost it.
+  **Segmentation and background augmentation are substitutes, not complements** - they attack
+  the same failure, so their gains do not add. That is the same effect already recorded for
+  Task 3's ingest router, now measured for retrieval.
+
+  **Arm P is no longer behind arm D on real photographs - it is ahead on P@10** (19.57 against
+  16.52) and tied on P@1, while the composited benchmark separates them by 13.6 points the other
+  way (42.22 against 55.78). At n=23 this does not refute the composited ranking; it says 23
+  photographs cannot confirm it, and that a 13-point gap on composites must never be quoted as a
+  gap on uploads. Nothing here justifies promoting arm P - see the standing rule above.
 
   Two caveats travel with that row: **n=23**, so the sampling error is roughly +/-10 points,
-  which makes the gap to 55.78 safe and the exact value not; and 1 of the 31 defeats ingestion
-  entirely and falls back to a centre crop.
+  which makes the gap to 55.78 safe and every ordering within the table unsafe; and one P@1 is
+  worth 4.35 points, so single-photograph moves dominate.
 
   **The labels were drafted by a vision model and hand-verified on 2026-09-10**, including the
   three rows on the `Casual Shoes` / `Sports Shoes` boundary that the draft had flagged. They

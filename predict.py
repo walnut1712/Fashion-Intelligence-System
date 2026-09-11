@@ -38,7 +38,15 @@ from src.models.item_type_classifier import (  # noqa: E402
     predict_proba,
 )
 
-DEFAULT_MODEL = PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_120x160_onecycle_best.pt"
+# The deployed Task 1 model is the BACKGROUND-ADAPTED checkpoint (2026-09-11).
+# The catalogue-only `task1_120x160_onecycle_best.pt` it was fine-tuned from is
+# still on disk and is still the better model on catalogue tiles - 0.8968
+# weighted-F1 against 0.8714, and 0.7311 macro-F1 against 0.6388, which is the
+# larger loss and falls on the rare tail. It was replaced deliberately: the
+# system is also served to real uploads, where the catalogue model collapses to
+# 0.1684 and this one holds 0.5796. Pass --model to score the historical
+# checkpoint; --ingest defaults to squash either way.
+DEFAULT_MODEL = PROJECT_ROOT / "artifacts" / "task1_120x160" / "task1_120x160_background_adapted.pt"
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
 
 

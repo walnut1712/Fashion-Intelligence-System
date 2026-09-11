@@ -40,3 +40,27 @@ seaborn>=0.13
 # --- notebook environment ---
 jupyter>=1.0
 ipykernel>=6.29
+
+# --- upload segmentation (optional, but measured results assume it) ---
+# `src/data/user_image.py:foreground_mask` runs a tiered ladder:
+#   rembg (u2netp) -> cv2.grabCut -> border colour model -> flood fill
+# Every tier is optional and the code degrades quietly, so this installs but does
+# not error without them. It is NOT cosmetic: grabCut seeds its GMM from OpenCV's
+# process-global RNG, so without rembg the same photograph segments differently on
+# consecutive calls and every real-photo score inherits that. With rembg installed
+# the real-photo harnesses reproduce exactly (Task 1's 7-repeat spread is 0.00).
+#
+# DEPENDENCY CONFLICT, and how to resolve it. rembg declares numpy>=2.3.0 while
+# opencv-python declares numpy<2.3.0, so pip cannot satisfy both. Install rembg
+# first, then pin numpy back for OpenCV:
+#
+#   python -m pip install "rembg[cpu]"
+#   python -m pip install "numpy<2.3"
+#
+# rembg's floor is a packaging artifact rather than a real ABI requirement - it was
+# verified working at numpy 2.2.6, as were cv2.grabCut, cv2.resize and the torch
+# array bridge. pip will still print the conflict; it is expected and safe.
+# rembg downloads u2netp.onnx (4.6 MB) to ~/.rembg on first use, so the first call
+# needs network access.
+opencv-python>=4.8
+rembg[cpu]>=2.0.60
