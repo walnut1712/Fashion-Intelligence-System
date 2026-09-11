@@ -1,0 +1,5 @@
+# Optional photo segmentation; install together so pip resolves compatible versions.
+# Keep pip check clean; do not force conflicting NumPy versions.
+# First rembg use may download weights; see the README pretrained note.
+opencv-python>=4.8
+rembg[cpu]>=2.0.60

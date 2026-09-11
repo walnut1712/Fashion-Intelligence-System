@@ -1,7 +1,7 @@
 ﻿from __future__ import annotations
 
 """
-Fast overnight background-adaptation experiment for COSC2753 Fashion Intelligence System.
+Background-adaptation experiment for the Fashion Intelligence System.
 
 Purpose
 -------
@@ -75,14 +75,10 @@ def seed_all(seed: int) -> None:
 
 
 def resolve_project_root() -> Path:
-    here = Path.cwd()
-    if (here / "A2_FashionDataset").exists():
-        return here
-    if (here.parent / "A2_FashionDataset").exists():
-        return here.parent
+    if (REPO_ROOT / "A2_FashionDataset").is_dir():
+        return REPO_ROOT
     raise FileNotFoundError(
-        "Cannot find A2_FashionDataset. Run this script from the repository root "
-        "or from a direct child directory."
+        f"Cannot find A2_FashionDataset under the repository: {REPO_ROOT}"
     )
 
 

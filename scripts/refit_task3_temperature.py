@@ -49,11 +49,11 @@ for _path in (str(PROJECT_ROOT), str(PROJECT_ROOT / "scripts")):
     if _path not in sys.path:
         sys.path.insert(0, _path)
 
-from train_task3_background_adaptation import (  # noqa: E402
+from scripts.train_task3_background_adaptation import (  # noqa: E402
     Task3Dataset,
     prepare_parts,
 )
-from train_t12_background_adaptation import (  # noqa: E402
+from scripts.train_task1_task2_background_adaptation import (  # noqa: E402
     CacheIndex,
     get_device,
     resolve_project_root,

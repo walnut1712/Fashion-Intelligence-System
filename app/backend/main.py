@@ -352,6 +352,14 @@ def health():
                     task3_error,
             },
 
+            "task3b": {
+                **(task3b_service.health() if task3b_service is not None else {}),
+                "loaded": task3b_service is not None,
+                "available": task3b_service is not None,
+                "device": "cpu",
+                "error": task3b_error,
+            },
+
             "task4": {
                 "loaded":
                     task4_service

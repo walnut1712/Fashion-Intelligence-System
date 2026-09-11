@@ -30,7 +30,7 @@ from src.data.places365_backgrounds import load_background_bank
 from src.data.synthetic_backgrounds import composite
 
 # Reuse EXACT same cache/background machinery already used for T1/T2.
-from train_t12_background_adaptation import (
+from scripts.train_task1_task2_background_adaptation import (
     CacheIndex,
     SOURCE_SHAPE,
     build_training_background_bank,

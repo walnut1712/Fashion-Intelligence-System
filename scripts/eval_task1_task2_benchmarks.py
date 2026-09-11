@@ -2,7 +2,7 @@
 
 Why this exists
 ---------------
-`scripts/train_t12_background_adaptation.py` reports two columns, `clean` and
+`scripts/train_task1_task2_background_adaptation.py` reports two columns, `clean` and
 `heldout_places365`. Task 4 reports five - `clean / hard / photo / wild /
 wildphoto` - and `scripts/eval_task3_benchmarks.py` gives Task 3 the same five.
 This closes the set, using the identical construction `build_queries` in
@@ -41,7 +41,7 @@ Note on the background arms
 not the weights. `ARMS` therefore points at `*_bgaug_local/`, reproduced with
 `--tag _local`. Re-create them with, e.g.:
 
-    python scripts/train_t12_background_adaptation.py --task 1 --tag _local
+    python scripts/train_task1_task2_background_adaptation.py --task 1 --tag _local
 
 CUDA training is not bit-reproducible (`cudnn.benchmark` picks its algorithms at
 runtime; measured drift on Task 4 was up to 0.94 points), so a reproduction is
@@ -49,8 +49,8 @@ close to but not identical with the committed run.
 
 Usage
 -----
-    python scripts/eval_t12_benchmarks.py --task 1
-    python scripts/eval_t12_benchmarks.py --task 2 --rows 3000
+    python scripts/eval_task1_task2_benchmarks.py --task 1
+    python scripts/eval_task1_task2_benchmarks.py --task 2 --rows 3000
 
 Writes `outputs/evaluation/task{1,2}_benchmarks.csv`.
 """

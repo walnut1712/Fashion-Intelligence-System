@@ -12,6 +12,15 @@ __pycache__/
 .env
 venv/
 .venv/
+.pytest_cache/
+.local_checks/
+
+# Optional exports/backups retired from version control in a758416b7.
+# Explicit review or promotion commands may generate them locally again.
+/outputs/evaluation/task1_review_queue.csv
+/outputs/evaluation/task1_realphoto_labels.csv
+/artifacts/task4/search_manifest_prev.json
+/A2_FashionDataset/processed/search_cache_60x80_ids.npy
 
 # Jupyter checkpoints
 .ipynb_checkpoints/
@@ -84,3 +93,8 @@ artifacts/task*_120x160/
 # committed weights are excluded above and a clone therefore cannot score them.
 /artifacts/task*_bgaug_local/*.pt
 /artifacts/task*_bgaug_local/*.pth
+
+# Checkpoints from named background experiments, including the reranking experiment.
+# Tracked deployed models remain tracked; new experiment weights stay local.
+/artifacts/task*_bgaug*/*.pt
+/artifacts/task*_bgaug*/*.pth

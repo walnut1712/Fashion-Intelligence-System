@@ -22,6 +22,7 @@ Important:
 import argparse
 import json
 import random
+import re
 import time
 from pathlib import Path
 import sys
@@ -55,12 +56,9 @@ def seed_all(seed=SEED):
 
 
 def project_root() -> Path:
-    p = Path.cwd()
-    if (p / "A2_FashionDataset").exists():
-        return p
-    if (p.parent / "A2_FashionDataset").exists():
-        return p.parent
-    raise FileNotFoundError("Run from repository root (or a direct child directory).")
+    if (REPO_ROOT / "A2_FashionDataset").is_dir():
+        return REPO_ROOT
+    raise FileNotFoundError(f"Cannot find A2_FashionDataset under {REPO_ROOT}")
 
 
 def device():
@@ -389,11 +387,31 @@ def main():
     ap.add_argument("--k", type=int, default=10)
     ap.add_argument("--bg-bank-size", type=int, default=800)
     ap.add_argument(
+        "--task1-baseline", type=Path,
+        default=Path("artifacts/task1_120x160/task1_120x160_onecycle_best.pt"),
+        help="Baseline checkpoint; relative paths are resolved from the repository root.",
+    )
+    ap.add_argument(
+        "--task1-adapted", type=Path,
+        default=Path("artifacts/task1_120x160/task1_120x160_background_adapted.pt"),
+        help="Adapted checkpoint (defaults to the deployed model).",
+    )
+    ap.add_argument(
+        "--tag", default="",
+        help="Optional output suffix, e.g. _rerank_experiment, to keep experiment tables separate.",
+    )
+    ap.add_argument(
         "--weights",
         default="0,0.05,0.10,0.15,0.20,0.30,0.40",
         help="Semantic bonus grid added to cosine score.",
     )
     args = ap.parse_args()
+    if min(args.tune_queries, args.test_queries, args.k, args.bg_bank_size) < 1:
+        ap.error("Query counts, --k, and --bg-bank-size must be positive.")
+    if args.pool < args.k:
+        ap.error("--pool must be at least --k.")
+    if args.tag and not re.fullmatch(r"_[A-Za-z0-9][A-Za-z0-9_-]*", args.tag):
+        ap.error("--tag must start with '_' and contain only letters, digits, '_' or '-'.")
 
     seed_all()
     project = project_root()
@@ -405,8 +423,8 @@ def main():
     t4 = Task4Runtime(project, dev)
     cache = Cache(project)
 
-    base_path = project / "artifacts" / "task1_120x160" / "task1_120x160_onecycle_best.pt"
-    robust_path = project / "artifacts" / "task1_bgaug" / "task1_bgadapt_best.pt"
+    base_path = project / args.task1_baseline
+    robust_path = project / args.task1_adapted
 
     t1_base = Task1Runtime(base_path, dev)
     t1_robust = Task1Runtime(robust_path, dev)
@@ -510,9 +528,9 @@ def main():
 
     out = project / "outputs" / "evaluation"
     out.mkdir(parents=True, exist_ok=True)
-    tune_path = out / "task1_t4_rerank_tuning.csv"
-    test_path = out / "task1_t4_rerank_test.csv"
-    json_path = out / "task1_t4_rerank_summary.json"
+    tune_path = out / f"task1_t4_rerank_tuning{args.tag}.csv"
+    test_path = out / f"task1_t4_rerank_test{args.tag}.csv"
+    json_path = out / f"task1_t4_rerank_summary{args.tag}.json"
 
     tune_df.to_csv(tune_path, index=False)
     result_df.to_csv(test_path, index=False)

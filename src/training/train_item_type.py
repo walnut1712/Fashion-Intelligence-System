@@ -268,13 +268,18 @@ def load_merge_map(path=MERGE_MAP):
     return {name: entry["into"] for name, entry in payload["merges"].items()}
 
 
-def load_splits(verbose=True, min_class_size=MIN_CLASS_SIZE, merge_dropped=False):
+def load_splits(verbose=True, min_class_size=MIN_CLASS_SIZE, merge_dropped=False,
+                load_images=True):
     """Return ``(train_df, val_df, test_df, class_names, images)``.
 
     ``images`` is the uint8 NHWC cache built by the notebook. The split is
     asserted leakage-free on groups, ids and image hashes, exactly as notebook
     cell 10 does, because a silent split change would invalidate every
     comparison this module is for.
+
+    Set ``load_images=False`` to inspect the same partitions using metadata
+    only. This returns ``images=None`` and omits ``cache_position``; it never
+    reads or creates image caches. Training keeps the default image-loading path.
 
     ``merge_dropped`` relabels the rows of a dropped class to their nearest kept
     class instead of deleting them, using the justified mapping in
@@ -343,29 +348,25 @@ def load_splits(verbose=True, min_class_size=MIN_CLASS_SIZE, merge_dropped=False
         merged_rows = len(extra)
         train_df = pd.concat([train_df, extra], ignore_index=True)
 
-    cache_ids = np.load(IMAGE_CACHE_IDS)
-    position = {int(i): p for p, i in enumerate(cache_ids)}
+    images = None
+    if load_images:
+        cache_ids = np.load(IMAGE_CACHE_IDS)
+        position = {int(i): p for p, i in enumerate(cache_ids)}
 
-    # Memory-mapped, not read into RAM. It is only ever fancy-indexed into the
-    # three splits, and holding all 554 MB resident on a 16 GB machine alongside
-    # the split tensors was enough to push a run into paging - which cost far
-    # more than the mmap does, dropping it from 20 cores to under one.
-    images = np.load(IMAGE_CACHE, mmap_mode="r")
+        # Keep the full 554 MB cache memory-mapped on the default training path.
+        images = np.load(IMAGE_CACHE, mmap_mode="r")
+        wanted = pd.concat([train_df["id"], val_df["id"], test_df["id"]])
+        missing = sorted(set(wanted) - set(position))
+        if missing:
+            extra, extra_ids = _extend_cache(missing, verbose=verbose)
+            base_rows = images.shape[0]
+            images = np.concatenate([np.asarray(images), extra], axis=0)
+            position.update({int(i): base_rows + offset for offset, i in enumerate(extra_ids)})
 
-    wanted = pd.concat([train_df["id"], val_df["id"], test_df["id"]])
-    missing = sorted(set(wanted) - set(position))
-    if missing:
-        extra, extra_ids = _extend_cache(missing, verbose=verbose)
-        # Concatenating drops the mmap, so only do it when a merge actually
-        # pulled uncached rows in - the default path stays memory-mapped.
-        base_rows = images.shape[0]
-        images = np.concatenate([np.asarray(images), extra], axis=0)
-        position.update({int(i): base_rows + offset for offset, i in enumerate(extra_ids)})
-
-    for frame in (train_df, val_df, test_df):
-        mapped = frame["id"].map(position)
-        assert mapped.notna().all(), "image cache does not cover every row"
-        frame["cache_position"] = mapped.astype(int)
+        for frame in (train_df, val_df, test_df):
+            mapped = frame["id"].map(position)
+            assert mapped.notna().all(), "image cache does not cover every row"
+            frame["cache_position"] = mapped.astype(int)
 
     if verbose:
         print(f"classes {len(class_names)} | train {len(train_df)} "
@@ -465,11 +466,9 @@ def load_splits_cv_starved(fold, folds=3, classes=None, verbose=True, **kwargs):
             overlap = set(frames[a][column]) & set(frames[b][column])
             assert not overlap, f"fold {fold}: leakage between {a} and {b} on {column}"
 
-    for frame in (new_train, new_val, new_test):
-        mapped = frame["id"].map(
-            {int(i): p for p, i in enumerate(np.load(IMAGE_CACHE_IDS))})
-        if mapped.notna().all():
-            frame["cache_position"] = mapped.astype(int)
+    # Concatenation preserves cache_position from load_splits when images were
+    # requested, including appended rows from a dropped-class merge. Metadata
+    # inspections do not need to open the image cache at all.
 
     if verbose:
         rotated = int(goes_to_test[TARGET].isin(class_set).sum())

@@ -1,3 +1,5 @@
+"""Print example Task 3B occasion recommendations using the optional SFS data."""
+
 from __future__ import annotations
 
 import json
@@ -10,7 +12,7 @@ import joblib
 import pandas as pd
 
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 
 SFS_CSV = (
     ROOT

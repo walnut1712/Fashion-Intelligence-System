@@ -30,8 +30,8 @@ pytestmark = pytest.mark.skipif(not CLEAN_METADATA.exists(),
 def splits():
     from src.training.train_item_type import load_splits
 
-    plain = load_splits(verbose=False)
-    merged = load_splits(verbose=False, merge_dropped=True)
+    plain = load_splits(verbose=False, load_images=False)
+    merged = load_splits(verbose=False, merge_dropped=True, load_images=False)
     return plain, merged
 
 
@@ -77,14 +77,14 @@ def test_starved_class_folds_are_leakage_free_and_add_evaluation_rows():
     from src.training.train_item_type import (load_splits, load_splits_cv_starved,
                                               starved_classes)
 
-    _, _, test_df, _, _ = load_splits(verbose=False)
+    _, _, test_df, _, _ = load_splits(verbose=False, load_images=False)
     names = starved_classes(test_df)
     baseline = test_df["articleType"].value_counts()
 
     pooled = {}
     for fold in range(3):
         train_df, val_df, fold_test, _, _ = load_splits_cv_starved(
-            fold, folds=3, verbose=False)
+            fold, folds=3, verbose=False, load_images=False)
         for column in ("id", "image_md5", "split_group"):
             assert not (set(train_df[column]) & set(fold_test[column])), (
                 f"fold {fold} leaks {column} between train and test")
@@ -98,3 +98,20 @@ def test_starved_class_folds_are_leakage_free_and_add_evaluation_rows():
         assert pooled[name] >= 4 * baseline.get(name, 0), (
             f"{name} gained too few evaluation rows: "
             f"{baseline.get(name, 0)} -> {pooled[name]}")
+
+
+def test_metadata_splits_do_not_read_or_build_image_caches(monkeypatch):
+    from src.training import train_item_type as training
+
+    def reject_image_io(*args, **kwargs):
+        pytest.fail("metadata-only splitting tried to access an image cache")
+
+    monkeypatch.setattr(training.np, "load", reject_image_io)
+    monkeypatch.setattr(training, "_extend_cache", reject_image_io)
+    for loader, args in ((training.load_splits, ()),
+                         (training.load_splits_cv_starved, (0,))):
+        train, val, test, names, images = loader(
+            *args, verbose=False, merge_dropped=True, load_images=False)
+        assert images is None
+        assert names
+        assert all("cache_position" not in frame for frame in (train, val, test))

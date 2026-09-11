@@ -9,7 +9,7 @@ four questions from a single uploaded image.
 | 1 | What type of item is this? (`articleType`, 92 classes) | `notebooks/02_task1_item_type.ipynb` | 87.14 weighted-F1 | 57.96 |
 | 2 | Which season is it for? (4 classes) | `notebooks/03_task2_season.ipynb` | 63.06 macro-F1 | 31.26 |
 | 3 | Who is it for, and for what occasion? (`gender` x `usage`) | `notebooks/04_task3_gender_usage.ipynb` | 77.23 / 82.67 macro-F1 | 46.36 / 64.12 |
-| 4 | Which catalogue items look like this? (top-K retrieval) | `notebooks/05`-`07` | P@10 76.19 | P@10 55.78 |
+| 4 | Which catalogue items look like this? (top-K retrieval) | `notebooks/05_task4_visual_search.ipynb` | P@10 76.19 | P@10 55.78 |
 
 Two columns rather than one, because a single catalogue number is the most misleading
 thing this project could report. Every training photograph is one garment, centred, on
@@ -40,7 +40,8 @@ models can be reused and served without re-training.
 
 ## Setup
 
-Python 3.13 on a plain python.org interpreter or a virtual environment - **not Anaconda**.
+Use Python 3.10-3.13 in a virtual environment. This checkout was verified with Python
+3.11.16 in `.venv`. Prefer a plain Python interpreter over Anaconda:
 Anaconda's MKL and PyTorch both ship `libiomp5md.dll`, and loading both crashes the kernel
 with `OMP: Error #15`. If a notebook dies on `import torch`, check the interpreter first.
 
@@ -48,16 +49,35 @@ with `OMP: Error #15`. If a notebook dies on `import torch`, check the interpret
 python -m venv .venv
 .venv/Scripts/activate                 # Windows;  source .venv/bin/activate elsewhere
 
-# torch is not on PyPI - match the index to your driver (see `nvidia-smi`)
+# For an NVIDIA GPU, select the appropriate PyTorch wheel index for your driver.
 python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
 
 python -m pip install -r requirements.txt           # notebooks
 python -m pip install -r requirements-backend.txt   # API only
 ```
 
+On Windows you can call `.\.venv\Scripts\python.exe` directly for every command
+below; activation is optional. If that environment has no pip, run
+`.\.venv\Scripts\python.exe -m ensurepip` first. CPU inference is supported too.
+For tests, install `requirements-dev.txt`.
+
+```powershell
+git fetch origin
+git status -sb
+git rev-list --left-right --count HEAD...origin/main  # 0 0 means the commits match
+git lfs pull                                       # materialize large model/image files
+.\.venv\Scripts\python.exe scripts/check_project.py --load-models
+```
+
+Git synchronizes tracked files and LFS assets. Experiment checkpoints and image
+caches listed in `.gitignore` are local rebuilds, so their absence does not mean
+the pull failed. `check_project.py` verifies required files, catalogue coverage
+and, with `--load-models`, all six API services without training or writing outputs.
+
 ## Data
 
-The dataset is not in this repository. Unpack it so the tree looks like this:
+This checkout tracks the catalogue images and metadata, including the 120x160
+images through Git LFS. The expected layout is:
 
 ```
 A2_FashionDataset/
@@ -68,22 +88,25 @@ A2_FashionDataset/
   input_images/       # 31 real-world photos used for out-of-domain evaluation
 ```
 
-Two caches under `processed/` are large and are rebuilt on first use rather than shipped:
-`image_cache_task1_60x80.npy` and `search_cache_60x80.npy` (~555 MB each). Expect several
-minutes of disk-bound work the first time notebooks 02 or 05 run.
+Large image caches under `processed/` are ignored by Git. Rebuild them only when
+running the corresponding training/evaluation workflow. Task 1's historical
+60x80 cache is built by `python scripts/build_task1_cache.py`; Task 4's 120x160
+image/mask caches use `python scripts/build_task4_cache.py --resolution 120x160`
+and need about 3 GB of free disk space. Serving the saved models and checking
+split invariants do not require these caches.
 
 ## Running the notebooks
 
-They are run in **VS Code**, not the Jupyter web UI, so `Path.cwd()` is the project root
-and paths are anchored on an explicit `PROJECT_DIR`. Run them in order - `01` produces the
-cleaned metadata every other notebook reads.
+Each notebook resolves `PROJECT_DIR` from either the repository root or the
+`notebooks/` directory, so both kernel working directories work. Run `01` first
+when rebuilding: it produces the cleaned metadata the other notebooks read.
 
 ```
 01_eda.ipynb                          shared cleaning, splits, prediction metadata
 02_task1_item_type.ipynb              Task 1
-03_task2_season.ipynb         Task 2
-04_task3_gender_usage.ipynb      Task 3
-05_task4_visual_search.ipynb        Task 4 - the encoder and the background comparison
+03_task2_season.ipynb                 Task 2
+04_task3_gender_usage.ipynb           Task 3
+05_task4_visual_search.ipynb          Task 4 - retrieval and background comparison
 07_ultimate_judgement.ipynb           cross-task judgement and deployment policy
 ```
 
@@ -94,9 +117,15 @@ ships, and trained again with photographic backdrops behind the garments.
 `07` reads only the artefacts the other notebooks wrote - no models are loaded - so it runs in
 seconds and can be re-run any time the other numbers change.
 
-Notebook `06` reads the clean encoder produced by `05` and writes the deployed one, so run
-them in that order. `07` clusters whatever index is current, so re-run it after `06`
-promotes a new encoder.
+Notebook `05` defaults to a report of committed results using the shipped encoder.
+Skipped experiments display their recorded figures and tables from the tracked
+`artifacts/task4/notebook_report_outputs.json.gz` archive. Each replay identifies
+the original notebook revision and states that the result was not recomputed.
+Clearing outputs, running all cells and saving therefore retains those figures.
+Set `REBUILD_EVALUATION = True` only to remeasure its experiments; additional local
+caches and experiment checkpoints may be required. Missing training histories
+and control checkpoints are reported explicitly. Notebook `07` combines the
+recorded evidence for all four tasks. Neither notebook promotes a model by default.
 
 ## The application
 
@@ -115,7 +144,7 @@ process. Upload an image and all four models answer it.
 | `GET /api/health` | per-task `loaded` / `error`, plus live model cards |
 | `GET /api/catalogue/{id}/image` | a catalogue thumbnail |
 
-`?mode=` selects how an upload is coerced to 60x80: `letterbox` (pad to aspect), `crop`
+`?mode=` selects how an upload is resized to the checkpoint's input size: `letterbox` (pad to aspect), `crop`
 (centre crop), or `nobg` (segment the subject onto white - the default, and the only one
 that survives a cluttered photograph).
 
@@ -131,7 +160,7 @@ python predict.py --images A2_FashionDataset/FashionDataset/test/images_test \
                   --out outputs/task1_item_type_predictions.csv --submission
 python scripts/build_submission.py
 
-# Task 4's own deliverable: top-K retrieval + cluster assignment for all 5,829 test images
+# Task 4's own deliverable: top-K retrieval for all 5,829 test images
 python scripts/build_task4_outputs.py
 ```
 
@@ -145,7 +174,12 @@ script rather than as a side effect.
 python -m pytest tests/ -q
 ```
 
-They mainly guard that the shipped checkpoints still load into the shipped architectures.
+Tests cover checkpoint loading, inference, submission consistency, image preprocessing
+and split invariants. Split checks use metadata only and do not recreate image caches.
+Some historical fixtures and optional experiment inputs are absent on a fresh checkout;
+their existing tests report skips.
+
+They also guard that the shipped checkpoints still load into the shipped architectures.
 That is not hypothetical: a duplicated network definition once left a trained checkpoint
 the API could not load, and a background-augmented encoder was mistaken for the clean
 baseline for three rounds of experiments. Both now fail a test instead of a report.
@@ -164,8 +198,9 @@ segments the subject with a tiered ladder, and its highest tier uses **rembg (u2
 is a pretrained matting network. The ladder degrades to GrabCut and then to a numpy border
 colour model when rembg is absent.
 
-**As of 2026-09-11 rembg is installed and is listed in both requirements files.** What it is and
-is not used for matters, so both halves are stated here.
+The recorded real-photo experiments used rembg. It is optional for the application;
+install `requirements-segmentation.txt` to enable that tier. The core setup and
+current verification also work without it, using the fallback described above.
 
 It is **not** used for anything graded. The graded deliverable is
 `styles_prediction_template.csv`, 5,829 catalogue tiles. Task 1 reaches them through
@@ -205,11 +240,23 @@ src/
   models/      architectures the services import
   features/    hand-built descriptors and embedding fusion (Task 4)
   evaluation/  metrics, retrieval protocol, OOD benchmark
-  visual_search/  search and cluster engines
+  visual_search/  retrieval engine
 app/backend/   FastAPI service, one module per task
 app/frontend/  vanilla JS, no build step
 artifacts/     trained checkpoints and indexes, per task
 outputs/       predictions and evaluation tables
-scripts/       submission and artefact builders
+scripts/       builders, evaluation and experiment launchers; see scripts/README.md
 tests/
 ```
+
+Script names describe their purpose and task numbers. The launcher
+`scripts/run_task1_task4_reranking_experiment.ps1` fine-tunes Task 1 with background
+adaptation, then evaluates its use for Task 4 semantic reranking. `-DryRun` prints
+the commands. The complete
+old-to-new mapping is in [scripts/README.md](scripts/README.md). Each renamed tool
+has one canonical file, with imports and notebook commands updated together.
+
+Retired clustering files, the old Task 2 prediction CSV, `README_BACKEND_STEP1.md`
+and outputs removed in commit `a758416b7` stay retired. Historical evidence that
+is still cited remains in its existing location; local caches and optional review
+exports stay ignored. Do not recreate deleted outputs just to make a folder look complete.

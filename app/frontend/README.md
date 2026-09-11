@@ -56,13 +56,11 @@ When opened over `file://` — or from port 5500 — the page targets
 `http://127.0.0.1:8000` for the API, so a separately running backend is still
 picked up. That path needs CORS, which the backend enables.
 
-**What to upload.** Images from `A2_FashionDataset/FashionDataset/train/images_train`
-are the distribution the models were trained on — white-background product
-cutouts — and item type will typically come back above 90%. The unlabelled
-`test/images_test` folder is mostly on-model lifestyle photography and sits a long
-way off that distribution (`unlabelled_distribution_shift_tvd: 44.6` in
-the final 120x160 Task 1 checkpoint), so low, split confidences there are the
-honest output, not a serving fault.
+**What to upload.** Catalogue examples are under
+`A2_FashionDataset/FashionDataset/train/images_train` and `test/images_test`.
+Both contain small catalogue tiles; the test split has a different class mix.
+Real photographs are under `A2_FashionDataset/input_images/`, with varied
+backgrounds and framing. Confidence can be much lower on those uploads.
 
 ## API contract
 

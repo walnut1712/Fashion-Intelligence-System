@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Measure the wider test-time augmentation sets against the shipped flip average.
+"""Measure wider test-time augmentation sets on the historical 60x80 model.
 
 TTA has always been horizontal-flip only. ``item_type_classifier.TTA_VIEWS`` adds
 small scales and shifts on top, each averaged with its mirror. This scores them on
@@ -11,7 +11,7 @@ The 3-seed noise floor on validation weighted-F1 is +/-0.24
 
 Usage
 -----
-    python scripts/evaluate_tta_views.py
+    python scripts/eval_task1_tta_views.py
 """
 
 import sys

@@ -8,10 +8,5 @@ torch>=2.0
 scipy>=1.11
 scikit-learn>=1.4
 
-# Upload segmentation for /api/analyze. Both tiers are optional - the ladder in
-# src/data/user_image.py degrades to a border colour model without them - but the
-# `nobg` ingestion the API routes uploads to is materially better with rembg, and
-# only rembg makes it deterministic. See requirements.txt for the numpy<2.3 pin
-# OpenCV needs alongside it.
-opencv-python>=4.8
-rembg[cpu]>=2.0.60
+# Optional higher-quality photo segmentation: requirements-segmentation.txt.
+# Core inference works with the built-in NumPy fallback.

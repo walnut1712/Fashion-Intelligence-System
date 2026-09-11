@@ -2,6 +2,35 @@
 
 Guidance for Claude Code working in this repository.
 
+## Current repository decisions (2026-09-12)
+
+- Keep one canonical script per command. The seven renames and purposes are in
+  `scripts/README.md`; do not restore old filenames as duplicate wrappers.
+- The 29 files removed in `a758416b7` remain removed. Optional review exports and
+  the promotion backup are ignored if explicitly regenerated. Do not resurrect
+  retired clustering files or superseded prediction tables to fill a directory.
+- Notebook 05 defaults to reading committed results and the shipped encoder.
+  Rebuilding evaluation is explicit; missing control weights/history are disclosed.
+  Static figures/tables from skipped experiments are replayed from the tracked
+  `artifacts/task4/notebook_report_outputs.json.gz`, with original notebook revision
+  and SHA256 provenance. Preserve this archive: it makes Clear Outputs / Run All /
+  Save safe without training or reading the notebook's mutable saved outputs.
+  Notebook 07 remains the cross-task report; retain its name and numbering.
+- Split tests run the real partition logic with metadata only. They do not need
+  or recreate the ignored Task 1 image caches or untracked prediction fixture.
+- Verified: 158 tests passed, 6 skipped; all six API services loaded; API image
+  analysis returned HTTP 200. All 193 notebook code cells parsed, and notebooks
+  05/07 executed from both root and notebook working directories in report mode.
+  Notebook 05 was additionally executed with a real Jupyter kernel after clearing
+  outputs, saved, reopened and executed again from the other working directory:
+  all 25 original figures remained, archived PNG bytes matched, and rich-output
+  counts stayed stable. Validation used a temporary copy; saved source outputs
+  and the recorded evidence archive were not overwritten.
+- Tracked data/model/evaluation/prediction files were not changed. Git LFS had all
+  38,619 working files downloaded; main matched origin/main at `a758416b7`.
+
+These decisions supersede older environment/cache instructions recorded below.
+
 ## What this is
 
 RMIT **COSC2753 Assignment 2 — Fashion Intelligence System**. Four modelling tasks over a
@@ -173,7 +202,7 @@ Training happens in **step 3, a script, not a notebook**: a run is ~100 minutes 
 checkpointed every epoch so `--resume` survives a killed kernel. Notebook `05` loads what it
 produced and plots it, so the notebook itself runs in minutes.
 
-**The state right now**: steps 1-5 are done. Both the encoder and the clustering were re-run
+**The state right now**: steps 1-5 are done. The encoder evaluations were run
 against the promoted 120x160 encoder, and notebook `05` stores output for every cell.
 
 ## Environment
@@ -189,20 +218,7 @@ python -m pip install -r requirements.txt          # notebooks
 python -m pip install -r requirements-backend.txt  # API
 ```
 
-**`rembg` is installed as of 2026-09-11, and pip cannot resolve it cleanly.** It declares
-`numpy>=2.3.0` while `opencv-python` declares `numpy<2.3.0`, so the two conflict. Install rembg
-first, then pin numpy back for OpenCV:
-
-```bash
-python -m pip install "rembg[cpu]"
-python -m pip install "numpy<2.3"
-```
-
-rembg's floor is a packaging artifact, not a real ABI requirement - verified working at numpy
-2.2.6, as were `cv2.grabCut`, `cv2.resize` and the torch array bridge. pip still prints the
-conflict; it is expected. It also pulls `onnxruntime`, `numba`, `llvmlite`, `scikit-image` and
-`pymatting`, and bumps pillow to 12.3.0. First use downloads `u2netp.onnx` (4.6 MB) to
-`~/.rembg`, so it needs network once.
+**Current setup:** the verified `.venv` uses Python 3.11.16 and the core dependencies. Optional `rembg` and OpenCV are not installed. Install `requirements-segmentation.txt` only to enable those photo-ingestion tiers, and keep `pip check` clean. The recorded photo results below were measured with rembg; they are historical measurements, not a claim about every checkout.
 
 **Why it is installed**: it is the deterministic top tier of `foreground_mask`. Below it sits
 `cv2.grabCut`, which seeds its GMM from OpenCV's process-global RNG, so every real-photo number
@@ -213,14 +229,14 @@ than a preference: see the README's pretrained-components note and
 `tests/test_graded_path_never_segments.py`. Nothing graded reaches it; the 31-photograph tables
 do.
 
-Notebooks are run in **VS Code**, not the Jupyter web UI. `Path.cwd()` in a notebook is
-`notebooks/` — the notebook's own directory, not the project root — so every notebook sets
-`PROJECT_DIR = Path.cwd().parent` and anchors its paths on that rather than writing them
-relative to the file. (`03_task2_season.ipynb` probes for `A2_FashionDataset/`
-instead and works either way.) An earlier version of this file claimed the opposite; the
-stored output of `01_eda.ipynb` cell 1 prints the real value.
+Notebooks resolve `PROJECT_DIR` from either the repository root or `notebooks/`. Notebook 05 defaults to a read-only report of committed evidence; set `REBUILD_EVALUATION = True` explicitly to remeasure experiments. Missing local training histories/control checkpoints are reported, not invented or recreated.
 
 ## Commands
+
+Split tests use `load_splits(load_images=False)`: metadata and hashes only, no
+image-cache reads or writes. Generated caches and optional fixtures are not pull
+requirements; do not restore retired files just to remove a missing-file skip.
+
 
 ```bash
 # API + frontend (from the project root; main.py mounts app/frontend at /)
@@ -231,7 +247,7 @@ python -m uvicorn app.backend.main:app --reload      # http://127.0.0.1:8000  /d
 # through the venv or you get "No module named pytest".
 .venv/Scripts/python.exe -m pytest tests/ -q
 
-# Task 1's image cache, which tests/test_splits.py needs and notebook 02 only
+# Task 1's optional training image cache, which notebook 02 only
 # builds as a side effect of training. 21 s. --check verifies without rebuilding.
 python scripts/build_task1_cache.py
 
@@ -269,12 +285,10 @@ python scripts/promote_task4_encoder.py     --encoder artifacts/task4_120x160/ta
 `/api/health` reports per-task `loaded` + `error`; a failed checkpoint does not take the API
 down. `POST /api/analyze` runs all four tasks on one upload.
 
-**Two interpreters, on purpose.** The global python.org install has `torch 2.11.0+cu128` and is
-what the notebooks train on; `.venv` has `torch 2.13.0+cpu` and pytest. Tests only load
-checkpoints and run a forward pass, so CPU is fine, but don't train from `.venv`.
+**Interpreter selection:** use `.venv/Scripts/python.exe` for this checkout. The verified environment is Python 3.11.16; the bare `python` command on this machine points to the Windows Store alias. Check `torch.cuda.is_available()` in the selected interpreter before launching a long training run.
 
-**144 collected: 139 pass, 5 skip, ~71 s** (measured 2026-09-11, after the Task 1
-routing and Task 3 promotion). Nothing fails.
+**Historical run: 144 collected, 139 pass, 5 skip, ~71 s** (2026-09-11, after
+the Task 1 routing and Task 3 promotion). This is not a current checkout test count.
 The count moved from 140/6 when `ImprovedEncoderV2` and its nine tests were deleted
 (-9) and `test_shipped_predictions_are_reproducible` was added (+1), then to 144/5
 when `tests/test_graded_path_never_segments.py` was added (+6) with the router fix
@@ -292,19 +306,15 @@ the change was intended, then rerun `predict.py --submission` and `build_submiss
 The script's `--pair legacy` handles the older 60x80 fixture, which pairs with
 `task1_cnn.pt` and must not be rebuilt against the shipped model.
 
-The five `tests/test_splits.py` failures this note used to record are fixed. They wanted
-`processed/image_cache_task1_60x80{,_ids}.npy`, which was simply not on disk: notebook `02`
-builds it as a side effect of training, so a checkout that has not run that notebook fails
-those tests with `FileNotFoundError`. `scripts/build_task1_cache.py` now builds it in **21 s**
-without a training run, and `--check` verifies an existing one by re-decoding a sample.
+`tests/test_splits.py` checks the production split/merge/fold logic with
+`load_images=False`, including hashes and leakage assertions. It neither reads
+nor writes image caches. The default `load_splits()` training path still loads
+`processed/image_cache_task1_60x80{,_ids}.npy`; build that optional cache with
+`python scripts/build_task1_cache.py` only when training needs it.
 
-Do not substitute Task 3's `image_cache_60x80.npy` for it. The two hold **different row
-subsets** — 38,539 rows against Task 1's 38,491, which are the rows surviving the
-`MIN_CLASS_SIZE` floor — and neither is a superset of the other.
-
-Both caches are gitignored (`A2_FashionDataset/processed/*.npy`), so a fresh clone has to build
-them. A test run additionally writes `image_cache_task1_60x80_extra{,_ids}.npy`, the 121 tiles
-`_extend_cache` decodes for the dropped-class merge; that is expected, not drift.
+Do not substitute Task 3 cache IDs: Task 3 and Task 1 keep different row subsets
+(38,539 versus 38,491). Missing caches or the untracked shipped prediction
+fixture are not evidence of an incomplete Git pull.
 
 Every skip is a data-presence guard — the tests that need gitignored images or a built
 submission skip rather than fail, so the count varies with what is on disk.
@@ -313,7 +323,7 @@ submission skip rather than fail, so the count varies with what is on disk.
 
 ```
 A2_FashionDataset/
-  FashionDataset/train/{images_train, styles_train.csv}   # gitignored, local only
+  FashionDataset/train/{images_train, styles_train.csv}   # tracked catalogue
   FashionDataset/test/{images_test, styles_prediction_template.csv}
   processed/           # written by 01_eda.ipynb — clean_train_metadata.csv, prediction_metadata.csv, splits
   processed/images_train_120x160/   # 38,612 train ids re-exported at 120×160 (git lfs)
@@ -462,7 +472,7 @@ Facts that matter:
   structure on its pooled val+test rows (96.97% family against 88.29%, 73.2% symmetric), so this
   is a property of the catalogue rather than of one network. The model almost always knows what
   the object is; the residual is which label the catalogue chose.
-  Regenerate with `python scripts/task1_error_structure.py` ->
+  Regenerate with `python scripts/analyze_task1_errors.py` ->
   `outputs/evaluation/task1_error_structure{,_pairs}.csv`; notebook 02's CELL 34b reads it. Do not treat this as a
   bug, and **do not relabel** — the held-out `articleType` values are the grading target, so
   "correcting" them moves away from it.
@@ -651,7 +661,7 @@ Facts that matter:
   numbers all sit within 0.007 of each other and could reorder, so do not rank them on that.
 
   **Tasks 1 and 2 had the same confound; both controls were run on 2026-09-11** with the
-  `--tag` flag added to `scripts/train_t12_background_adaptation.py` (which already had
+  `--tag` flag added to `scripts/train_task1_task2_background_adaptation.py` (which already had
   `--p-bg`). The direction of the correction is **task-dependent**, so it cannot be predicted -
   it has to be measured:
 

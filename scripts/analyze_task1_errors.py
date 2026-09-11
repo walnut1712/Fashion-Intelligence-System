@@ -31,8 +31,8 @@ Together they say the residual is the catalogue's choice of word, not the
 model's grasp of the image, which is why pairwise specialists were measured and
 declined rather than pursued.
 
-    python scripts/task1_error_structure.py                 # the shipped 120x160 model
-    python scripts/task1_error_structure.py --checkpoint <path>
+    python scripts/analyze_task1_errors.py                 # catalogue-only 120x160 reference
+    python scripts/analyze_task1_errors.py --checkpoint <path>
 
 Writes ``outputs/evaluation/task1_error_structure.csv`` (the headline numbers)
 and ``..._pairs.csv`` (every symmetric pair, largest first).
